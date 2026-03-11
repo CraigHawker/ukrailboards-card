@@ -89,7 +89,7 @@ body {
             .leaving.scheduled,
             .destination.final,
             .leaving.estimated {
-                top: calc(2em + 12px);
+                animation: show-following-train-scroll 10s linear forwards;
             }
         }
 
@@ -147,6 +147,30 @@ body {
     }
 }
 
+@keyframes show-following-train-scroll {
+    0% {
+        top: 4em;
+        opacity: 1;
+    }
+
+    10% {
+        top: calc(2em + 14px);
+        opacity: 1;
+    }
+
+    90% {
+        top: calc(2em + 14px);
+        opacity: 1;
+    }
+    95% {
+        top: calc(2em + 14px);
+        opacity: 0;
+    }
+    100% {
+        top: calc(2em + 14px);
+        opacity: 0;
+    }
+}
 @keyframes calling-at-scroll {
     0% {
         left: 0;

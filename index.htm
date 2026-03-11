@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departure Board</title>
-    <link rel="stylesheet" href="styles/site.css">
+    <link rel="stylesheet" href="styles/site.css" />
 </head>
 <body>
 
-    <section class="board" data-location-city="City A" data-location-platform="1" aria-labelledby="board-title">
+    <section class="board" data-location-city="City A" data-location-platform="1">
         <header>
-            <h1 id="board-title">
+            <h1>
                 <span class="prefix">Departures from</span>
                 <span class="location">City A</span><span class="location platform prefix">, platform 1</span>
                 <span class="prefix">on</span>
@@ -48,7 +48,7 @@
                     </ol>
                 </article>
             </li>
-            <li class="train show" itemscope itemtype="https://schema.org/Trip">
+            <li class="train" itemscope itemtype="https://schema.org/Trip">
                 <article>
                     <h2>
                         <span class="prefix ordinance">2nd</span>
@@ -116,6 +116,6 @@
             </p>
         </footer>
     </section>
-
+    <script src="scripts/next-train.js"></script>
 </body>
 </html>
