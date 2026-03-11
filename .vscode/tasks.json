@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build SCSS",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"sass",
+				"styles:styles",
+				"--no-source-map"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Watch SCSS",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"sass",
+				"styles:styles",
+				"--no-source-map",
+				"--watch"
+			],
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}

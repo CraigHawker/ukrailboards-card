@@ -4,168 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departure Board</title>
-    <style id="compiled-css"></style>
-    <script id="scss-source" type="text/x-scss">
-        @font-face {
-            font-family: "Modern National Rail PIS Small";
-            src: url("font/modern-national-rail-pis-small.ttf") format("truetype");
-            font-display: swap;
-        }
-
-        body {
-            margin: 0;
-            padding: 1em;
-            background-color: #000;
-        }
-
-        .board {
-            background-color: #222;
-            width: 350px;
-            position: relative;
-            height: calc(3em + 16px);
-            padding: 4px;
-            margin: 0px;
-            box-sizing: border-box;
-            overflow: hidden;
-
-            * {
-                font-family: "Modern National Rail PIS Small", sans-serif;
-                color: orange;
-                font-size: 16px;
-                font-weight: normal;
-                padding: 0px;
-                margin: 0px;
-            }
-            header, footer, .prefix{
-                display: none;
-            }
-            .train{
-                display: none;
-                .status{ display: none; }
-                .ordinance{
-                    position: absolute;
-                    left: 4px;
-                    top: 4px;
-                    width: 35px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    display: inline-block;
-                }
-                .leaving.scheduled{
-                    position: absolute;
-                    left: 45px;
-                    top: 4px;
-                    width: 45px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                }
-                .destination.final{
-                    position: absolute;
-                    left: 100px;
-                    top: 4px;
-                    width: 200px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                }
-                .leaving.estimated{
-                    position: absolute;
-                    left: 300px;
-                    top: 4px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                }
-                &.show{
-                    display: block;
-                    .calling-at{ display: none;}
-                    .ordinance,
-                        .leaving.scheduled,
-                        .destination.final,
-                        .leaving.estimated{
-                        top: calc(2em + 12px);
-                    }
-                }
-                &:nth-child(1){
-                    display: block;
-                    h3.calling-at{
-                        position: absolute;
-                        left: 14px;
-                        top: calc(1em + 8px);
-                        &:after{
-                            content: ": ";
-                            display: inline-block;
-                        }
-                    }
-                    ol.calling-at{
-                        position: absolute;
-                        left: 100px;
-                        top: calc(1em + 8px);
-                        width: calc(100% - 104px);
-                        overflow: hidden;
-                        white-space: nowrap;
-                        display: inline-block;
-                        li{
-                            position: relative;
-                            display: inline-block;
-                            animation: calling-at-scroll 10s linear infinite;
-                            &:not(:last-child){
-                                &:after{
-                                    content: ",";
-                                    display: inline-block;
-                                    position: relative;
-                                    left: -5px;
-                                }
-                            }
-                            .estimated{
-                                &:before{ content: " ("; display: inline-block; }
-                                &:after{ content: ")"; display: inline-block; }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        @keyframes calling-at-scroll {
-            0% {
-                left: 0;
-            }
-            20% {
-                left: 0;
-            }
-            80% {
-                left: -90px;
-            }
-            100% {
-                left: -90px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .board .train ol.calling-at {
-                animation: none;
-                transform: translateX(0);
-            }
-        }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sass.js@0.11.1/dist/sass.sync.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var scssSource = document.getElementById("scss-source");
-            var compiledCss = document.getElementById("compiled-css");
-
-            if (!scssSource || !compiledCss || typeof Sass === "undefined") {
-                return;
-            }
-
-            Sass.compile(scssSource.textContent, function (result) {
-                if (result.status === 0) {
-                    compiledCss.textContent = result.text;
-                } else {
-                    console.error("Sass compile error:", result.formatted);
-                }
-            });
-        });
-    </script>
+    <link rel="stylesheet" href="styles/site.css">
 </head>
 <body>
 
@@ -180,8 +19,8 @@
         </header>
         <ol aria-label="Train departures">
             <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article aria-labelledby="service-title">
-                    <h2 id="service-title">
+                <article>
+                    <h2>
                         <span class="prefix ordinance">1st</span>
                         <span class="prefix">Service to</span>
                         <span class="location destination final" itemprop="arrivalStation">City D</span>
@@ -210,8 +49,8 @@
                 </article>
             </li>
             <li class="train show" itemscope itemtype="https://schema.org/Trip">
-                <article aria-labelledby="service-title">
-                    <h2 id="service-title">
+                <article>
+                    <h2>
                         <span class="prefix ordinance">2nd</span>
                         <span class="prefix">Service to</span>
                         <span class="location destination final" itemprop="arrivalStation">City D</span>
@@ -240,8 +79,8 @@
                 </article>
             </li>
             <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article aria-labelledby="service-title">
-                    <h2 id="service-title">
+                <article>
+                    <h2>
                         <span class="prefix ordinance">3rd</span>
                         <span class="prefix">Service to</span>
                         <span class="location destination final" itemprop="arrivalStation">City D</span>

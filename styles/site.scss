@@ -1,0 +1,173 @@
+@font-face {
+    font-family: "Modern National Rail PIS Small";
+    src: url("../font/modern-national-rail-pis-small.ttf") format("truetype");
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    padding: 1em;
+    background-color: #000;
+}
+
+.board {
+    background-color: #222;
+    width: 350px;
+    position: relative;
+    height: calc(3em + 16px);
+    padding: 4px;
+    margin: 0px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    * {
+        font-family: "Modern National Rail PIS Small", sans-serif;
+        color: orange;
+        font-size: 16px;
+        font-weight: normal;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    header,
+    footer,
+    .prefix {
+        display: none;
+    }
+
+    .train {
+        display: none;
+
+        .status {
+            display: none;
+        }
+
+        .ordinance {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 35px;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .leaving.scheduled {
+            position: absolute;
+            left: 45px;
+            top: 4px;
+            width: 45px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .destination.final {
+            position: absolute;
+            left: 100px;
+            top: 4px;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .leaving.estimated {
+            position: absolute;
+            left: 300px;
+            top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        &.show {
+            display: block;
+
+            .calling-at {
+                display: none;
+            }
+
+            .ordinance,
+            .leaving.scheduled,
+            .destination.final,
+            .leaving.estimated {
+                top: calc(2em + 12px);
+            }
+        }
+
+        &:nth-child(1) {
+            display: block;
+
+            h3.calling-at {
+                position: absolute;
+                left: 14px;
+                top: calc(1em + 8px);
+
+                &:after {
+                    content: ": ";
+                    display: inline-block;
+                }
+            }
+
+            ol.calling-at {
+                position: absolute;
+                left: 100px;
+                top: calc(1em + 8px);
+                width: calc(100% - 104px);
+                overflow: hidden;
+                white-space: nowrap;
+                display: inline-block;
+
+                li {
+                    position: relative;
+                    display: inline-block;
+                    animation: calling-at-scroll 10s linear infinite;
+
+                    &:not(:last-child) {
+                        &:after {
+                            content: ",";
+                            display: inline-block;
+                            position: relative;
+                            left: -5px;
+                        }
+                    }
+
+                    .estimated {
+                        &:before {
+                            content: " (";
+                            display: inline-block;
+                        }
+
+                        &:after {
+                            content: ")";
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes calling-at-scroll {
+    0% {
+        left: 0;
+    }
+
+    20% {
+        left: 0;
+    }
+
+    80% {
+        left: -90px;
+    }
+
+    100% {
+        left: -90px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .board .train ol.calling-at {
+        animation: none;
+        transform: translateX(0);
+    }
+}
