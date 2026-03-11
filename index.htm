@@ -42,73 +42,83 @@
             .train{
                 display: none;
                 .status{ display: none; }
-                &:nth-child(1){
-                    display: block;
-                    .ordinance{
-                        position: absolute;
-                        left: 4px;
-                        top: 4px;
-                        width: 35px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        display: inline-block;
-                    }
-                    .leaving.scheduled{
-                        position: absolute;
-                        left: 45px;
-                        top: 4px;
-                        width: 45px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                    }
-                    .destination.final{
-                        position: absolute;
-                        left: 100px;
-                        top: 4px;
-                        width: 200px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                    }
-                    .leaving.estimated{
-                        position: absolute;
-                        left: 300px;
-                        top: 4px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                    }
-                }
-                h3.calling-at{
+                .ordinance{
                     position: absolute;
-                    left: 14px;
-                    top: calc(1em + 8px);
-                    &:after{
-                        content: ": ";
-                        display: inline-block;
-                    }
+                    left: 4px;
+                    top: 4px;
+                    width: 35px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: inline-block;
                 }
-                ol.calling-at{
+                .leaving.scheduled{
+                    position: absolute;
+                    left: 45px;
+                    top: 4px;
+                    width: 45px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                .destination.final{
                     position: absolute;
                     left: 100px;
-                    top: calc(1em + 8px);
-                    width: calc(100% - 104px);
-                    overflow: hidden;
+                    top: 4px;
+                    width: 200px;
                     white-space: nowrap;
-                    display: inline-block;
-                    li{
-                        position: relative;
-                        display: inline-block;
-                        animation: calling-at-scroll 10s linear infinite;
-                        &:not(:last-child){
-                            &:after{
-                                content: ",";
-                                display: inline-block;
-                                position: relative;
-                                left: -5px;
-                            }
+                    overflow: hidden;
+                }
+                .leaving.estimated{
+                    position: absolute;
+                    left: 300px;
+                    top: 4px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                &.show{
+                    display: block;
+                    .calling-at{ display: none;}
+                    .ordinance,
+                        .leaving.scheduled,
+                        .destination.final,
+                        .leaving.estimated{
+                        top: calc(2em + 12px);
+                    }
+                }
+                &:nth-child(1){
+                    display: block;
+                    h3.calling-at{
+                        position: absolute;
+                        left: 14px;
+                        top: calc(1em + 8px);
+                        &:after{
+                            content: ": ";
+                            display: inline-block;
                         }
-                        .estimated{
-                            &:before{ content: " ("; display: inline-block; }
-                            &:after{ content: ")"; display: inline-block; }
+                    }
+                    ol.calling-at{
+                        position: absolute;
+                        left: 100px;
+                        top: calc(1em + 8px);
+                        width: calc(100% - 104px);
+                        overflow: hidden;
+                        white-space: nowrap;
+                        display: inline-block;
+                        li{
+                            position: relative;
+                            display: inline-block;
+                            animation: calling-at-scroll 10s linear infinite;
+                            &:not(:last-child){
+                                &:after{
+                                    content: ",";
+                                    display: inline-block;
+                                    position: relative;
+                                    left: -5px;
+                                }
+                            }
+                            .estimated{
+                                &:before{ content: " ("; display: inline-block; }
+                                &:after{ content: ")"; display: inline-block; }
+                            }
                         }
                     }
                 }
@@ -116,6 +126,9 @@
         }
 
         @keyframes calling-at-scroll {
+            0% {
+                left: 0;
+            }
             20% {
                 left: 0;
             }
@@ -196,16 +209,47 @@
                     </ol>
                 </article>
             </li>
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
+            <li class="train show" itemscope itemtype="https://schema.org/Trip">
                 <article aria-labelledby="service-title">
                     <h2 id="service-title">
                         <span class="prefix ordinance">2nd</span>
                         <span class="prefix">Service to</span>
                         <span class="location destination final" itemprop="arrivalStation">City D</span>
+                        <time class="leaving scheduled" datetime="2026-03-11T08:00:00">08:00</time>
                     </h2>
                     <p>
                         <span class="prefix">Departs:</span>
-                        <time class="estimated" itemprop="departureTime" datetime="2026-03-11T08:00:00">08:00</time>
+                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T08:00:00">08:00</time>
+                        <span class="status" aria-label="Service status">On time</span>
+                    </p>
+                    <h3 class="calling-at">Calling at</h3>
+                    <ol class="calling-at" aria-label="Intermediate and final stops">
+                        <li>
+                            <span class="location stop">City B</span>
+                            <time class="estimated" datetime="2026-03-11T08:30:00">08:30</time>
+                        </li>
+                        <li>
+                            <span class="location stop">City C</span>
+                            <time class="estimated" datetime="2026-03-11T08:45:00">08:45</time>
+                        </li>
+                        <li>
+                            <span class="location stop" itemprop="arrivalStation">City D</span>
+                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:00:00">09:00</time>
+                        </li>
+                    </ol>
+                </article>
+            </li>
+            <li class="train" itemscope itemtype="https://schema.org/Trip">
+                <article aria-labelledby="service-title">
+                    <h2 id="service-title">
+                        <span class="prefix ordinance">3rd</span>
+                        <span class="prefix">Service to</span>
+                        <span class="location destination final" itemprop="arrivalStation">City D</span>
+                        <time class="leaving scheduled" datetime="2026-03-11T08:00:00">08:00</time>
+                    </h2>
+                    <p>
+                        <span class="prefix">Departs:</span>
+                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T08:00:00">08:00</time>
                         <span class="status" aria-label="Service status">On time</span>
                     </p>
                     <h3 class="calling-at">Calling at</h3>
