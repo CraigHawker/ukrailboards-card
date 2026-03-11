@@ -1,3 +1,44 @@
+$pis-font: "Modern National Rail PIS Small", sans-serif;
+$text-color: orange;
+$page-bg: #000;
+$board-bg: #222;
+$base-font-size: 16px;
+
+$top-row-y: 4px;
+$calling-row-y: calc(1em + 8px);
+$following-row-y: calc(2em + 14px);
+$calling-scroll-distance: -90px;
+
+$anim-duration: 10s;
+$anim-easing: linear;
+
+// Shared layout helper for text cells that sit on fixed coordinates.
+// Why this exists:
+// - Keeps repeated positioning logic in one place.
+// - Prevents long station labels from spilling into neighboring columns.
+// - Allows callers to set only what changes (x/y, optional width, optional display mode).
+// Parameter intent:
+// - $left: horizontal anchor from the board's left edge.
+// - $top: vertical anchor for row placement.
+// - $width: optional column width cap; omit when natural width is desired.
+// - $display: optional display override for contexts that need inline flow behavior.
+@mixin clipped-absolute($left, $top, $width: null, $display: null) {
+    position: absolute;
+    left: $left;
+    top: $top;
+
+    @if $width != null {
+        width: $width;
+    }
+
+    white-space: nowrap;
+    overflow: hidden;
+
+    @if $display != null {
+        display: $display;
+    }
+}
+
 @font-face {
     font-family: "Modern National Rail PIS Small";
     src: url("../font/modern-national-rail-pis-small.ttf") format("truetype");
@@ -7,11 +48,11 @@
 body {
     margin: 0;
     padding: 1em;
-    background-color: #000;
+    background-color: $page-bg;
 }
 
 .board {
-    background-color: #222;
+    background-color: $board-bg;
     width: 350px;
     position: relative;
     height: calc(3em + 16px);
@@ -19,11 +60,12 @@ body {
     margin: 0px;
     box-sizing: border-box;
     overflow: hidden;
+    margin: 20px;
 
     * {
-        font-family: "Modern National Rail PIS Small", sans-serif;
-        color: orange;
-        font-size: 16px;
+        font-family: $pis-font;
+        color: $text-color;
+        font-size: $base-font-size;
         font-weight: normal;
         padding: 0px;
         margin: 0px;
@@ -43,39 +85,27 @@ body {
         }
 
         .ordinance {
-            position: absolute;
-            left: 4px;
-            top: 4px;
-            width: 35px;
-            white-space: nowrap;
-            overflow: hidden;
-            display: inline-block;
+            // First column marker (e.g., 1st/2nd/3rd).
+            // We lock this label to a narrow lane so it never collides with departure time.
+            @include clipped-absolute(4px, $top-row-y, 35px, inline-block);
         }
 
         .leaving.scheduled {
-            position: absolute;
-            left: 45px;
-            top: 4px;
-            width: 45px;
-            white-space: nowrap;
-            overflow: hidden;
+            // Timetable departure column in the top row.
+            // Width is fixed to preserve column alignment between different services.
+            @include clipped-absolute(45px, $top-row-y, 45px);
         }
 
         .destination.final {
-            position: absolute;
-            left: 100px;
-            top: 4px;
-            width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
+            // Main destination text lane.
+            // This is intentionally wider than time columns because city names vary in length.
+            @include clipped-absolute(100px, $top-row-y, 190px);
         }
 
         .leaving.estimated {
-            position: absolute;
-            left: 300px;
-            top: 4px;
-            white-space: nowrap;
-            overflow: hidden;
+            // Right-most live estimate.
+            // No explicit width here so status text can use natural content width.
+            @include clipped-absolute(300px, $top-row-y);
         }
 
         &.show {
@@ -89,7 +119,7 @@ body {
             .leaving.scheduled,
             .destination.final,
             .leaving.estimated {
-                animation: show-following-train-scroll 10s linear forwards;
+                animation: show-following-train-scroll $anim-duration $anim-easing forwards;
             }
         }
 
@@ -99,7 +129,7 @@ body {
             h3.calling-at {
                 position: absolute;
                 left: 14px;
-                top: calc(1em + 8px);
+                top: $calling-row-y;
 
                 &:after {
                     content: ": ";
@@ -108,18 +138,15 @@ body {
             }
 
             ol.calling-at {
-                position: absolute;
-                left: 100px;
-                top: calc(1em + 8px);
-                width: calc(100% - 104px);
-                overflow: hidden;
-                white-space: nowrap;
-                display: inline-block;
+                // Scrolling stop list viewport.
+                // Positioned under the top line and constrained to the available lane
+                // so horizontal animation stays inside the board frame.
+                @include clipped-absolute(100px, $calling-row-y, calc(100% - 104px), inline-block);
 
                 li {
                     position: relative;
                     display: inline-block;
-                    animation: calling-at-scroll 10s linear infinite;
+                    animation: calling-at-scroll $anim-duration $anim-easing infinite;
 
                     &:not(:last-child) {
                         &:after {
@@ -154,23 +181,21 @@ body {
     }
 
     10% {
-        top: calc(2em + 14px);
+        top: $following-row-y;
         opacity: 1;
     }
 
     90% {
-        top: calc(2em + 14px);
+        top: $following-row-y;
         opacity: 1;
     }
-    95% {
-        top: calc(2em + 14px);
-        opacity: 0;
-    }
+
     100% {
-        top: calc(2em + 14px);
+        top: $following-row-y;
         opacity: 0;
     }
 }
+
 @keyframes calling-at-scroll {
     0% {
         left: 0;
@@ -181,17 +206,22 @@ body {
     }
 
     80% {
-        left: -90px;
+        left: $calling-scroll-distance;
     }
 
     100% {
-        left: -90px;
+        left: $calling-scroll-distance;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .board .train ol.calling-at {
-        animation: none;
-        transform: translateX(0);
+    .board .train {
+        ol.calling-at,
+        .ordinance,
+        .leaving.scheduled,
+        .destination.final,
+        .leaving.estimated {
+            animation: none;
+        }
     }
 }
