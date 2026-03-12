@@ -64,10 +64,24 @@
 		});
 	}
 
+	function debounce(fn, waitMs) {
+		var timeoutId;
+		return function () {
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+			}
+
+			timeoutId = setTimeout(function () {
+				fn();
+			}, waitMs);
+		};
+	}
+
 	document.addEventListener('DOMContentLoaded', function () {
 		measureAllScrollableElements();
+		var debouncedMeasureAllScrollableElements = debounce(measureAllScrollableElements, 300);
 
-		window.addEventListener('resize', measureAllScrollableElements);
+		window.addEventListener('resize', debouncedMeasureAllScrollableElements);
 
 		if (typeof ResizeObserver !== 'undefined') {
 			var observer = new ResizeObserver(function () {

@@ -18,6 +18,7 @@ body {
     padding: 8px 16px;
     margin: 20px;
     overflow: hidden;
+    transition: width 0.3s ease;
 
     * {
         font-family: "UkPIDS", sans-serif;
