@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "Modern National Rail PIS Small";
-    src: url("../font/modern-national-rail-pis-small.ttf") format("truetype");
+    font-family: "UkPIDS";
+    src: url("../font/UkPIDS.ttf") format("truetype");
     font-display: swap;
 }
 
@@ -19,9 +19,10 @@ body {
     overflow: hidden;
 
     * {
-        font-family: "Modern National Rail PIS Small", sans-serif;
+        font-family: "UkPIDS", sans-serif;
         color: orange;
-        font-size: 16px;
+        font-size: 10px;
+        line-height: 12px;
         font-weight: normal;
         padding: 0px;
         margin: 0px;
@@ -38,9 +39,6 @@ body {
         grid-template-columns: auto auto 1fr auto;
         grid-template-rows: auto auto;
         gap: 4px;
-        &.four-rows{
-            grid-template-rows: auto auto auto;
-        }
 
         .train{
             grid-template-columns: subgrid;
