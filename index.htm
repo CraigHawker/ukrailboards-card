@@ -12,221 +12,157 @@
         <header>
             <h1>
                 <span class="prefix">Departures from</span>
-                <span class="location">Wellingborough</span><span class="location platform prefix">, platform 4</span>
-                <span class="prefix">on</span>
-                <time class="current date" datetime="2026-03-11">11 Mar 2026</time>
+                <span class="location can-scroll">Wellingborough</span><span class="location platform prefix">, platform 4</span>
             </h1>
         </header>
-        <ol aria-label="Train departures">
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article>
-                    <h2>
-                        <span class="prefix ordinance">1st</span>
-                        <span class="prefix">Service to</span>
-                        <span class="location destination final" itemprop="arrivalStation">Corby</span>
-                        <time class="leaving scheduled" datetime="2026-03-11T08:05:00">08:05</time>
-                    </h2>
-                    <p>
-                        <span class="prefix">Departs:</span>
-                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T08:05:00">08:05</time>
-                        <span class="status" aria-label="Service status">On time</span>
-                    </p>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop">Kettering</span>
-                            <time class="estimated" datetime="2026-03-11T08:13:00">08:13</time>
-                        </li>
-                        <li>
-                            <span class="location stop" itemprop="arrivalStation">Corby</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:22:00">08:22</time>
-                        </li>
-                    </ol>
-                </article>
+        <ol class="trains">
+            <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:00:00" data-status="On time" data-isEstimated="true" data-isCancelled="false">
+                <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T08:00:00">08:00</time>
+                <span class="prefix">service from</span>
+                <span class="location can-scroll" itemprop="departureStation">Wellingborough</span>
+                <span class="prefix">to</span>
+                <span class="location destination final can-scroll" itemprop="arrivalStation">Corby</span>
+                <h3 class="calling-at">Calling at</h3>
+                <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <li>
+                        <span class="location stop can-scroll">Kettering</span>
+                        <time class="estimated" datetime="2026-03-11T08:13:00">08:13</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll" itemprop="arrivalStation">Corby</span>
+                        <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:22:00">08:22</time>
+                    </li>
+                </ol>
             </li>
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article>
-                    <h2>
-                        <span class="prefix ordinance">2nd</span>
-                        <span class="prefix">Service to</span>
-                        <span class="location destination final" itemprop="arrivalStation">Corby</span>
-                        <time class="leaving scheduled" datetime="2026-03-11T08:35:00">08:35</time>
-                    </h2>
-                    <p>
-                        <span class="prefix">Departs:</span>
-                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T08:35:00">08:35</time>
-                        <span class="status" aria-label="Service status">On time</span>
-                    </p>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop">Kettering</span>
-                            <time class="estimated" datetime="2026-03-11T08:43:00">08:43</time>
-                        </li>
-                        <li>
-                            <span class="location stop" itemprop="arrivalStation">Corby</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:52:00">08:52</time>
-                        </li>
-                    </ol>
-                </article>
+            <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:10:00" data-status="Est: 08:40" data-isEstimated="true" data-isCancelled="false">
+                <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T08:30:00">08:30</time>
+                <span class="prefix">service from</span>
+                <span class="location can-scroll" itemprop="departureStation">Wellingborough</span>
+                <span class="prefix">to</span>
+                <span class="location destination final can-scroll" aria-label="Destination" itemprop="arrivalStation">Corby</span>
+                <h3 class="calling-at">Calling at</h3>
+                <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <li>
+                        <span class="location stop can-scroll">Kettering</span>
+                        <time class="estimated" datetime="2026-03-11T08:33:00">08:33</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll" itemprop="arrivalStation">Corby</span>
+                        <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:52:00">08:52</time>
+                    </li>
+                </ol>
             </li>
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article>
-                    <h2>
-                        <span class="prefix ordinance">3rd</span>
-                        <span class="prefix">Service to</span>
-                        <span class="location destination final" itemprop="arrivalStation">Corby</span>
-                        <time class="leaving scheduled" datetime="2026-03-11T09:05:00">09:05</time>
-                    </h2>
-                    <p>
-                        <span class="prefix">Departs:</span>
-                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T09:05:00">09:05</time>
-                        <span class="status" aria-label="Service status">On time</span>
-                    </p>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop">Kettering</span>
-                            <time class="estimated" datetime="2026-03-11T09:13:00">09:13</time>
-                        </li>
-                        <li>
-                            <span class="location stop" itemprop="arrivalStation">Corby</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:22:00">09:22</time>
-                        </li>
-                    </ol>
-                </article>
+            <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:10:00" data-status="Cancelled" data-isEstimated="true" data-isCancelled="true">
+                <time itemprop="departureTime" class="departure" datetime="2026-03-11T09:10:00">09:10</time>
+                <span class="prefix">service from</span>
+                <span class="location can-scroll" itemprop="departureStation">Wellingborough</span>
+                <span class="prefix">to</span>
+                <span class="location destination final can-scroll" itemprop="arrivalStation">Corby</span>
+                <h3 class="calling-at">Calling at</h3>
+                <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <li>
+                        <span class="location stop can-scroll">Kettering</span>
+                        <time class="estimated" datetime="2026-03-11T09:13:00">09:13</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll" itemprop="arrivalStation">Corby</span>
+                        <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:22:00">09:22</time>
+                    </li>
+                </ol>
             </li>
         </ol>
-        <footer>
-            <p>
-                <span class="prefix">Current time:</span>
-                <time class="current time" datetime="2026-03-11T07:55:00">07:55</time>
-            </p>
-        </footer>
     </section>
-
 
     <section class="board" data-location-city="London St Pancras International" data-location-platform="1">
         <header>
             <h1>
                 <span class="prefix">Departures from</span>
-                <span class="location">Wellingborough</span><span class="location platform prefix">, platform 4</span>
-                <span class="prefix">on</span>
-                <time class="current date" datetime="2026-03-11">11 Mar 2026</time>
+                <span class="location can-scroll">Wellingborough</span><span class="location platform prefix">, platform 4</span>
             </h1>
         </header>
-        <ol aria-label="Train departures">
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article>
-                    <h2>
-                        <span class="prefix ordinance">1st</span>
-                        <span class="prefix">Service to</span>
-                        <span class="location destination final" itemprop="arrivalStation">London St Pancras International</span>
-                        <time class="leaving scheduled" datetime="2026-03-11T08:00:00">08:00</time>
-                    </h2>
-                    <p>
-                        <span class="prefix">Departs:</span>
-                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T08:00:00">08:00</time>
-                        <span class="status" aria-label="Service status">On time</span>
-                    </p>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop">Bedford</span>
-                            <time class="estimated" datetime="2026-03-11T08:14:00">08:14</time>
-                        </li>
-                        <li>
-                            <span class="location stop">Luton</span>
-                            <time class="estimated" datetime="2026-03-11T08:31:00">08:31</time>
-                        </li>
-                        <li>
-                            <span class="location stop">Luton Airport Parkway</span>
-                            <time class="estimated" datetime="2026-03-11T08:34:00">08:34</time>
-                        </li>
-                        <li>
-                            <span class="location stop" itemprop="arrivalStation">London St Pancras</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:58:00">08:58</time>
-                        </li>
-                    </ol>
-                </article>
+        <ol class="trains">
+            <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:00:00" data-status="On time" data-isEstimated="true" data-isCancelled="false">
+                <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T08:00:00">08:00</time>
+                <span class="prefix">service from</span>
+                <span class="location can-scroll" itemprop="departureStation">Wellingborough</span>
+                <span class="prefix">to</span>
+                <span class="location destination final can-scroll" itemprop="arrivalStation">London St Pancras International</span>
+                <h3 class="calling-at">Calling at</h3>
+                <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <li>
+                        <span class="location stop">Bedford</span>
+                        <time class="estimated" datetime="2026-03-11T08:14:00">08:14</time>
+                    </li>
+                    <li>
+                        <span class="location stop">Luton</span>
+                        <time class="estimated" datetime="2026-03-11T08:31:00">08:31</time>
+                    </li>
+                    <li>
+                        <span class="location stop">Luton Airport Parkway</span>
+                        <time class="estimated" datetime="2026-03-11T08:34:00">08:34</time>
+                    </li>
+                    <li>
+                        <span class="location stop" itemprop="arrivalStation">London St Pancras</span>
+                        <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:58:00">08:58</time>
+                    </li>
+                </ol>
             </li>
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article>
-                    <h2>
-                        <span class="prefix ordinance">2nd</span>
-                        <span class="prefix">Service to</span>
-                        <span class="location destination final" itemprop="arrivalStation">London St Pancras International</span>
-                        <time class="leaving scheduled" datetime="2026-03-11T08:30:00">08:30</time>
-                    </h2>
-                    <p>
-                        <span class="prefix">Departs:</span>
-                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T08:30:00">08:30</time>
-                        <span class="status" aria-label="Service status">On time</span>
-                    </p>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop">Bedford</span>
-                            <time class="estimated" datetime="2026-03-11T08:44:00">08:44</time>
-                        </li>
-                        <li>
-                            <span class="location stop">Luton</span>
-                            <time class="estimated" datetime="2026-03-11T09:01:00">09:01</time>
-                        </li>
-                        <li>
-                            <span class="location stop">Luton Airport Parkway</span>
-                            <time class="estimated" datetime="2026-03-11T09:04:00">09:04</time>
-                        </li>
-                        <li>
-                            <span class="location stop" itemprop="arrivalStation">London St Pancras</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:28:00">09:28</time>
-                        </li>
-                    </ol>
-                </article>
+            <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:00:00" data-status="On time" data-isEstimated="true" data-isCancelled="false">
+                <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T08:30:00">08:30</time>
+                <span class="prefix">service from</span>
+                <span class="location can-scroll" itemprop="departureStation">Wellingborough</span>
+                <span class="prefix">to</span>
+                <span class="location destination final can-scroll" itemprop="arrivalStation">London St Pancras International</span>
+                <h3 class="calling-at">Calling at</h3>
+                <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <li>
+                        <span class="location stop can-scroll">Bedford</span>
+                        <time class="estimated" datetime="2026-03-11T08:44:00">08:44</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll">Luton</span>
+                        <time class="estimated" datetime="2026-03-11T09:01:00">09:01</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll">Luton Airport Parkway</span>
+                        <time class="estimated" datetime="2026-03-11T09:04:00">09:04</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll" itemprop="arrivalStation">London St Pancras</span>
+                        <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:28:00">09:28</time>
+                    </li>
+                </ol>
             </li>
-            <li class="train" itemscope itemtype="https://schema.org/Trip">
-                <article>
-                    <h2>
-                        <span class="prefix ordinance">3rd</span>
-                        <span class="prefix">Service to</span>
-                        <span class="location destination final" itemprop="arrivalStation">London St Pancras International</span>
-                        <time class="leaving scheduled" datetime="2026-03-11T09:00:00">09:00</time>
-                    </h2>
-                    <p>
-                        <span class="prefix">Departs:</span>
-                        <time class="leaving estimated" itemprop="departureTime" datetime="2026-03-11T09:00:00">09:00</time>
-                        <span class="status" aria-label="Service status">On time</span>
-                    </p>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop">Bedford</span>
-                            <time class="estimated" datetime="2026-03-11T09:14:00">09:14</time>
-                        </li>
-                        <li>
-                            <span class="location stop">Luton</span>
-                            <time class="estimated" datetime="2026-03-11T09:31:00">09:31</time>
-                        </li>
-                        <li>
-                            <span class="location stop">Luton Airport Parkway</span>
-                            <time class="estimated" datetime="2026-03-11T09:34:00">09:34</time>
-                        </li>
-                        <li>
-                            <span class="location stop" itemprop="arrivalStation">London St Pancras</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:58:00">09:58</time>
-                        </li>
-                    </ol>
-                </article>
+            <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:00:00" data-status="On time" data-isEstimated="true" data-isCancelled="false">
+                <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T09:00:00">09:00</time>
+                <span class="prefix">service from</span>
+                <span class="location can-scroll" itemprop="departureStation">Wellingborough</span>
+                <span class="prefix">to</span>
+                <span class="location destination final can-scroll" itemprop="arrivalStation">London St Pancras International</span>
+                <h3 class="calling-at">Calling at</h3>
+                <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <li>
+                        <span class="location stop can-scroll">Bedford</span>
+                        <time class="estimated" datetime="2026-03-11T09:14:00">09:14</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll">Luton</span>
+                        <time class="estimated" datetime="2026-03-11T09:31:00">09:31</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll">Luton Airport Parkway</span>
+                        <time class="estimated" datetime="2026-03-11T09:34:00">09:34</time>
+                    </li>
+                    <li>
+                        <span class="location stop can-scroll" itemprop="arrivalStation">London St Pancras</span>
+                        <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:58:00">09:58</time>
+                    </li>
+                </ol>
             </li>
         </ol>
-        <footer>
-            <p>
-                <span class="prefix">Current time:</span>
-                <time class="current time" datetime="2026-03-11T07:55:00">07:55</time>
-            </p>
-        </footer>
     </section>
 
     <script src="scripts/next-train.js"></script>
+    <script src="scripts/scrolling.js"></script>
 </body>
 </html>

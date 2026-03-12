@@ -14,6 +14,7 @@
                 var train = new Train(el);
                 that.trains.push(train);
             });
+            console.log('Found', that.trains.length, 'trains on this board');
             that.nextTrain();
         }
         that.nextTrain = function(){
@@ -24,6 +25,7 @@
 
             // Increment the train index, and if it exceeds the number of trains, reset it to 0.
             that._trainIndex = (++that._trainIndex) % that.trains.length;
+            console.log('Showing train index', that._trainIndex);
 
             // Add the "show" class to the current train.
             that.trains[that._trainIndex].show();
