@@ -1,5 +1,16 @@
 (function(){
     var boards = [];
+    // Each plugin gets called for every board on each ticker cycle.
+    var renderPlugins = [];
+
+    // Register layout plugins once at startup.
+    registerRenderPlugin(createSingleTrainRenderPlugin());
+    registerRenderPlugin(createOverheadPlatformRenderPlugin());
+
+    function registerRenderPlugin(renderPlugin){
+        renderPlugins.push(renderPlugin);
+    }
+
     function ensureNumberBetweenMaxAndMin(value, min, max){
         var parsed = parseInt(value, 10);
         if(isNaN(parsed)) return min;
@@ -10,97 +21,173 @@
     function Board(el){
         var that = this;
         that.element = el;
-        that._trainIndex = -1;
-        that.fixedRows = ensureNumberBetweenMaxAndMin(that.element.getAttribute('data-table-fixed-rows'), 3, 7);
-        that.baseStaticTrainCount = Math.max(1, that.fixedRows - 2);
-        that.staticTrainCount = that.baseStaticTrainCount;
+        // Plugin state is namespaced by plugin name so plugins stay isolated.
+        that.renderPluginState = {};
+        that.getRenderPluginState = function(pluginName){
+            if(!that.renderPluginState[pluginName]){
+                that.renderPluginState[pluginName] = {};
+            }
 
-        function setTrainStructure(){
-            var overviewSlot = that.fixedRows - 1;
-
-            that.element.setAttribute('data-overview-slot', overviewSlot);
-            that.element.setAttribute('data-static-train-count', that.staticTrainCount);
-
-            that.allTrains.forEach(function(train, index){
-                var role = 'rotating';
-
-                // First train is the next service and includes calling data.
-                if(index === 0){
-                    role = 'next-train';
-                } else if(index < that.staticTrainCount){
-                    // Static services stay in fixed rows above the rotating overview row.
-                    role = 'static';
-                }
-
-                train.setRole(role);
-                train.clearRotationState();
-            });
+            return that.renderPluginState[pluginName];
         }
-
-        function populateTrains(){
-            // Populate the board with the trains.
+        that.collectTrains = function(){
             that.allTrains = [];
             var trains = that.element.querySelectorAll('.train');
             trains.forEach(function(el){
                 that.allTrains.push(new Train(el));
             });
-
-            // Only rotate when there are at least 2 rotating candidates.
-            that.staticTrainCount = Math.min(that.baseStaticTrainCount, that.allTrains.length);
-            if((that.allTrains.length - that.staticTrainCount) <= 1){
-                that.staticTrainCount = that.allTrains.length;
-            }
-
-            setTrainStructure();
-
-            that.trains = that.allTrains.slice(that.staticTrainCount);
-            console.log('Found', that.allTrains.length, 'trains on this board. Rotating', that.trains.length, 'train(s).');
-            that.nextTrain();
         }
-        that.nextTrain = function(){
-            // Remove any previous rotation marker before showing the next train.
-            that.allTrains.forEach(function(train){
-                train.hide();
+        that.render = function(){
+            // Re-read trains each tick so plugins react to dynamic DOM/layout changes.
+            that.collectTrains();
+            renderPlugins.forEach(function(renderPlugin){
+                renderPlugin.render(that);
             });
-
-            if(that.trains.length === 0){
-                return;
-            }
-
-            // Increment the train index, and if it exceeds the number of trains, reset it to 0.
-            that._trainIndex = (++that._trainIndex) % that.trains.length;
-            console.log('Showing train index', that._trainIndex);
-
-            // Mark the current rotating train as visible.
-            that.trains[that._trainIndex].show();
         }
-        populateTrains();
+        that.render();
         return that;
     }
     function Train(el){
         var that = this;
         that.element = el;
-        that.setRole = function(role){
-            that.element.setAttribute('data-train-role', role);
+        that.setAttribute = function(attributeName, value){
+            that.element.setAttribute(attributeName, value);
         }
-        that.clearRotationState = function(){
-            that.element.removeAttribute('data-train-state');
-        }
-        that.hide = function(){
-            that.clearRotationState();
-        }
-        that.show = function(){
-            that.element.setAttribute('data-train-state', 'current');
+        that.removeAttribute = function(attributeName){
+            that.element.removeAttribute(attributeName);
         }
         return that;
+    }
+    function createOverheadPlatformRenderPlugin(){
+        var pluginName = 'overhead-platform';
+
+        function getPluginState(board){
+            // Persist rotation index per board for this plugin only.
+            var pluginState = board.getRenderPluginState(pluginName);
+
+            if(typeof pluginState.trainIndex !== 'number'){
+                pluginState.trainIndex = -1;
+            }
+
+            return pluginState;
+        }
+
+        function clearCurrentTrainState(train){
+            train.removeAttribute('data-overhead-platform-train-state');
+        }
+
+        function setTrainStructure(board, pluginState){
+            var overviewRow = pluginState.fixedRows - 1;
+
+            board.element.setAttribute('data-overhead-platform-overview-row', overviewRow);
+            board.element.setAttribute('data-overhead-platform-static-train-count', pluginState.staticTrainCount);
+
+            board.allTrains.forEach(function(train, index){
+                var role = 'rotating';
+
+                if(index === 0){
+                    role = 'next-train';
+                } else if(index < pluginState.staticTrainCount){
+                    role = 'static';
+                }
+
+                train.setAttribute('data-overhead-platform-train-role', role);
+                clearCurrentTrainState(train);
+            });
+        }
+
+        function populateTrains(board, pluginState){
+            pluginState.fixedRows = ensureNumberBetweenMaxAndMin(board.element.getAttribute('data-overhead-platform-fixed-rows'), 3, 7);
+            pluginState.baseStaticTrainCount = Math.max(1, pluginState.fixedRows - 2);
+            pluginState.staticTrainCount = Math.min(pluginState.baseStaticTrainCount, board.allTrains.length);
+
+            if((board.allTrains.length - pluginState.staticTrainCount) <= 1){
+                pluginState.staticTrainCount = board.allTrains.length;
+            }
+
+            setTrainStructure(board, pluginState);
+
+            pluginState.rotatingTrains = board.allTrains.slice(pluginState.staticTrainCount);
+            console.log('Found', board.allTrains.length, 'trains on this board for overhead platform. Rotating', pluginState.rotatingTrains.length, 'train(s).');
+        }
+
+        function showNextTrain(board, pluginState){
+            board.allTrains.forEach(function(train){
+                clearCurrentTrainState(train);
+            });
+
+            if(pluginState.rotatingTrains.length === 0){
+                return;
+            }
+
+            pluginState.trainIndex = (++pluginState.trainIndex) % pluginState.rotatingTrains.length;
+            console.log('Showing overhead platform train index', pluginState.trainIndex);
+
+            pluginState.rotatingTrains[pluginState.trainIndex].setAttribute('data-overhead-platform-train-state', 'current');
+        }
+
+        return {
+            name: pluginName,
+            render: function(board){
+                // Calculate the overhead structure and then advance rotating services.
+                var pluginState = getPluginState(board);
+
+                populateTrains(board, pluginState);
+                showNextTrain(board, pluginState);
+            }
+        };
+    }
+    function createSingleTrainRenderPlugin(){
+        var pluginName = 'single-train';
+
+        function getPluginState(board){
+            // Persist rotation index per board for this plugin only.
+            var pluginState = board.getRenderPluginState(pluginName);
+
+            if(typeof pluginState.trainIndex !== 'number'){
+                pluginState.trainIndex = -1;
+            }
+
+            return pluginState;
+        }
+
+        function clearCurrentTrainState(train){
+            train.removeAttribute('data-single-train-state');
+        }
+
+        function showNextTrain(board, pluginState){
+            board.allTrains.forEach(function(train){
+                clearCurrentTrainState(train);
+            });
+
+            if(board.allTrains.length === 0){
+                return;
+            }
+
+            pluginState.trainIndex = (++pluginState.trainIndex) % board.allTrains.length;
+            console.log('Showing single train index', pluginState.trainIndex);
+
+            board.allTrains[pluginState.trainIndex].setAttribute('data-single-train-state', 'current');
+        }
+
+        return {
+            name: pluginName,
+            render: function(board){
+                // Show exactly one train and move to the next on each tick.
+                var pluginState = getPluginState(board);
+
+                showNextTrain(board, pluginState);
+            }
+        };
     }
     document.querySelectorAll('.board').forEach(function(el){
         var board = new Board(el);
         boards.push(board);
     });
+    // Shared ticker: every plugin re-renders every board each cycle.
     window.setInterval(function(){
         boards.forEach(function(board){
-            board.nextTrain();
+            board.render();
         });
     }, 10 * 1000);
 })();

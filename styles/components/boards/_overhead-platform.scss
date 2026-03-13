@@ -59,7 +59,7 @@
                     display: inline-block;
                     white-space-collapse: collapse;
                     position: relative;
-                    animation: calling-at-scroll var(--calling-at-scroll-duration, 10s) linear 0s infinite forwards;
+                    animation: overhead-platform-calling-at-scroll var(--overhead-platform-calling-at-scroll-duration, 10s) linear 0s infinite forwards;
                     animation-fill-mode: both;
 
                     &:not(:last-child) {
@@ -85,7 +85,7 @@
                 }
             }
 
-            &[data-train-role="next-train"] {
+            &[data-overhead-platform-train-role="next-train"] {
                 grid-row: 1;
                 display: grid;
 
@@ -126,7 +126,7 @@
                 }
             }
 
-            &[data-train-role="static"] {
+            &[data-overhead-platform-train-role="static"] {
                 display: grid;
 
                 &:before {
@@ -135,10 +135,10 @@
                 }
             }
 
-            &[data-train-state="current"] {
+            &[data-overhead-platform-train-state="current"] {
                 display: grid;
                 position: relative;
-                animation: show-following-train-scroll 10s linear forwards;
+                animation: overhead-platform-show-following-train-scroll 10s linear forwards;
 
                 &:before {
                     display: block;
@@ -149,7 +149,7 @@
 
         // Static trains always occupy slots above the rotating overview slot.
         @for $position from 2 through 7 {
-            .train[data-train-role="static"]:nth-child(#{$position}) {
+            .train[data-overhead-platform-train-role="static"]:nth-child(#{$position}) {
                 grid-row: $position;
             }
         }
@@ -158,12 +158,12 @@
 
     // Rotating train uses the board's configured overview slot.
     @for $slot from 2 through 6 {
-        &[data-overview-slot="#{$slot}"] .trains .train[data-train-state="current"] {
+        &[data-overhead-platform-overview-row="#{$slot}"] .trains .train[data-overhead-platform-train-state="current"] {
             grid-row: $slot;
         }
     }
 
-    @keyframes show-following-train-scroll {
+    @keyframes overhead-platform-show-following-train-scroll {
         0% {
             top: 2em;
             opacity: 1;
@@ -190,7 +190,7 @@
         }
     }
 
-    @keyframes calling-at-scroll {
+    @keyframes overhead-platform-calling-at-scroll {
         0% {
             left: 0;
             opacity: 0;

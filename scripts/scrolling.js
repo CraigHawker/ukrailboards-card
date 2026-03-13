@@ -13,7 +13,7 @@
 
 		el.style.setProperty('--available-width', parseInt(availableWidth) + 'px');
 		el.style.setProperty('--actual-width', parseInt(actualWidth) + 'px');
-		el.style.setProperty('--calling-at-scroll-duration', callingAtDurationSeconds + 's');
+		el.style.setProperty('--overhead-platform-calling-at-scroll-duration', callingAtDurationSeconds + 's');
 
 		if (actualWidth - 1 >= availableWidth) {
 			el.classList.add('scroll');
