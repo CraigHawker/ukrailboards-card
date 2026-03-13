@@ -1,7 +1,7 @@
-@use "board";
+@use "base" as boards;
 
 @mixin overhead-platform {
-    @include board.board-base;
+    @include boards.board-base;
 
     header,
     footer,
@@ -13,7 +13,7 @@
         display: grid;
         grid-template-columns: auto auto 1fr auto;
         grid-template-rows: repeat(var(--grid-rows, 2), auto);
-        gap: board.$grid-gap;
+        gap: boards.$grid-gap;
 
         .train {
             grid-template-columns: subgrid;

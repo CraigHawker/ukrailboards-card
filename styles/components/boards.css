@@ -1,0 +1,14 @@
+@keyframes text-scroll {
+  0% {
+    left: 0;
+  }
+  40% {
+    left: 0;
+  }
+  80% {
+    left: calc(var(--available-width) - var(--actual-width));
+  }
+  100% {
+    left: calc(var(--available-width) - var(--actual-width));
+  }
+}

@@ -1,7 +1,7 @@
-@use "board";
+@use "base" as boards;
 
 @mixin single-train {
-    @include board.board-base;
+    @include boards.board-base;
 
     header,
     footer,
@@ -13,7 +13,7 @@
         display: grid;
         grid-template-columns: auto auto 1fr;
         grid-template-rows: auto auto auto auto 1fr auto auto;
-        gap: board.$grid-gap;
+        gap: boards.$grid-gap;
 
         .train{
             grid-template-columns: subgrid;
@@ -28,6 +28,10 @@
                 display: block;
                 grid-column: 2;
                 grid-row: 1;
+            }
+
+            &:not(:has(.on-time)):after {
+                color: red;
             }
 
             &:before {
