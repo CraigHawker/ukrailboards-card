@@ -11,28 +11,29 @@
         var that = this;
         that.element = el;
         that._trainIndex = -1;
-        that.fixedRows = ensureNumberBetweenMaxAndMin(that.element.getAttribute('data-fixed-rows'), 3, 7);
-        that.staticTrainCount = Math.max(1, that.fixedRows - 2);
+        that.fixedRows = ensureNumberBetweenMaxAndMin(that.element.getAttribute('data-table-fixed-rows'), 3, 7);
+        that.baseStaticTrainCount = Math.max(1, that.fixedRows - 2);
+        that.staticTrainCount = that.baseStaticTrainCount;
 
-        function applyLayout(){
-            var overviewRow = that.fixedRows - 1;
-            var gridRows = Math.max(2, overviewRow);
+        function setTrainStructure(){
+            var overviewSlot = that.fixedRows - 1;
 
-            that.element.style.setProperty('--overview-row', overviewRow);
-            that.element.style.setProperty('--grid-rows', gridRows);
+            that.element.setAttribute('data-overview-slot', overviewSlot);
+            that.element.setAttribute('data-static-train-count', that.staticTrainCount);
 
             that.allTrains.forEach(function(train, index){
-                train.element.classList.remove('pinned');
-                train.element.style.removeProperty('--board-row');
+                var role = 'rotating';
 
-                // The first train is always rendered as the primary row with calling data.
-                if(index === 0) return;
-
-                // If it does not change then it is pinned.
-                if(index < that.staticTrainCount){
-                    train.element.classList.add('pinned');
-                    train.element.style.setProperty('--board-row', (index + 1));
+                // First train is the next service and includes calling data.
+                if(index === 0){
+                    role = 'next-train';
+                } else if(index < that.staticTrainCount){
+                    // Static services stay in fixed rows above the rotating overview row.
+                    role = 'static';
                 }
+
+                train.setRole(role);
+                train.clearRotationState();
             });
         }
 
@@ -44,14 +45,20 @@
                 that.allTrains.push(new Train(el));
             });
 
-            applyLayout();
+            // Only rotate when there are at least 2 rotating candidates.
+            that.staticTrainCount = Math.min(that.baseStaticTrainCount, that.allTrains.length);
+            if((that.allTrains.length - that.staticTrainCount) <= 1){
+                that.staticTrainCount = that.allTrains.length;
+            }
+
+            setTrainStructure();
 
             that.trains = that.allTrains.slice(that.staticTrainCount);
             console.log('Found', that.allTrains.length, 'trains on this board. Rotating', that.trains.length, 'train(s).');
             that.nextTrain();
         }
         that.nextTrain = function(){
-            // Remove the "show" class from all trains on this board.
+            // Remove any previous rotation marker before showing the next train.
             that.allTrains.forEach(function(train){
                 train.hide();
             });
@@ -64,7 +71,7 @@
             that._trainIndex = (++that._trainIndex) % that.trains.length;
             console.log('Showing train index', that._trainIndex);
 
-            // Add the "show" class to the current train.
+            // Mark the current rotating train as visible.
             that.trains[that._trainIndex].show();
         }
         populateTrains();
@@ -73,11 +80,17 @@
     function Train(el){
         var that = this;
         that.element = el;
+        that.setRole = function(role){
+            that.element.setAttribute('data-train-role', role);
+        }
+        that.clearRotationState = function(){
+            that.element.removeAttribute('data-train-state');
+        }
         that.hide = function(){
-            that.element.classList.remove('show');
+            that.clearRotationState();
         }
         that.show = function(){
-            that.element.classList.add('show');
+            that.element.setAttribute('data-train-state', 'current');
         }
         return that;
     }

@@ -12,7 +12,6 @@
     .trains {
         display: grid;
         grid-template-columns: auto auto 1fr auto;
-        grid-template-rows: repeat(var(--grid-rows, 2), auto);
         gap: boards.$grid-gap;
         margin: 8px 16px;
 
@@ -86,7 +85,7 @@
                 }
             }
 
-            &:nth-child(1) {
+            &[data-train-role="next-train"] {
                 grid-row: 1;
                 display: grid;
 
@@ -127,8 +126,7 @@
                 }
             }
 
-            &.pinned {
-                grid-row: var(--board-row);
+            &[data-train-role="static"] {
                 display: grid;
 
                 &:before {
@@ -137,8 +135,7 @@
                 }
             }
 
-            &.show {
-                grid-row: var(--overview-row, 2);
+            &[data-train-state="current"] {
                 display: grid;
                 position: relative;
                 animation: show-following-train-scroll 10s linear forwards;
@@ -148,6 +145,21 @@
                     grid-column: 1;
                 }
             }
+        }
+
+        // Static trains always occupy slots above the rotating overview slot.
+        @for $position from 2 through 7 {
+            .train[data-train-role="static"]:nth-child(#{$position}) {
+                grid-row: $position;
+            }
+        }
+
+    }
+
+    // Rotating train uses the board's configured overview slot.
+    @for $slot from 2 through 6 {
+        &[data-overview-slot="#{$slot}"] .trains .train[data-train-state="current"] {
+            grid-row: $slot;
         }
     }
 

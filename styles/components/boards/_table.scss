@@ -2,8 +2,6 @@
 
 @mixin table(){
     @include boards.board-base;
-    min-width: 500px;
-    padding: 0px;
 
     header, footer, .prefix{
         display: none;
