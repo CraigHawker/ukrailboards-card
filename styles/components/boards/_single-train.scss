@@ -15,8 +15,6 @@
         grid-template-rows: auto;
         gap: boards.$grid-gap;
         margin: 8px 16px;
-        min-height: 250px;
-        max-height: 350px;
 
         .train{
             grid-template-columns: subgrid;
@@ -83,6 +81,9 @@
                     grid-row: 5;
                     grid-column: 1 / -1;
                     display: block;
+                    min-height: 200px;
+                    max-height: 300px;
+                    overflow-y: auto;
                     li{
                         display: block;
                         font-size: 0.8em;
