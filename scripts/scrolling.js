@@ -6,7 +6,7 @@
 		el.style.setProperty('--available-width', parseInt(availableWidth) + 'px');
 		el.style.setProperty('--actual-width', parseInt(actualWidth) + 'px');
 
-		if (actualWidth > availableWidth) {
+		if (actualWidth - 1 >= availableWidth) {
 			el.classList.add('scroll');
 			return;
 		}

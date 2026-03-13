@@ -1,5 +1,6 @@
 @use "components/board";
 @use "components/overhead-platform";
+@use "components/single-train";
 
 @font-face {
     font-family: "UkPIDS";
@@ -9,16 +10,29 @@
 
 body {
     margin: 0;
+    background-color: #AAA;
     padding: 1em;
-    background-color: #000;
-    max-width: 800px;
+    font-family: "UkPIDS";
+    h1{
+        font-size: 1.2em;
+    }
 }
 
 .board {
     @include board.board-base;
-}
 
+    // Explicit style defined.
+    &.overhead-platform {
+        @include overhead-platform.overhead-platform;
+    }
 
-.board.overhead-platform {
-    @include overhead-platform.overhead-platform;
+    // Responsive the style reacts to size.
+    &.responsive {
+        @container board (max-width: 500px){
+            @include single-train.single-train;
+        }
+        @container board (min-width: 500px){
+            @include overhead-platform.overhead-platform;
+        }
+    }
 }

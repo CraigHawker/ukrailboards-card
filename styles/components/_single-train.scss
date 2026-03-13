@@ -1,0 +1,98 @@
+@use "board";
+
+@mixin single-train {
+    @include board.board-base;
+
+    header,
+    footer,
+    .prefix {
+        display: none;
+    }
+
+    .trains {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        grid-template-rows: auto auto auto auto 1fr auto auto;
+        gap: board.$grid-gap;
+
+        .train{
+            grid-template-columns: subgrid;
+            display: grid;
+            gap: 4px 8px;
+            opacity: 1;
+            grid-column: 1 / -1;
+            display: none;
+
+            &:after {
+                content: attr(data-status);
+                display: block;
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            &:before {
+                content: attr(data-operator);
+                display: block;
+                grid-column: 1 / -1;
+                grid-row: 6;
+            }
+
+            time.departure {
+                grid-row: 1;
+                grid-column: 1;
+            }
+            .platform{
+                text-align: right;
+                grid-row: 1;
+                grid-column: 3;
+                .prefix{ display: inline-block;}
+            }
+
+            .destination.final {
+                grid-row: 2;
+                grid-column: 1 / -1;
+            }
+            [itemprop="departureStation"], .calling-at {
+                display: none;
+            }
+
+            &:nth-child(1) {
+                display: grid;
+
+                h3.calling-at {
+                    grid-row: 4;
+                    grid-column: 1 / -1;
+                    display: block;
+                    font-size: 0.8em;
+                    &:after{
+                        content: ": ";
+                        display: inline-block;
+                    }
+                }
+
+                ol.calling-at {
+                    grid-row: 5;
+                    grid-column: 1 / -1;
+                    display: block;
+                    li{
+                        display: block;
+                        font-size: 0.8em;
+
+                        .estimated {
+                            &:before {
+                                content: " (";
+                                display: inline-block;
+                            }
+
+                            &:after {
+                                content: ")";
+                                display: inline-block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

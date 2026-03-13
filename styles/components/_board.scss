@@ -1,18 +1,53 @@
+$grid-gap: 4px;
+
 @mixin board-base {
+    border: 10px solid black;
+    border-radius: 4px;
     background-color: #222;
-    min-width: 350px;
     padding: 8px 16px;
     margin: 20px;
     overflow: hidden;
     transition: width 0.3s ease;
+    container-type: inline-size;
+    container-name: board;
+    font-family: "UkPIDS", sans-serif;
+    color: orange;
+    font-size: 14px;
+    line-height: 1.3em;
 
     * {
-        font-family: "UkPIDS", sans-serif;
-        color: orange;
-        font-size: 14px;
-        line-height: 1.3em;
-        font-weight: normal;
         padding: 0px;
         margin: 0px;
+    font-weight: normal;
+    }
+
+    span.can-scroll {
+        overflow: hidden;
+        white-space: nowrap;
+
+        &.scroll > .scroller {
+            position: relative;
+            display: inline-block;
+            animation: text-scroll 5s linear infinite alternate;
+        }
+    }
+}
+
+
+@keyframes text-scroll {
+    0% {
+        left: 0;
+    }
+
+    40% {
+        left: 0;
+    }
+
+    80% {
+        left: calc((var(--available-width) - var(--actual-width)));
+    }
+
+    100% {
+        left: calc((var(--available-width) - var(--actual-width)));
     }
 }

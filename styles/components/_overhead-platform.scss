@@ -13,7 +13,7 @@
         display: grid;
         grid-template-columns: auto auto 1fr auto;
         grid-template-rows: repeat(var(--grid-rows, 2), auto);
-        gap: 4px;
+        gap: board.$grid-gap;
 
         .train {
             grid-template-columns: subgrid;
@@ -26,7 +26,7 @@
                 grid-column: 2;
             }
 
-            [itemprop="departureStation"] {
+            [itemprop="departureStation"], .platform {
                 display: none;
             }
 
@@ -49,17 +49,6 @@
                 display: none;
             }
 
-            span.can-scroll {
-                overflow: hidden;
-                white-space: nowrap;
-
-                &.scroll > .scroller {
-                    position: relative;
-                    display: inline-block;
-                    animation: text-scroll 5s linear infinite alternate;
-                }
-            }
-
             ol.calling-at {
                 grid-column: 3 / 5;
                 overflow: hidden;
@@ -70,7 +59,8 @@
                     display: inline-block;
                     white-space-collapse: collapse;
                     position: relative;
-                    animation: calling-at-scroll 10s linear infinite;
+                    animation: calling-at-scroll 10s linear 0s infinite forwards;
+                    animation-fill-mode: both;
 
                     &:not(:last-child) {
                         &:after {
@@ -187,38 +177,33 @@
         }
     }
 
-    @keyframes text-scroll {
-        0% {
-            left: 0;
-        }
-
-        40% {
-            left: 0;
-        }
-
-        80% {
-            left: calc((var(--available-width) - var(--actual-width)));
-        }
-
-        100% {
-            left: calc((var(--available-width) - var(--actual-width)));
-        }
-    }
-
     @keyframes calling-at-scroll {
         0% {
             left: 0;
+            opacity: 0;
+        }
+        5%{
+            left: 0;
+            opacity: 1;
         }
 
         20% {
             left: 0;
+            opacity: 1;
         }
 
         80% {
+            opacity: 1;
+            left: calc((var(--available-width) - var(--actual-width)));
+        }
+
+        95% {
+            opacity: 1;
             left: calc((var(--available-width) - var(--actual-width)));
         }
 
         100% {
+            opacity: 0;
             left: calc((var(--available-width) - var(--actual-width)));
         }
     }
