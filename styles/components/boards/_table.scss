@@ -36,10 +36,18 @@
             .status{
                 grid-column: 4;
                 display: block;
+                text-align: right;
             }
 
             &:not(:has(.on-time)).status {
                 color: red;
+            }
+            &[data-isCancelled="true"] {
+                .platform{ display: none; }
+                .status {
+                    color: red;
+                    grid-column: 3 / 5;
+                }
             }
 
             // headers

@@ -59,7 +59,7 @@
                     display: inline-block;
                     white-space-collapse: collapse;
                     position: relative;
-                    animation: calling-at-scroll 10s linear 0s infinite forwards;
+                    animation: calling-at-scroll var(--calling-at-scroll-duration, 10s) linear 0s infinite forwards;
                     animation-fill-mode: both;
 
                     &:not(:last-child) {
@@ -200,7 +200,7 @@
             opacity: 1;
         }
 
-        20% {
+        25% {
             left: 0;
             opacity: 1;
         }
