@@ -1,5 +1,41 @@
-@forward "boards/base";
-@forward "boards/overhead-platform";
-@forward "boards/single-train";
-@forward "boards/table";
+@use "boards/base";
+@use "boards/overhead-platform";
+@use "boards/single-train";
+@use "boards/table";
 
+
+@font-face {
+    font-family: "UkPIDS";
+    src: url("../font/UkPIDS.ttf") format("truetype");
+    font-display: swap;
+}
+
+@mixin applyBoardLayout($selector){
+    #{$selector} {
+
+        // Explicit style defined.
+        &.overhead-platform {
+            @include overhead-platform.overhead-platform;
+        }
+        &.single-train {
+            @include single-train.single-train;
+        }
+        &.table {
+            @include table.table;
+        }
+
+        // Responsive the style reacts to size.
+        &.responsive {
+            @include base.board-base;
+            @container board (max-width: 500px){
+                @include single-train.single-train;
+            }
+            @container board (min-width: 500px) and (max-width: 700px){
+                @include table.table;
+            }
+            @container board (min-width: 700px){
+                @include overhead-platform.overhead-platform;
+            }
+        }
+    }
+}

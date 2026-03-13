@@ -1,11 +1,5 @@
 @use "components/boards";
 
-@font-face {
-    font-family: "UkPIDS";
-    src: url("../font/UkPIDS.ttf") format("truetype");
-    font-display: swap;
-}
-
 body {
     margin: 0;
     background-color: #AAA;
@@ -16,30 +10,4 @@ body {
     }
 }
 
-.board {
-
-    // Explicit style defined.
-    &.overhead-platform {
-        @include boards.overhead-platform;
-    }
-    &.single-train {
-        @include boards.single-train;
-    }
-    &.table {
-        @include boards.table;
-    }
-
-    // Responsive the style reacts to size.
-    &.responsive {
-        @include boards.board-base;
-        @container board (max-width: 500px){
-            @include boards.single-train;
-        }
-        @container board (min-width: 500px) and (max-width: 700px){
-            @include boards.table;
-        }
-        @container board (min-width: 700px){
-            @include boards.overhead-platform;
-        }
-    }
-}
+@include boards.applyBoardLayout(".board");
