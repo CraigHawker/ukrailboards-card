@@ -1,18 +1,20 @@
 $grid-gap: 4px;
 
 @mixin board-base {
-    border: 10px solid black;
-    border-radius: 4px;
-    background-color: #222;
-    margin: 20px;
+    /* Theme-configurable variables (defaults are provided by the theme/root). */
+
+    border: var(--board-border-width) solid var(--board-border);
+    border-radius: var(--board-border-radius);
+    background-color: var(--board-bg);
+    margin: var(--board-margin);
     overflow: hidden;
     transition: width 0.3s ease;
     container-type: inline-size;
     container-name: board;
-    font-family: "UkPIDS", sans-serif;
-    color: orange;
-    font-size: 14px;
-    line-height: 1.3em;
+    font-family: var(--board-font);
+    color: var(--board-text);
+    font-size: var(--board-font-size, 14px);
+    line-height: var(--board-line-height, 1.3);
 
     * {
         padding: 0px;

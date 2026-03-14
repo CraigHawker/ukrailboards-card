@@ -3,17 +3,23 @@
 @mixin overhead-platform {
     @include boards.board-base;
 
-    header,
-    footer,
+    header {
+        display: var(--board-header-display);
+    }
+
+    footer {
+        display: var(--board-footer-display);
+    }
+
     .prefix {
-        display: none;
+        display: var(--board-prefix-display);
     }
 
     .trains {
         display: grid;
         grid-template-columns: auto auto 1fr auto;
-        gap: boards.$grid-gap;
-        margin: 8px 16px;
+        gap: var(--board-gap);
+        margin: var(--board-content-spacing);
 
         .train {
             grid-template-columns: subgrid;
@@ -38,7 +44,7 @@
             }
 
             &:not(:has(.on-time)):after {
-                color: red;
+                color: var(--board-cancel-color);
             }
 
             .destination.final {

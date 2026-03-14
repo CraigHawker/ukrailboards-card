@@ -1,8 +1,7 @@
-@use "components/boards";
-@use "themes/classic";
-@use "themes/london2025";
-
-:root {
+.theme-classic {
+    /* Explicit opt-in for the classic theme.
+       These match the default values baked into the board base styles, so a plain `.board` will also behave like classic.
+    */
     --board-border: black;
     --board-border-width: 10px;
     --board-border-radius: 4px;
@@ -10,29 +9,19 @@
     --board-text: orange;
     --board-font: "UkPIDS", sans-serif;
 
+    /* Theme-controlled spacing */
     --board-margin: 20px;
     --board-gap: 4px;
     --board-content-spacing: 8px 16px;
-
     --board-font-size: 14px;
     --board-line-height: 1.3;
     --board-header-border-width: 30px;
 
+    /* Theme-controlled layout visibility */
     --board-header-display: none;
     --board-footer-display: none;
     --board-prefix-display: none;
 
+    /* Theme-controlled status colors */
     --board-cancel-color: red;
 }
-
-body {
-    margin: 0;
-    background-color: #AAA;
-    padding: 1em;
-    font-family: "UkPIDS";
-    h1{
-        font-size: 1.2em;
-    }
-}
-
-@include boards.applyBoardLayout(".board");

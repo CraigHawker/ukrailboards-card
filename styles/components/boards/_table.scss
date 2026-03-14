@@ -3,18 +3,26 @@
 @mixin table(){
     @include boards.board-base;
 
-    header, footer, .prefix{
-        display: none;
+    header {
+        display: var(--board-header-display);
+    }
+
+    footer {
+        display: var(--board-footer-display);
+    }
+
+    .prefix {
+        display: var(--board-prefix-display);
     }
 
     .trains{
         display: grid;
         grid-template-columns: auto 1fr minmax(auto, 60px) auto;
         grid-auto-flow: row;
-        gap: boards.$grid-gap;
+        gap: var(--board-gap);
         position: relative;
-        padding: 8px 16px;
-        border-top: 30px solid black;
+        padding: var(--board-content-spacing);
+        border-top: var(--board-header-border-width, 30px) solid var(--board-border);
 
         .train{
             display: grid;
@@ -40,7 +48,7 @@
             }
 
             &:not(:has(.on-time)).status {
-                color: red;
+                color: var(--board-cancel-color);
             }
             &[data-isCancelled="true"] {
                 .platform{ display: none; }
