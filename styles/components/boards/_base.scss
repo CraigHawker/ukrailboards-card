@@ -42,46 +42,44 @@ $grid-gap: 4px;
         color: var(--board-nav-icon-color, currentColor);
         text-indent: -9999px;
         overflow: hidden;
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 60%;
+            height: 60%;
+            background-color: var(--board-nav-icon-color, currentColor);
+            mask: var(--board-nav-icon-mask);
+            -webkit-mask: var(--board-nav-icon-mask);
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-position: center;
+            mask-size: contain;
+            -webkit-mask-size: contain;
+        }
+        &:hover {
+            background-color: var(--board-nav-button-hover-bg, rgba(0, 0, 0, 0.55));
+        }
+        &.prev {
+            left: 0.75rem;
+            &::after {
+                mask: var(--board-nav-prev-mask);
+                -webkit-mask: var(--board-nav-prev-mask);
+            }
+        }
+        &.next {
+            right: 0.75rem;
+            &::after {
+                mask: var(--board-nav-next-mask);
+                -webkit-mask: var(--board-nav-next-mask);
+            }
+        }
     }
 
-    .board-nav::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        margin: auto;
-        width: 60%;
-        height: 60%;
-        background-color: var(--board-nav-icon-color, currentColor);
-        mask: var(--board-nav-icon-mask);
-        -webkit-mask: var(--board-nav-icon-mask);
-        mask-repeat: no-repeat;
-        -webkit-mask-repeat: no-repeat;
-        mask-position: center;
-        -webkit-mask-position: center;
-        mask-size: contain;
-        -webkit-mask-size: contain;
-    }
-
-    .board-nav:hover {
-        background-color: var(--board-nav-button-hover-bg, rgba(0, 0, 0, 0.55));
-    }
-
-    .board-nav.prev {
-        left: 0.75rem;
-    }
-
-    .board-nav.next {
-        right: 0.75rem;
-    }
-
-    .board-nav.prev::after {
-        mask: var(--board-nav-prev-mask);
-        -webkit-mask: var(--board-nav-prev-mask);
-    }
-
-    .board-nav.next::after {
-        mask: var(--board-nav-next-mask);
-        -webkit-mask: var(--board-nav-next-mask);
+    .location.platform{
+        text-transform: capitalize;
     }
 
     span.can-scroll {
