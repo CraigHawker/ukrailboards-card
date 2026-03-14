@@ -5,11 +5,25 @@
         margin: 0px;
         gap: 0px;
         column-gap: 0px;
-        --train-header-background-color: green;
+        --train-header-background-color: darkgreen;
         
+
+        &:before{
+            background-color: var(--train-header-background-color);
+            position: absolute;
+            content: "";
+            display: block;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            height: 100px;
+            z-index: 1;
+        }
+
         .train{
-            grid-template-rows: auto auto auto auto auto 1fr auto auto auto;
+            grid-template-rows: 36px 20px 20px 20px 36px 1fr auto auto auto;
             gap: 0px;
+            z-index: 2;
             
             time.departure {
                 grid-row: 1;
