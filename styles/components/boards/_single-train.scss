@@ -6,10 +6,6 @@
     /* Allow optional pause-by-hover for controls and auto-rotate */
     --board-pause-on-hover: true;
 
-    .board-nav {
-        display: none;
-    }
-
     &:hover {
         .board-nav {
             display: block;
@@ -133,8 +129,11 @@
                 }
             }
 
-            /* Show only the current train by default */
-            &[data-single-train-state="current"] {
+        }
+
+        /* Single-column: show only the current train */
+        @container board (max-width: 575px) {
+            .train[data-single-train-state="current"] {
                 display: grid;
 
                 h3.calling-at {
@@ -157,26 +156,32 @@
                     }
                 }
             }
-
         }
 
-        /* Show additional trains to the right of the current train based on available width */
-        @container board (min-width: 560px) {
+        /* Multi-column: show the first N trains (not based on current) */
+        @container board (min-width: 576px) {
             --single-train-columns: 2;
 
-            .train[data-single-train-state="current"] + .train {
+            .train:nth-child(-n+2) {
                 display: grid;
 
                 h3.calling-at, ol.calling-at {
                     display: block;
                 }
             }
+
+            /* Hide nav buttons on hover once there is more than one column */
+            &:hover {
+                .board-nav {
+                    display: none;
+                }
+            }
         }
 
-        @container board (min-width: 840px) {
+        @container board (min-width: 872px) {
             --single-train-columns: 3;
 
-            .train[data-single-train-state="current"] + .train + .train {
+            .train:nth-child(-n+3) {
                 display: grid;
 
                 h3.calling-at, ol.calling-at {
@@ -185,10 +190,10 @@
             }
         }
 
-        @container board (min-width: 1120px) {
+        @container board (min-width: 1168px) {
             --single-train-columns: 4;
 
-            .train[data-single-train-state="current"] + .train + .train + .train {
+            .train:nth-child(-n+4) {
                 display: grid;
 
                 h3.calling-at, ol.calling-at {
@@ -197,10 +202,10 @@
             }
         }
 
-        @container board (min-width: 1400px) {
+        @container board (min-width: 1464px) {
             --single-train-columns: 5;
 
-            .train[data-single-train-state="current"] + .train + .train + .train + .train {
+            .train:nth-child(-n+5) {
                 display: grid;
 
                 h3.calling-at, ol.calling-at {
@@ -210,10 +215,19 @@
         }
     }
 
-    /* Only animate the current train when there is more than one train available */
-    &[data-single-train-animation="true"] {
-        .trains .train[data-single-train-state="current"] {
-            animation: single-train-fade-cycle 10s linear forwards;
+    /* Hide nav buttons in multi-column mode (fixed columns, no scrolling) */
+    @container board (min-width: 576px) {
+        .board-nav {
+            display: none !important;
+        }
+    }
+
+    @container board (max-width: 575px) {
+        /* Only animate current train in single-column mode */
+        &[data-single-train-animation="true"] {
+            .trains .train[data-single-train-state="current"] {
+                animation: single-train-fade-cycle 10s linear forwards;
+            }
         }
     }
 
