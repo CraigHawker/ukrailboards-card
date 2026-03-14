@@ -42,6 +42,7 @@ $grid-gap: 4px;
         color: var(--board-nav-icon-color, currentColor);
         text-indent: -9999px;
         overflow: hidden;
+        z-index: 10;
         &::after {
             content: "";
             position: absolute;
