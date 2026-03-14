@@ -29,5 +29,8 @@
         @container board (max-width: 500px){
             @include single-train.single-train;
         }
+        @container board (min-width: 840px){
+            @include single-train.single-train;
+        }
     }
 }
