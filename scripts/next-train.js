@@ -43,6 +43,7 @@
         };
 
         that.shouldPauseOnHover = function(){
+            return false; // This breaks the current CSS transition approach, so disabling for now.
             var value = getComputedStyle(that.element).getPropertyValue('--board-pause-on-hover').trim().toLowerCase();
             return value === 'true' || value === '1';
         };
