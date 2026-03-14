@@ -16,7 +16,7 @@
             top: 0px;
             left: 0px;
             right: 0px;
-            height: 100px;
+            height: 104px;
             z-index: 1;
         }
 
@@ -79,6 +79,7 @@
                     grid-template-columns: 1fr auto;
                     align-items: center;
                     font-size: 1em;
+                    padding: 1px 0px;
 
                     .location.stop{
                         grid-column: 1;

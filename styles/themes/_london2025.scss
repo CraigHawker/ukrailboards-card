@@ -20,7 +20,7 @@
        --board-prefix-display
        --board-cancel-color
     */
-    --board-font: "Google Sans", sans-serif;
+    --board-font: "Roboto Mono", sans-serif;
 
     &.single-train {
         @include single-train.single-train;
