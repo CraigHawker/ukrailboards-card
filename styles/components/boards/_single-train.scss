@@ -28,6 +28,21 @@
         display: var(--board-prefix-display);
     }
 
+    .board-nav
+    {
+        top: auto;
+        bottom: 0px;
+        &.prev {
+            left: auto;
+            right: 40px;
+        }
+
+        .board-nav.next {
+            right: 0px;
+        }        
+    }
+
+
     .trains {
         display: grid;
         grid-template-columns: auto auto 1fr;
@@ -83,7 +98,6 @@
 
             &[data-single-train-state="current"] {
                 display: grid;
-                animation: single-train-fade-cycle 10s linear forwards;
 
                 h3.calling-at {
                     grid-row: 4;
@@ -121,6 +135,13 @@
                     }
                 }
             }
+        }
+    }
+
+    /* Only animate the current train when there is more than one train available */
+    &[data-single-train-animation="true"] {
+        .trains .train[data-single-train-state="current"] {
+            animation: single-train-fade-cycle 10s linear forwards;
         }
     }
 

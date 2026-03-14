@@ -1,0 +1,97 @@
+
+@mixin single-train(){
+    .trains{
+        grid-template-columns: 1fr;
+        margin: 0px;
+        --train-header-background-color: green;
+        
+        .train[data-single-train-state=current]{
+            grid-template-rows: auto auto auto auto auto 1fr auto auto auto;
+            gap: 0px;
+            
+            time.departure {
+                grid-row: 1;
+                grid-column: 1;
+                font-weight: bold;
+                @include header();
+                padding-top: 16px;
+            }
+
+            .destination {
+                grid-row: 2;
+                grid-column: 1;
+                font-weight: bold;
+                @include header();
+            }
+
+            .platform{
+                grid-row: 4;
+                @include header();
+                padding-bottom: 16px;
+                .prefix{ display: inline-block;}
+            }
+
+            &:after{
+                display: none;
+            }
+
+            &:before {
+                grid-row: 9;
+                @include board-padding();
+            }
+            
+            h3.calling-at {
+                grid-row: 5;
+                @include board-padding();
+                padding-top: 16px;
+                font-size: 1em;
+                &:after{
+                    content: ": ";
+                    display: inline-block;
+                }
+            }
+            ol.calling-at {
+                grid-row: 6;
+                display: block;
+                color: white;
+                @include board-padding();
+
+                li{
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    align-items: center;
+                    font-size: 1em;
+
+                    .location.stop{
+                        grid-column: 1;
+                    }
+                    time {
+                        grid-column: 2;
+                    }
+
+                    .estimated {
+                        &:before, &:after {
+                            display: none;
+                        }
+                    }
+
+                    &:last-child{
+                        .location.stop, time {
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@mixin board-padding(){
+    padding: 2px 16px;
+}
+@mixin header()
+{
+    @include board-padding();
+    background-color: var(--train-header-background-color);
+    color: white;
+    text-align: left;
+}

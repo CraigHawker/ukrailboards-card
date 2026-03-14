@@ -336,6 +336,14 @@
             name: pluginName,
             render: function(board){
                 var pluginState = getPluginState(board);
+
+                // Only animate when there is more than one train to cycle through.
+                if(board.allTrains && board.allTrains.length > 1){
+                    board.element.setAttribute('data-single-train-animation', 'true');
+                } else {
+                    board.element.removeAttribute('data-single-train-animation');
+                }
+
                 showCurrentTrain(board, pluginState);
             },
             next: showNextTrain,
