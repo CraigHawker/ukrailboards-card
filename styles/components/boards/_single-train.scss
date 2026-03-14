@@ -3,6 +3,19 @@
 @mixin single-train {
     @include boards.board-base;
 
+    /* Allow optional pause-by-hover for controls and auto-rotate */
+    --board-pause-on-hover: true;
+
+    .board-nav {
+        display: none;
+    }
+
+    &:hover {
+        .board-nav {
+            display: block;
+        }
+    }
+
     header {
         display: var(--board-header-display);
     }

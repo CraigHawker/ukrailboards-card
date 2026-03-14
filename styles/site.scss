@@ -23,6 +23,15 @@
     --board-prefix-display: none;
 
     --board-cancel-color: red;
+
+    /* Navigation controls */
+    --board-nav-button-bg: rgba(0, 0, 0, 0.35);
+    --board-nav-button-hover-bg: rgba(0, 0, 0, 0.55);
+    --board-nav-icon-color: var(--board-text);
+    --board-nav-icon-size: 60px;
+    --board-nav-prev-mask: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M15%2018l-6-6%206-6%22/%3E%3C/svg%3E");
+    --board-nav-next-mask: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M9%2018l6-6-6-6%22/%3E%3C/svg%3E");
+    --board-pause-on-hover: false;
 }
 
 body {
