@@ -33,8 +33,11 @@
             @container board (min-width: 500px) and (max-width: 700px){
                 @include table.table;
             }
-            @container board (min-width: 700px){
+            @container board (min-width: 700px) and (max-width: 840px){
                 @include overhead-platform.overhead-platform;
+            }
+            @container board (min-width: 840px){
+                @include single-train.single-train;
             }
         }
     }

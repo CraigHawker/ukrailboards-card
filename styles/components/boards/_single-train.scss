@@ -44,19 +44,22 @@
 
 
     .trains {
+        /* How many trains to show side-by-side. 1 by default. */
+        --single-train-columns: 1;
+
         display: grid;
-        grid-template-columns: auto auto 1fr;
+        grid-template-columns: repeat(var(--single-train-columns), 1fr);
         grid-template-rows: auto;
         gap: var(--board-gap);
+        column-gap: 16px;
         margin: var(--board-content-spacing);
 
         .train{
-            grid-template-columns: subgrid;
+            grid-template-columns: auto auto 1fr;
             grid-template-rows: auto auto auto auto 1fr auto auto;
             display: grid;
             gap: 4px 8px;
             opacity: 1;
-            grid-column: 1 / -1;
             display: none;
 
             &:after {
@@ -96,43 +99,112 @@
                 display: none;
             }
 
+            h3.calling-at {
+                grid-row: 4;
+                grid-column: 1 / -1;
+                font-size: 0.8em;
+                &:after{
+                    content: ": ";
+                    display: inline-block;
+                }
+            }
+
+            ol.calling-at {
+                grid-row: 5;
+                grid-column: 1 / -1;
+                min-height: 200px;
+                max-height: 300px;
+                overflow-y: auto;
+                li{
+                    display: block;
+                    font-size: 0.8em;
+
+                    .estimated {
+                        &:before {
+                            content: " (";
+                            display: inline-block;
+                        }
+
+                        &:after {
+                            content: ")";
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+
+            /* Show only the current train by default */
             &[data-single-train-state="current"] {
                 display: grid;
 
                 h3.calling-at {
-                    grid-row: 4;
-                    grid-column: 1 / -1;
                     display: block;
-                    font-size: 0.8em;
-                    &:after{
-                        content: ": ";
-                        display: inline-block;
-                    }
                 }
 
                 ol.calling-at {
-                    grid-row: 5;
-                    grid-column: 1 / -1;
                     display: block;
-                    min-height: 200px;
-                    max-height: 300px;
-                    overflow-y: auto;
                     li{
-                        display: block;
-                        font-size: 0.8em;
 
                         .estimated {
                             &:before {
-                                content: " (";
                                 display: inline-block;
                             }
 
                             &:after {
-                                content: ")";
                                 display: inline-block;
                             }
                         }
                     }
+                }
+            }
+
+        }
+
+        /* Show additional trains to the right of the current train based on available width */
+        @container board (min-width: 560px) {
+            --single-train-columns: 2;
+
+            .train[data-single-train-state="current"] + .train {
+                display: grid;
+
+                h3.calling-at, ol.calling-at {
+                    display: block;
+                }
+            }
+        }
+
+        @container board (min-width: 840px) {
+            --single-train-columns: 3;
+
+            .train[data-single-train-state="current"] + .train + .train {
+                display: grid;
+
+                h3.calling-at, ol.calling-at {
+                    display: block;
+                }
+            }
+        }
+
+        @container board (min-width: 1120px) {
+            --single-train-columns: 4;
+
+            .train[data-single-train-state="current"] + .train + .train + .train {
+                display: grid;
+
+                h3.calling-at, ol.calling-at {
+                    display: block;
+                }
+            }
+        }
+
+        @container board (min-width: 1400px) {
+            --single-train-columns: 5;
+
+            .train[data-single-train-state="current"] + .train + .train + .train + .train {
+                display: grid;
+
+                h3.calling-at, ol.calling-at {
+                    display: block;
                 }
             }
         }

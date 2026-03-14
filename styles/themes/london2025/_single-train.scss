@@ -1,17 +1,19 @@
 
 @mixin single-train(){
     .trains{
-        grid-template-columns: 1fr;
+        /* Allow the base layout to control how many columns are shown via --single-train-columns. */
         margin: 0px;
+        gap: 0px;
+        column-gap: 0px;
         --train-header-background-color: green;
         
-        .train[data-single-train-state=current]{
+        .train{
             grid-template-rows: auto auto auto auto auto 1fr auto auto auto;
             gap: 0px;
             
             time.departure {
                 grid-row: 1;
-                grid-column: 1;
+                grid-column: 1 / -1;
                 font-weight: bold;
                 @include header();
                 padding-top: 16px;
@@ -19,13 +21,14 @@
 
             .destination {
                 grid-row: 2;
-                grid-column: 1;
+                grid-column: 1 / -1;
                 font-weight: bold;
                 @include header();
             }
 
             .platform{
                 grid-row: 4;
+                grid-column: 1 / -1;
                 @include header();
                 padding-bottom: 16px;
                 .prefix{ display: inline-block;}
@@ -33,6 +36,7 @@
 
             &:after{
                 display: none;
+                content: "";
             }
 
             &:before {
@@ -72,6 +76,7 @@
                     .estimated {
                         &:before, &:after {
                             display: none;
+                            content: "";
                         }
                     }
 
