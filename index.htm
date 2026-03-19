@@ -24,86 +24,38 @@
     </script>
 
     <script type="template/handlebars" id="template-board">
-        <section class="board {{layout.css}} {{theme.css}}" data-location-city="Wellingborough" data-location-platform="4">
+        <section class="board {{layout.css}} {{theme.css}}" data-location-city="{{board.locationName}}" data-location-platform="{{firstPlatform board.trainServices}}">
             <header>
                 <h1>
                     <span class="prefix">Departures from</span>
-                    <span class="location can-scroll">Wellingborough</span>
+                    <span class="location can-scroll">{{board.locationName}}</span>
                 </h1>
             </header>
             <ol class="trains">
-                <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-status="On time" data-isEstimated="true" data-isCancelled="false" data-operator="East Midlands Railway">
-                    <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T08:00:00">08:00</time>
+                {{#each board.trainServices}}
+                <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-status="{{statusText this}}" data-isEstimated="{{isEstimated this}}" data-isCancelled="{{isCancelled this}}" data-operator="{{operator}}">
+                    <time itemprop="departureTime" class="departure {{departureClass this}}" datetime="{{serviceDateTime this ../board.generatedAt}}">{{std}}</time>
                     <span class="prefix">service from</span>
-                    <span class="location can-scroll" itemprop="departureStation"><span class="scroller">Wellingborough</span></span>
+                    <span class="location can-scroll" itemprop="departureStation"><span class="scroller">{{../board.locationName}}</span></span>
                     <span class="prefix">to</span>
-                    <span class="location destination final can-scroll" itemprop="arrivalStation"><span class="scroller">Corby</span></span>
+                    <span class="location destination final can-scroll" itemprop="arrivalStation"><span class="scroller">{{destinationName this}}</span></span>
                     <span class="prefix">on</span>
                     <span class="location platform">
                         <span class="prefix">platform</span>
-                        <span class="platform-number">1</span>
+                        <span class="platform-number">{{platform}}</span>
                     </span>
-                    <span class="prefix status">On time</span>
+                    <span class="prefix status">{{statusText this}}</span>
                     <h3 class="calling-at">Calling at</h3>
                     <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                        {{#each (callingPoints this)}}
                         <li>
-                            <span class="location stop can-scroll">Kettering</span>
-                            <time class="estimated" datetime="2026-03-11T08:13:00">08:13</time>
+                            <span class="location stop can-scroll{{#if (isLast @index (callingPoints ../this))}} final{{/if}}"{{#if (isLast @index (callingPoints ../this))}} itemprop="arrivalStation"{{/if}}>{{locationName}}</span>
+                            <time class="estimated"{{#if (isLast @index (callingPoints ../this))}} itemprop="arrivalTime"{{/if}} datetime="{{callingPointDateTime this @root.board.generatedAt}}">{{displayTime this}}</time>
                         </li>
-                        <li>
-                            <span class="location stop can-scroll" itemprop="arrivalStation">Corby</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:22:00">08:22</time>
-                        </li>
+                        {{/each}}
                     </ol>
                 </li>
-                <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:10:00" data-status="Est: 08:40" data-isEstimated="true" data-isCancelled="false" data-operator="East Midlands Railway">
-                    <time itemprop="departureTime" class="departure on-time" datetime="2026-03-11T08:30:00">08:30</time>
-                    <span class="prefix">service from</span>
-                    <span class="location can-scroll" itemprop="departureStation"><span class="scroller">Wellingborough</span></span>
-                    <span class="prefix">to</span>
-                    <span class="location destination final can-scroll" aria-label="Destination" itemprop="arrivalStation"><span class="scroller">Corby</span></span>
-                    <span class="prefix">on</span>
-                    <span class="location platform">
-                        <span class="prefix">platform</span>
-                        <span class="platform-number">1</span>
-                    </span>
-                    <span class="prefix status">On time</span>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop can-scroll">Kettering</span>
-                            <time class="estimated" datetime="2026-03-11T08:33:00">08:33</time>
-                        </li>
-                        <li>
-                            <span class="location stop can-scroll" itemprop="arrivalStation">Corby</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T08:52:00">08:52</time>
-                        </li>
-                    </ol>
-                </li>
-                <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-delay="00:10:00" data-status="Cancelled" data-isEstimated="true" data-isCancelled="true">
-                    <time itemprop="departureTime" class="departure" datetime="2026-03-11T09:10:00">09:10</time>
-                    <span class="prefix">service from</span>
-                    <span class="location can-scroll" itemprop="departureStation"><span class="scroller">Wellingborough</span></span>
-                    <span class="prefix">to</span>
-                    <span class="location destination final can-scroll" itemprop="arrivalStation"><span class="scroller">Corby</span></span>
-                    <span class="prefix">on</span>
-                    <span class="location platform">
-                        <span class="prefix">platform</span>
-                        <span class="platform-number">1</span>
-                    </span>
-                    <span class="prefix status">Cancelled</span>
-                    <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
-                        <li>
-                            <span class="location stop can-scroll">Kettering</span>
-                            <time class="estimated" datetime="2026-03-11T09:13:00">09:13</time>
-                        </li>
-                        <li>
-                            <span class="location stop can-scroll" itemprop="arrivalStation">Corby</span>
-                            <time class="estimated" itemprop="arrivalTime" datetime="2026-03-11T09:22:00">09:22</time>
-                        </li>
-                    </ol>
-                </li>
+                {{/each}}
             </ol>
         </section>
     </script>
