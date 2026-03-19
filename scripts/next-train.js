@@ -148,6 +148,16 @@
             that.timerId = setTimeout(that.tick, TICK_INTERVAL);
         };
 
+        that.destroy = function(){
+            if(that.timerId){
+                clearTimeout(that.timerId);
+                that.timerId = null;
+            }
+
+            that.element.removeEventListener('mouseenter', that.pause);
+            that.element.removeEventListener('mouseleave', that.resume);
+        };
+
         that.collectTrains();
         that.ensureNavigationControls();
         that.render();
@@ -351,8 +361,20 @@
         };
     }
 
-    document.querySelectorAll('.board').forEach(function(el){
-        var board = new Board(el);
-        boards.push(board);
-    });
+    function initBoards(){
+        boards.forEach(function(board){
+            if(board && typeof board.destroy === 'function'){
+                board.destroy();
+            }
+        });
+        boards = [];
+
+        document.querySelectorAll('.board').forEach(function(el){
+            var board = new Board(el);
+            boards.push(board);
+        });
+    }
+
+    initBoards();
+    document.addEventListener('boards:rendered', initBoards);
 })();

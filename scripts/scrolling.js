@@ -3,6 +3,8 @@
 	var BASE_CALLING_AT_DURATION_S = 10;
 	var CALLING_AT_FIXED_TIME_S = 0.5 + 2 + 1.5 + 0.5;
 	var BASE_CALLING_AT_TRAVEL_TIME_S = BASE_CALLING_AT_DURATION_S - CALLING_AT_FIXED_TIME_S;
+	var observer;
+	var observedElements = [];
 
 	function measureElement(el) {
 		var availableWidth = el.getBoundingClientRect().width;
@@ -42,20 +44,39 @@
 		};
 	}
 
-	document.addEventListener('DOMContentLoaded', function () {
+	function observeScrollableElements() {
+		if (typeof ResizeObserver === 'undefined') {
+			return;
+		}
+
+		if (!observer) {
+			observer = new ResizeObserver(function () {
+				measureAllScrollableElements();
+			});
+		}
+
+		observedElements.forEach(function (el) {
+			observer.unobserve(el);
+		});
+		observedElements = [];
+
+		document.querySelectorAll('.can-scroll').forEach(function (el) {
+			observer.observe(el);
+			observedElements.push(el);
+		});
+	}
+
+	function initializeScrolling() {
 		measureAllScrollableElements();
+		observeScrollableElements();
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		initializeScrolling();
 		var debouncedMeasureAllScrollableElements = debounce(measureAllScrollableElements, 300);
 
 		window.addEventListener('resize', debouncedMeasureAllScrollableElements);
-
-		if (typeof ResizeObserver !== 'undefined') {
-			var observer = new ResizeObserver(function () {
-				measureAllScrollableElements();
-			});
-
-			document.querySelectorAll('.can-scroll').forEach(function (el) {
-				observer.observe(el);
-			});
-		}
 	});
+
+	document.addEventListener('boards:rendered', initializeScrolling);
 })();
