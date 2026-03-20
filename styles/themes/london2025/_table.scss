@@ -1,0 +1,39 @@
+@mixin table(){
+    header{
+        background-color: darkblue;
+        display: block;
+        color: white;
+        min-height: 50px;
+        padding: 8px 10px;
+        h1{
+            text-align: center;
+            text-transform: uppercase;
+            &::after{
+                content: " Departures";
+                display: inline-block;
+                text-transform: none;
+            }
+        }
+    }
+    .trains{
+        color: white;
+        --board-header-border-width: 0px;
+        .train{
+            border-bottom: 1px solid grey;
+            &:nth-child(1){
+                time.departure::before,
+                    .platform:before,
+                    .status:before
+                {
+                    top:-1.5em;
+                }
+                .status:before{
+                    content: "Expected"
+                }
+            }
+        }
+        .destination{
+            color: yellow;
+        }
+    }
+}

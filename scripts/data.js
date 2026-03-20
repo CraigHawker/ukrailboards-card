@@ -18,6 +18,10 @@ var layouts = [
         name: "Single train"
     }, 
     {
+        css: "table",
+        name: "Table"
+    }, 
+    {
         css: "responsive",
         name: "Responsive"
     }];
