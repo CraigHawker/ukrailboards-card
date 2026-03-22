@@ -1,6 +1,6 @@
 @mixin table(){
     header{
-        background-color: darkblue;
+        background-color: var(--train-header-background-color);
         display: block;
         color: white;
         min-height: 50px;

@@ -22,6 +22,7 @@
        --board-cancel-color
     */
     --board-font: "Roboto Mono", sans-serif;
+    --train-header-background-color: darkblue;
 
     &.single-train {
         @include single-train.single-train;
