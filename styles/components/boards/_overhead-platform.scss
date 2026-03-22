@@ -47,8 +47,15 @@
                 color: var(--board-cancel-color);
             }
 
-            .destination.final {
-                grid-column: 3;
+            [itemprop="arrivalStation"]{
+                // display: inline-grid;
+                // grid-template-columns: subgrid;
+                &:before {
+                    content: attr(name);
+                    grid-column: 3;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
             }
 
             .calling-at {
@@ -73,7 +80,7 @@
                             content: ",";
                             display: inline-block;
                             position: relative;
-                            left: -5px;
+                            left: -3px;
                         }
                     }
 
@@ -81,6 +88,7 @@
                         &:before {
                             content: " (";
                             display: inline-block;
+                            padding-left: 5px;
                         }
 
                         &:after {
@@ -111,7 +119,7 @@
                 }
 
                 ol.calling-at {
-                    display: inline-block;
+                    display: block;
                 }
             }
 

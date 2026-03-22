@@ -37,6 +37,20 @@ function registerHandlebarsHelpers() {
         return "";
     });
 
+    Handlebars.registerHelper("destinationCode", function(service) {
+        var currentDestinations = service && service.currentDestinations;
+        if (currentDestinations && currentDestinations.length > 0) {
+            return currentDestinations[0].crs || "";
+        }
+
+        var destinations = service && service.destination;
+        if (destinations && destinations.length > 0) {
+            return destinations[0].crs || "";
+        }
+
+        return "";
+    });
+
     Handlebars.registerHelper("callingPoints", function(service) {
         if (!service || !service.subsequentCallingPoints || service.subsequentCallingPoints.length === 0) {
             return [];

@@ -33,24 +33,33 @@
             </header>
             <ol class="trains">
                 {{#each (limit board.trainServices 9)}}
-                <li class="train" itemscope itemtype="https://schema.org/TrainTrip" data-status="{{statusText this}}" data-isEstimated="{{isEstimated this}}" data-isCancelled="{{isCancelled this}}" data-operator="{{operator}}">
+                <li class="train" itemscope itemtype="https://schema.org/TrainTrip"
+                data-status="{{statusText this}}" data-isEstimated="{{isEstimated this}}" data-isCancelled="{{isCancelled this}}"
+                data-operator="{{operator}}"
+                aria-label="{{ std }} service to {{ destinationName this }}">
                     <time itemprop="departureTime" class="departure {{departureClass this}}" datetime="{{serviceDateTime this ../board.generatedAt}}">{{fallback std "--:--"}}</time>
+                    <station itemprop="departureStation" class="can-scroll" name="{{fallback ../board.locationName "Unknown"}}" code="{{fallback ../board.crs "Unknown"}}"></station>
+                    <station itemprop="arrivalStation" class="destination final can-scroll" name="{{fallback (destinationName this) "Unknown"}}" code="{{fallback (destinationCode this) "Unknown"}}"></station>
                     <span class="prefix">service from</span>
-                    <span class="location can-scroll" itemprop="departureStation"><span class="scroller">{{fallback ../board.locationName "Unknown"}}</span></span>
+                    <!-- <span class="location can-scroll" itemprop="departureStation"><span class="scroller">{{fallback ../board.locationName "Unknown"}}</span></span> -->
                     <span class="prefix">to</span>
-                    <span class="location destination final can-scroll" itemprop="arrivalStation"><span class="scroller">{{fallback (destinationName this) "Unknown"}}</span></span>
+                    <!-- <span class="location destination final can-scroll" itemprop="arrivalStation"><span class="scroller">{{fallback (destinationName this) "Unknown"}}</span></span> -->
                     <span class="prefix">on</span>
+                    {{#if platform }}
                     <span class="location platform">
                         <span class="prefix">platform</span>
-                        <span class="platform-number">{{fallback platform "TBC"}}</span>
+                        <span class="platform-number">{{ platform }}</span>
                     </span>
+                    {{/if}}
                     <span class="prefix status">{{fallback (statusText this) "Unknown"}}</span>
                     <h3 class="calling-at">Calling at</h3>
                     <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
                         {{#each (callingPoints this)}}
                         <li>
-                            <span class="location stop can-scroll{{#if @last}} final{{/if}}"{{#if @last}} itemprop="arrivalStation"{{/if}}>{{fallback locationName "Unknown"}}</span>
-                            <time class="estimated"{{#if @last}} itemprop="arrivalTime"{{/if}} datetime="{{callingPointDateTime this @root.board.generatedAt}}">{{displayTime this}}</time>
+                            <span class="location stop can-scroll{{#if @last}} final{{/if}}"{{#if @last}} itemprop="arrivalStation"{{/if}}>
+                                {{fallback locationName "Unknown"}}
+                                <time class="estimated"{{#if @last}} itemprop="arrivalTime"{{/if}} datetime="{{callingPointDateTime this @root.board.generatedAt}}">{{displayTime this}}</time>
+                            </span>
                         </li>
                         {{/each}}
                     </ol>
@@ -65,6 +74,6 @@
     <script src="scripts/handlebars-helpers.js"></script>
     <script src="scripts/data.js"></script>
     <script src="scripts/next-train.js"></script>
-    <script src="scripts/scrolling.js"></script>
+    <!-- <script src="scripts/scrolling.js"></script> -->
 </body>
 </html>

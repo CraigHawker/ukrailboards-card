@@ -19,6 +19,7 @@
         display: grid;
         grid-template-columns: auto 1fr minmax(auto, 60px) auto;
         grid-auto-flow: row;
+        --board-gap: 4px 8px;
         gap: var(--board-gap);
         position: relative;
         padding: var(--board-content-spacing);
@@ -32,8 +33,16 @@
             time.departure {
                 grid-column: 1;
             }
-            .destination.final {
-                grid-column: 2;
+
+            [itemprop="arrivalStation"]{
+                display: grid;
+                grid-template-columns: subgrid;
+                &:before {
+                    content: attr(name);
+                    grid-column: 2;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
             }
             .calling-at, [itemprop="departureStation"] {
                 display: none;
