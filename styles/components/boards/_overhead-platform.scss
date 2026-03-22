@@ -68,16 +68,19 @@
             }
 
             ol.calling-at {
+                --scroll-enabled: 1;
+                --scroll-measure-root: 1;
                 grid-column: 3 / 5;
                 overflow: hidden;
                 white-space: nowrap;
                 white-space-collapse: collapse;
 
                 li {
+                    --scroll-enabled: 0;
+                    --scroll-measure-root: 0;
                     display: inline-block;
                     white-space-collapse: collapse;
                     position: relative;
-                    animation: overhead-platform-calling-at-scroll var(--overhead-platform-calling-at-scroll-duration, 10s) linear 0s infinite forwards;
                     animation-fill-mode: both;
 
                     &:not(:last-child) {
@@ -100,6 +103,12 @@
                             content: ")";
                             display: inline-block;
                         }
+                    }
+                }
+
+                &.scroll {
+                    li {
+                        animation: overhead-platform-calling-at-scroll var(--overhead-platform-calling-at-scroll-duration, 10s) linear 0s infinite forwards;
                     }
                 }
             }

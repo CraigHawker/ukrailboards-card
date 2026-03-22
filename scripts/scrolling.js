@@ -6,9 +6,34 @@
 	var observer;
 	var observedElements = [];
 
+	function isTruthyFlag(value, defaultValue) {
+		var normalized = (value || '').trim().toLowerCase();
+		if (!normalized) {
+			return defaultValue;
+		}
+
+		return normalized !== '0' && normalized !== 'false' && normalized !== 'off' && normalized !== 'no';
+	}
+
+	function shouldMeasureElement(el) {
+		var styles = getComputedStyle(el);
+		var isEnabled = isTruthyFlag(styles.getPropertyValue('--scroll-enabled'), true);
+		if (!isEnabled) {
+			return false;
+		}
+
+		return isTruthyFlag(styles.getPropertyValue('--scroll-measure-root'), true);
+	}
+
 	function measureElement(el) {
+		if (!shouldMeasureElement(el)) {
+			el.classList.remove('scroll');
+			return;
+		}
+
 		var availableWidth = el.getBoundingClientRect().width;
 		var actualWidth = el.scrollWidth;
+
 		var overflowDistance = Math.max(0, actualWidth - availableWidth);
 		var callingAtTravelDurationSeconds = (overflowDistance / BASE_CALLING_AT_DISTANCE_PX) * BASE_CALLING_AT_TRAVEL_TIME_S;
 		var callingAtDurationSeconds = CALLING_AT_FIXED_TIME_S + callingAtTravelDurationSeconds;
