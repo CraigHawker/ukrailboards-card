@@ -78,6 +78,17 @@ function getTrainData(){
                             "detachFront": false,
                             "affectedByDiversion": false,
                             "rerouteDelay": 0
+                        },
+                        {
+                            "locationName": "Bedford",
+                            "crs": "BED",
+                            "st": "10:53",
+                            "et": "On time",
+                            "isCancelled": false,
+                            "length": 0,
+                            "detachFront": false,
+                            "affectedByDiversion": false,
+                            "rerouteDelay": 0
                         }
                     ],
                     "serviceType": "train",
