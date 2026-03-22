@@ -15,10 +15,10 @@
             }
         }
     }
-    .trains{
+    trains{
         color: white;
         --board-header-border-width: 0px;
-        .train{
+        train{
             border-bottom: 1px solid grey;
             &:nth-child(1){
                 time.departure::before,

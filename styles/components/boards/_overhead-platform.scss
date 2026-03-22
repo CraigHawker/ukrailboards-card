@@ -17,7 +17,7 @@
 
     trains {
         display: grid;
-        grid-template-columns: auto auto 1fr minmax(max-content, 6em);
+        grid-template-columns: auto auto 1fr auto;
         gap: var(--board-gap);
         margin: var(--board-content-spacing);
 
@@ -40,7 +40,7 @@
                 content: attr(data-status);
                 display: block;
                 grid-column: 4;
-                grid-row: 1;
+                grid-row: 1; 
                 text-align: right;
             }
 

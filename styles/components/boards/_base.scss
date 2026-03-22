@@ -21,7 +21,7 @@ $grid-gap: 4px;
         padding: 0px;
         margin: 0px;
     }
-    li{
+    stations station{
         padding: 2px 0px;
     }
     station.stop {
@@ -100,6 +100,9 @@ $grid-gap: 4px;
             position: relative;
             display: inline-block;
             animation: text-scroll 5s linear infinite alternate;
+        }
+        .scroller{
+            width: 0px;
         }
     }
 }
