@@ -15,13 +15,13 @@
         display: var(--board-prefix-display);
     }
 
-    .trains {
+    trains {
         display: grid;
         grid-template-columns: auto auto 1fr minmax(max-content, 6em);
         gap: var(--board-gap);
         margin: var(--board-content-spacing);
 
-        .train {
+        train {
             grid-template-columns: subgrid;
             display: none;
             grid-column: 1 / -1;
@@ -47,7 +47,7 @@
             &:not(:has(.on-time)):after {
                 color: var(--board-cancel-color);
             }
-            station{
+            > station{
                 display: grid;
                 grid-template-columns: subgrid;
             }
@@ -60,7 +60,7 @@
                 display: none;
             }
 
-            ol.calling-at {
+            stations.calling-at {
                 --scroll-enabled: 1;
                 --scroll-measure-root: 1;
                 grid-column: 3 / 5;
@@ -68,7 +68,7 @@
                 white-space: nowrap;
                 white-space-collapse: collapse;
 
-                li {
+                station {
                     --scroll-enabled: 0;
                     --scroll-measure-root: 0;
                     display: inline-block;
@@ -100,7 +100,7 @@
                 }
 
                 &.scroll {
-                    li {
+                    station {
                         animation: overhead-platform-calling-at-scroll var(--overhead-platform-calling-at-scroll-duration, 10s) linear 0s infinite forwards;
                     }
                 }
@@ -125,7 +125,7 @@
                     align-self: center;
                 }
 
-                ol.calling-at {
+                stations.calling-at {
                     display: block;
                 }
             }
@@ -172,7 +172,7 @@
 
         // Static trains always occupy slots above the rotating overview slot.
         @for $position from 2 through 7 {
-            .train[data-overhead-platform-train-role="static"]:nth-child(#{$position}) {
+            train[data-overhead-platform-train-role="static"]:nth-child(#{$position}) {
                 grid-row: $position;
             }
         }
@@ -181,7 +181,7 @@
 
     // Rotating train uses the board's configured overview slot.
     @for $slot from 2 through 6 {
-        &[data-overhead-platform-overview-row="#{$slot}"] .trains .train[data-overhead-platform-train-state="current"] {
+        &[data-overhead-platform-overview-row="#{$slot}"] trains train[data-overhead-platform-train-state="current"] {
             grid-row: $slot;
         }
     }
@@ -245,7 +245,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .board .train ol.calling-at {
+        .board train stations.calling-at {
             animation: none;
         }
     }

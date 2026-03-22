@@ -41,7 +41,7 @@
     }
 
 
-    .trains {
+    trains {
         /* How many trains to show side-by-side. 1 by default. */
         --single-train-columns: 1;
 
@@ -52,7 +52,7 @@
         column-gap: 16px;
         margin: var(--board-content-spacing);
 
-        .train{
+        train{
             grid-template-columns: auto auto 1fr;
             grid-template-rows: auto auto auto auto 1fr auto auto;
             display: grid;
@@ -109,13 +109,15 @@
                 }
             }
 
-            ol.calling-at {
+            stations.calling-at {
                 grid-row: 5;
                 grid-column: 1 / -1;
                 min-height: 200px;
                 max-height: 300px;
                 overflow-y: auto;
-                li{
+                station{
+                    --scroll-enabled: 0;
+                    --scroll-measure-root: 0;
                     display: block;
                     font-size: 0.8em;
 
@@ -137,16 +139,16 @@
 
         /* Single-column: show only the current train */
         @container board (max-width: 575px) {
-            .train[data-single-train-state="current"] {
+            train[data-single-train-state="current"] {
                 display: grid;
 
                 h3.calling-at {
                     display: block;
                 }
 
-                ol.calling-at {
+                stations.calling-at {
                     display: block;
-                    li{
+                    station{
 
                         .estimated {
                             &:before {
@@ -166,10 +168,10 @@
         @container board (min-width: 576px) {
             --single-train-columns: 2;
 
-            .train:nth-child(-n+2) {
+            train:nth-child(-n+2) {
                 display: grid;
 
-                h3.calling-at, ol.calling-at {
+                h3.calling-at, stations.calling-at {
                     display: block;
                 }
             }
@@ -185,10 +187,10 @@
         @container board (min-width: 872px) {
             --single-train-columns: 3;
 
-            .train:nth-child(-n+3) {
+            train:nth-child(-n+3) {
                 display: grid;
 
-                h3.calling-at, ol.calling-at {
+                h3.calling-at, stations.calling-at {
                     display: block;
                 }
             }
@@ -197,10 +199,10 @@
         @container board (min-width: 1168px) {
             --single-train-columns: 4;
 
-            .train:nth-child(-n+4) {
+            train:nth-child(-n+4) {
                 display: grid;
 
-                h3.calling-at, ol.calling-at {
+                h3.calling-at, stations.calling-at {
                     display: block;
                 }
             }
@@ -209,10 +211,10 @@
         @container board (min-width: 1464px) {
             --single-train-columns: 5;
 
-            .train:nth-child(-n+5) {
+            train:nth-child(-n+5) {
                 display: grid;
 
-                h3.calling-at, ol.calling-at {
+                h3.calling-at, stations.calling-at {
                     display: block;
                 }
             }
@@ -229,7 +231,7 @@
     @container board (max-width: 575px) {
         /* Only animate current train in single-column mode */
         &[data-single-train-animation="true"] {
-            .trains .train[data-single-train-state="current"] {
+            trains train[data-single-train-state="current"] {
                 animation: single-train-fade-cycle 10s linear forwards;
             }
         }

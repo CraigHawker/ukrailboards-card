@@ -68,13 +68,13 @@
                     display: inline-block;
                 }
             }
-            ol.calling-at {
+            stations.calling-at {
                 grid-row: 6;
                 display: block;
                 color: white;
                 @include board-padding();
 
-                li{
+                station{
                     display: grid;
                     grid-template-columns: 1fr auto;
                     align-items: center;

@@ -15,7 +15,7 @@
         display: var(--board-prefix-display);
     }
 
-    .trains{
+    trains{
         display: grid;
         grid-template-columns: auto 1fr minmax(auto, 60px) auto;
         grid-auto-flow: row;
@@ -25,7 +25,7 @@
         padding: var(--board-content-spacing);
         border-top: var(--board-header-border-width, 30px) solid var(--board-border);
 
-        .train{
+        train{
             display: grid;
             grid-template-columns: subgrid;
             grid-column: 1 / -1;

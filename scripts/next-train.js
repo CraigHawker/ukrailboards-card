@@ -36,7 +36,7 @@
 
         that.collectTrains = function(){
             that.allTrains = [];
-            var trains = that.element.querySelectorAll('.train');
+            var trains = that.element.querySelectorAll('train');
             trains.forEach(function(el){
                 that.allTrains.push(new Train(el));
             });

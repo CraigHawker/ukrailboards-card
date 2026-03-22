@@ -31,9 +31,9 @@
                     <span class="location can-scroll">{{board.locationName}}</span>
                 </h1>
             </header>
-            <ol class="trains">
+            <trains role="list">
                 {{#each (limit board.trainServices 9)}}
-                <li class="train" itemscope itemtype="https://schema.org/TrainTrip"
+                <train role="listitem" itemscope itemtype="https://schema.org/TrainTrip"
                 data-status="{{statusText this}}" data-isEstimated="{{isEstimated this}}" data-isCancelled="{{isCancelled this}}"
                 data-operator="{{operator}}"
                 title="{{fallback (statusText this) "Unknown"}}: {{ std }} service to {{ destinationName this }}"
@@ -49,17 +49,17 @@
                     {{/if}}
                     <span class="prefix status">{{fallback (statusText this) "Unknown"}}</span>
                     <h3 class="calling-at">Calling at</h3>
-                    <ol class="calling-at can-scroll" aria-label="Intermediate and final stops">
+                    <stations class="calling-at can-scroll" role="list" aria-label="Intermediate and final stops">
                         {{#each (callingPoints this)}}
-                        <li class="location stop can-scroll{{#if @last}} final{{/if}}"{{#if @last}} itemprop="arrivalStation"{{/if}}>
+                        <station class="location stop can-scroll{{#if @last}} final{{/if}}" role="listitem"{{#if @last}} itemprop="arrivalStation"{{/if}}>
                                 {{fallback locationName "Unknown"}}
                                 <time class="estimated"{{#if @last}} itemprop="arrivalTime"{{/if}} datetime="{{callingPointDateTime this @root.board.generatedAt}}">{{displayTime this}}</time>
-                        </li>
+                        </station>
                         {{/each}}
-                    </ol>
-                </li>
+                    </stations>
+                </train>
                 {{/each}}
-            </ol>
+            </trains>
         </section>
     </script>
 

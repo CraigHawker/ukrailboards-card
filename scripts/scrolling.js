@@ -27,7 +27,7 @@
 
 	function canWrapElementContent(el) {
 		var tagName = (el.tagName || '').toUpperCase();
-		return tagName !== 'OL' && tagName !== 'UL';
+		return tagName !== 'OL' && tagName !== 'UL' && tagName !== 'STATIONS';
 	}
 
 	function ensureScrollerElement(el) {
