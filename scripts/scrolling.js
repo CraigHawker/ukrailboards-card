@@ -25,11 +25,43 @@
 		return isTruthyFlag(styles.getPropertyValue('--scroll-measure-root'), true);
 	}
 
+	function canWrapElementContent(el) {
+		var tagName = (el.tagName || '').toUpperCase();
+		return tagName !== 'OL' && tagName !== 'UL';
+	}
+
+	function ensureScrollerElement(el) {
+		if (!canWrapElementContent(el)) {
+			return null;
+		}
+
+		var existingScroller = el.querySelector(':scope > .scroller');
+		if (existingScroller) {
+			return existingScroller;
+		}
+
+		if (!el.firstChild) {
+			return null;
+		}
+
+		var scroller = document.createElement('span');
+		scroller.className = 'scroller';
+
+		while (el.firstChild) {
+			scroller.appendChild(el.firstChild);
+		}
+
+		el.appendChild(scroller);
+		return scroller;
+	}
+
 	function measureElement(el) {
 		if (!shouldMeasureElement(el)) {
 			el.classList.remove('scroll');
 			return;
 		}
+
+		ensureScrollerElement(el);
 
 		var availableWidth = el.getBoundingClientRect().width;
 		var actualWidth = el.scrollWidth;

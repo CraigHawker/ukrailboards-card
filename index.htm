@@ -39,8 +39,8 @@
                 title="{{fallback (statusText this) "Unknown"}}: {{ std }} service to {{ destinationName this }}"
                 aria-label="{{fallback (statusText this) "Unknown"}}: {{ std }} service to {{ destinationName this }}">
                     <time itemprop="departureTime" class="departure {{departureClass this}}" datetime="{{serviceDateTime this ../board.generatedAt}}">{{fallback std "--:--"}}</time>
-                    <station itemprop="departureStation" class="can-scroll" name="{{fallback ../board.locationName "Unknown"}}" code="{{fallback ../board.crs "Unknown"}}"></station>
-                    <station itemprop="arrivalStation" class="destination final can-scroll" name="{{fallback (destinationName this) "Unknown"}}" code="{{fallback (destinationCode this) "Unknown"}}"></station>
+                    <station itemprop="departureStation" class="can-scroll" name="{{fallback ../board.locationName "Unknown"}}" code="{{fallback ../board.crs "Unknown"}}">{{fallback ../board.locationName "Unknown"}}</station>
+                    <station itemprop="arrivalStation" class="destination final can-scroll" name="{{fallback (destinationName this) "Unknown"}}" code="{{fallback (destinationCode this) "Unknown"}}">{{fallback (destinationName this) "Unknown"}}</station>
                     {{#if platform }}
                     <span class="location platform">
                         <span class="prefix">platform</span>

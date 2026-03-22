@@ -90,16 +90,9 @@
             }
 
             [itemprop="arrivalStation"]{
-                display: grid;
-                grid-template-columns: subgrid;
+                display: block;
                 grid-column: 1 / -1;
-                &:before {
-                    content: attr(name);
-                    grid-row: 2;
-                    grid-column: 1 / -1;
-                    overflow: hidden;
-                    white-space: nowrap;
-                }
+                grid-row: 2;
             }
 
             [itemprop="departureStation"], .calling-at {
