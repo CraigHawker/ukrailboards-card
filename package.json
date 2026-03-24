@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "handlebars": "^4.7.8"
+  },
+  "devDependencies": {
+    "ttf2woff2": "^8.0.1"
   }
 }

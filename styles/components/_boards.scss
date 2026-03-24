@@ -6,7 +6,26 @@
 
 @font-face {
     font-family: "UkPIDS";
-    src: url("../font/UkPIDS.ttf") format("truetype");
+    src: url("../font/UkPIDS.woff2") format("woff2"),
+         url("../font/UkPIDS.ttf") format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("../font/RobotoMono-Regular.woff2") format("woff2"),
+         url("../font/RobotoMono-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("../font/RobotoMono-Bold.woff2") format("woff2"),
+         url("../font/RobotoMono-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
     font-display: swap;
 }
 
