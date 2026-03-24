@@ -102,7 +102,7 @@ class NationalRailUKCard extends HTMLElement {
             show_cancelled: config.show_cancelled !== false,
             show_platform: config.show_platform || false,
             show_operator: config.show_operator || false,
-            refresh_interval: config.refresh_interval || 30,
+            refresh_interval: config.refresh_interval || 60,
             layout: config.layout || "responsive",
             theme: config.theme || "",
             ...config
@@ -165,7 +165,7 @@ class NationalRailUKCard extends HTMLElement {
             return;
         }
 
-        const refreshIntervalMs = (this._config.refresh_interval || 30) * 1000;
+        const refreshIntervalMs = (this._config.refresh_interval || 60) * 1000;
         const now = Date.now();
         if (this._lastUpdate > 0 && (now - this._lastUpdate) < refreshIntervalMs) {
             return;
