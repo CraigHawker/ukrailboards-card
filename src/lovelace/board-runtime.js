@@ -6,15 +6,24 @@ function ensureNumberBetweenMaxAndMin(value, min, max) {
     return parsed;
 }
 
-function setSingleTrainState(boardElement) {
-    var trains = Array.prototype.slice.call(boardElement.querySelectorAll("train"));
+var TICK_INTERVAL = 10 * 1000;
+var rootBoards = new WeakMap();
+
+function normalizeIndex(index, length) {
+    if (length <= 0) return 0;
+    return ((index % length) + length) % length;
+}
+
+function applySingleTrainState(boardElement, trains, activeIndex) {
     if (trains.length === 0) {
         boardElement.removeAttribute("data-single-train-animation");
         return;
     }
 
+    var normalizedIndex = normalizeIndex(activeIndex, trains.length);
+
     trains.forEach(function(train, index) {
-        if (index === 0) {
+        if (index === normalizedIndex) {
             train.setAttribute("data-single-train-state", "current");
         } else {
             train.removeAttribute("data-single-train-state");
@@ -28,12 +37,11 @@ function setSingleTrainState(boardElement) {
     }
 }
 
-function setOverheadPlatformState(boardElement) {
-    var trains = Array.prototype.slice.call(boardElement.querySelectorAll("train"));
+function applyOverheadPlatformState(boardElement, trains, activeRotatingIndex) {
     if (trains.length === 0) {
         boardElement.removeAttribute("data-overhead-platform-overview-row");
         boardElement.removeAttribute("data-overhead-platform-static-train-count");
-        return;
+        return 0;
     }
 
     var fixedRows = ensureNumberBetweenMaxAndMin(boardElement.getAttribute("data-overhead-platform-fixed-rows"), 3, 7);
@@ -67,8 +75,141 @@ function setOverheadPlatformState(boardElement) {
     });
 
     if (rotatingTrains.length > 0) {
-        rotatingTrains[0].setAttribute("data-overhead-platform-train-state", "current");
+        var normalizedIndex = normalizeIndex(activeRotatingIndex, rotatingTrains.length);
+        rotatingTrains[normalizedIndex].setAttribute("data-overhead-platform-train-state", "current");
     }
+
+    return rotatingTrains.length;
+}
+
+function createBoardController(boardElement) {
+    var controller = {
+        element: boardElement,
+        timerId: null,
+        singleTrainIndex: 0,
+        overheadTrainIndex: 0,
+        trainCount: 0,
+        overheadRotatingCount: 0,
+        prevButton: null,
+        nextButton: null
+    };
+
+    controller.collectTrains = function() {
+        return Array.prototype.slice.call(controller.element.querySelectorAll("train"));
+    };
+
+    controller.ensureNavigationControls = function() {
+        if (controller.trainCount <= 1) {
+            if (controller.prevButton) {
+                controller.prevButton.remove();
+                controller.prevButton = null;
+            }
+            if (controller.nextButton) {
+                controller.nextButton.remove();
+                controller.nextButton = null;
+            }
+            controller.element.removeAttribute("data-board-has-navigation");
+            return;
+        }
+
+        if (controller.prevButton && controller.nextButton) {
+            controller.element.setAttribute("data-board-has-navigation", "true");
+            return;
+        }
+
+        var ownerDocument = controller.element.ownerDocument;
+        var prev = ownerDocument.createElement("button");
+        prev.type = "button";
+        prev.className = "board-nav prev";
+        prev.setAttribute("aria-label", "Previous train");
+        prev.textContent = "";
+
+        var next = ownerDocument.createElement("button");
+        next.type = "button";
+        next.className = "board-nav next";
+        next.setAttribute("aria-label", "Next train");
+        next.textContent = "";
+
+        prev.addEventListener("click", function(event) {
+            event.stopPropagation();
+            controller.showPreviousTrain();
+        });
+
+        next.addEventListener("click", function(event) {
+            event.stopPropagation();
+            controller.showNextTrain();
+        });
+
+        controller.element.appendChild(prev);
+        controller.element.appendChild(next);
+
+        controller.prevButton = prev;
+        controller.nextButton = next;
+        controller.element.setAttribute("data-board-has-navigation", "true");
+    };
+
+    controller.render = function() {
+        var trains = controller.collectTrains();
+        controller.trainCount = trains.length;
+
+        controller.singleTrainIndex = normalizeIndex(controller.singleTrainIndex, controller.trainCount);
+        applySingleTrainState(controller.element, trains, controller.singleTrainIndex);
+
+        controller.overheadRotatingCount = applyOverheadPlatformState(controller.element, trains, controller.overheadTrainIndex);
+        controller.overheadTrainIndex = normalizeIndex(controller.overheadTrainIndex, controller.overheadRotatingCount);
+
+        controller.ensureNavigationControls();
+    };
+
+    controller.showNextTrain = function() {
+        if (controller.trainCount > 0) {
+            controller.singleTrainIndex = normalizeIndex(controller.singleTrainIndex + 1, controller.trainCount);
+        }
+
+        if (controller.overheadRotatingCount > 0) {
+            controller.overheadTrainIndex = normalizeIndex(controller.overheadTrainIndex + 1, controller.overheadRotatingCount);
+        }
+
+        controller.render();
+        controller.resetTimer();
+    };
+
+    controller.showPreviousTrain = function() {
+        if (controller.trainCount > 0) {
+            controller.singleTrainIndex = normalizeIndex(controller.singleTrainIndex - 1, controller.trainCount);
+        }
+
+        if (controller.overheadRotatingCount > 0) {
+            controller.overheadTrainIndex = normalizeIndex(controller.overheadTrainIndex - 1, controller.overheadRotatingCount);
+        }
+
+        controller.render();
+        controller.resetTimer();
+    };
+
+    controller.tick = function() {
+        controller.timerId = null;
+        controller.showNextTrain();
+    };
+
+    controller.resetTimer = function() {
+        if (controller.timerId) {
+            clearTimeout(controller.timerId);
+        }
+        controller.timerId = setTimeout(controller.tick, TICK_INTERVAL);
+    };
+
+    controller.destroy = function() {
+        if (controller.timerId) {
+            clearTimeout(controller.timerId);
+            controller.timerId = null;
+        }
+    };
+
+    controller.render();
+    controller.resetTimer();
+
+    return controller;
 }
 
 function canWrapElementContent(el) {
@@ -127,12 +268,20 @@ function measureScrollableElement(el) {
 }
 
 export function initializeRenderedBoards(root) {
-    var boardElements = root.querySelectorAll(".board");
+    var existingBoards = rootBoards.get(root);
+    if (existingBoards && existingBoards.length > 0) {
+        existingBoards.forEach(function(boardController) {
+            if (boardController && typeof boardController.destroy === "function") {
+                boardController.destroy();
+            }
+        });
+    }
 
-    boardElements.forEach(function(boardElement) {
-        setSingleTrainState(boardElement);
-        setOverheadPlatformState(boardElement);
+    var boardControllers = [];
+    root.querySelectorAll(".board").forEach(function(boardElement) {
+        boardControllers.push(createBoardController(boardElement));
     });
+    rootBoards.set(root, boardControllers);
 
     root.querySelectorAll(".can-scroll").forEach(function(el) {
         measureScrollableElement(el);
