@@ -77,17 +77,18 @@ function normalizeTrainServices(boardData) {
     if (!boardData) return null;
 
     if (Array.isArray(boardData.trainServices)) {
-        return boardData;
+        // Fine.
     }
 
     if (Array.isArray(boardData.trains)) {
-        return {
-            ...boardData,
-            trainServices: boardData.trains
-        };
+        boardData.trainServices = boardData.trains;
     }
 
-    return null;
+    if (boardData.station_name && !boardData.locationName) {
+        boardData.locationName = boardData.station_name;
+    }
+
+    return boardData;
 }
 
 function resolveBoardDataFromAttributes(attributes) {
@@ -133,8 +134,8 @@ class NationalRailUKCard extends HTMLElement {
             limit: config.limit || 10,
             show_delayed: config.show_delayed !== false,
             show_cancelled: config.show_cancelled !== false,
-            show_platform: config.show_platform || false,
-            show_operator: config.show_operator || false,
+            show_platform: config.show_platform !== false,
+            show_operator: config.show_operator !== false,
             refresh_interval: config.refresh_interval || 60,
             layout: config.layout || "responsive",
             theme: config.theme || "",
@@ -230,6 +231,7 @@ class NationalRailUKCard extends HTMLElement {
             maxRows: maxRows,
             board: filteredBoardData
         };
+        console.log("Rendering board with model:", model);
 
         content.innerHTML = boardTemplate(model);
         initializeRenderedBoards(this.shadowRoot);
