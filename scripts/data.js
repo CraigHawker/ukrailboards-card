@@ -2,10 +2,20 @@ if (typeof registerHandlebarsHelpers === "function") {
     registerHandlebarsHelpers();
 }
 
-// Compile our templates.
-var layoutTemplate = Handlebars.compile(document.getElementById("template-layout").innerHTML);
-var themeTemplate = Handlebars.compile(document.getElementById("template-theme").innerHTML);
-var boardTemplate = Handlebars.compile(document.getElementById("template-board").innerHTML);
+// Compile our templates or use precompiled templates supplied by the demo bundle.
+var layoutTemplate;
+var themeTemplate;
+var boardTemplate;
+
+if (window.boardTemplates) {
+    layoutTemplate = window.boardTemplates.layoutTemplate;
+    themeTemplate = window.boardTemplates.themeTemplate;
+    boardTemplate = window.boardTemplates.boardTemplate;
+} else {
+    layoutTemplate = Handlebars.compile(document.getElementById("template-layout").innerHTML);
+    themeTemplate = Handlebars.compile(document.getElementById("template-theme").innerHTML);
+    boardTemplate = Handlebars.compile(document.getElementById("template-board").innerHTML);
+}
 
 // Create themes and layouts arrays so we can output every combination.
 var layouts = [

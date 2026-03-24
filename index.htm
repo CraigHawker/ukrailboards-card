@@ -12,60 +12,6 @@
     <section id="boards">
         <p>Please wait whilst we load data...</p>
     </section>
-
-    <script type="template/handlebars" id="template-layout">
-        <h1>{{name}}</h1>
-    </script>
-
-    <script type="template/handlebars" id="template-theme">
-        <h2>{{name}}</h2>
-    </script>
-
-    <script type="template/handlebars" id="template-board">
-        <section class="board {{layout.css}} {{theme.css}}" data-location-city="{{board.locationName}}" data-location-platform="{{firstPlatform board.trainServices}}">
-            <header>
-                <h1>
-                    <span class="prefix">Departures from</span>
-                    <span class="location can-scroll">{{board.locationName}}</span>
-                </h1>
-            </header>
-            <trains role="list">
-                {{#each (limit board.trainServices 9)}}
-                <train role="listitem" itemscope itemtype="https://schema.org/TrainTrip"
-                data-status="{{statusText this}}" data-isEstimated="{{isEstimated this}}" data-isCancelled="{{isCancelled this}}"
-                data-operator="{{operator}}"
-                title="{{fallback (statusText this) "Unknown"}}: {{ std }} service to {{ destinationName this }}"
-                aria-label="{{fallback (statusText this) "Unknown"}}: {{ std }} service to {{ destinationName this }}">
-                    <time itemprop="departureTime" class="departure {{departureClass this}}" datetime="{{serviceDateTime this ../board.generatedAt}}">{{fallback std "--:--"}}</time>
-                    <station itemprop="departureStation" class="can-scroll" name="{{fallback ../board.locationName "Unknown"}}" code="{{fallback ../board.crs "Unknown"}}">{{fallback ../board.locationName "Unknown"}}</station>
-                    <station itemprop="arrivalStation" class="destination final can-scroll" name="{{fallback (destinationName this) "Unknown"}}" code="{{fallback (destinationCode this) "Unknown"}}">{{fallback (destinationName this) "Unknown"}}</station>
-                    {{#if platform }}
-                    <span class="location platform">
-                        <span class="prefix">platform</span>
-                        <span class="platform-number">{{ platform }}</span>
-                    </span>
-                    {{/if}}
-                    <span class="prefix status">{{fallback (statusText this) "Unknown"}}</span>
-                    <h3 class="calling-at">Calling at</h3>
-                    <stations class="calling-at can-scroll" role="list" aria-label="Intermediate and final stops">
-                        {{#each (callingPoints this)}}
-                        <station class="location stop can-scroll{{#if @last}} final{{/if}}" role="listitem"{{#if @last}} itemprop="arrivalStation"{{/if}}>
-                                {{fallback locationName "Unknown"}}
-                                <time class="estimated"{{#if @last}} itemprop="arrivalTime"{{/if}} datetime="{{callingPointDateTime this @root.board.generatedAt}}">{{displayTime this}}</time>
-                        </station>
-                        {{/each}}
-                    </stations>
-                </train>
-                {{/each}}
-            </trains>
-        </section>
-    </script>
-
-
-    <script src="scripts/handlebars.min.js"></script>
-    <script src="scripts/handlebars-helpers.js"></script>
-    <script src="scripts/data.js"></script>
-    <script src="scripts/next-train.js"></script>
-    <script src="scripts/scrolling.js"></script>
+    <script type="module" src="dist/demo.js"></script>
 </body>
 </html>
