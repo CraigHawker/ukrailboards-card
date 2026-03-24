@@ -1,6 +1,7 @@
 # National Rail UK Board (Demo + Lovelace Card)
 
 This project now supports both:
+
 - A local demo page rendered from bundled, precompiled Handlebars templates
 - A Lovelace custom card bundle for Home Assistant
 
@@ -11,6 +12,7 @@ npm run build
 ```
 
 Build output:
+
 - `dist/demo.js`
 - `dist/nationalrailuk-card.js`
 
@@ -41,20 +43,21 @@ refresh_interval: 30
 
 ## Compatible Config Fields
 
-The card accepts the same configuration keys as the replacement target card and loads them in `setConfig`.
+The card accepts the same configuration keys as the replacement target card and applies them in rendering.
 
 - `title`: Card header text.
 - `entity`: Home Assistant sensor/entity to read.
 - `max_rows`: Maximum rows to render (validated 1-50).
 - `limit`: Alternate row-limit field (validated 1-50; also maps into `max_rows` when `max_rows` is omitted).
-- `show_delayed`: Loaded for compatibility.
-- `show_cancelled`: Loaded for compatibility.
-- `show_platform`: Loaded for compatibility.
-- `show_operator`: Loaded for compatibility.
-- `refresh_interval`: Loaded for compatibility.
+- `show_delayed`: Hides delayed services when `false`.
+- `show_cancelled`: Hides cancelled services when `false`.
+- `show_platform`: Hides platform label/value when `false`.
+- `show_operator`: Hides operator text when `false`.
+- `refresh_interval`: Minimum seconds between card content refreshes.
 
 Card-specific display options also supported in this implementation:
+
 - `layout`: Board layout CSS class (`responsive`, `single-train`, `table`, `overhead-platform`).
 - `theme`: Theme CSS class (for example `theme-london2025`).
 
-Note: compatibility fields are loaded, but filtering/logic behavior for those fields has not yet been implemented.
+Delayed detection follows the same approach as the replacement card: an expected time later than scheduled is treated as delayed.

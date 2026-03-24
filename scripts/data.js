@@ -59,6 +59,7 @@ for (var i = 0; i < layouts.length; i++) {
         var data = {
             layout: layouts[i],
             theme: themes[j],
+            maxRows: 9,
             board: boardData
         };
         finalOutput += boardTemplate(data);

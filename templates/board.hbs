@@ -6,7 +6,7 @@
         </h1>
     </header>
     <trains role="list">
-        {{#each (limit board.trainServices 9)}}
+        {{#each (limit board.trainServices maxRows)}}
         <train role="listitem" itemscope itemtype="https://schema.org/TrainTrip"
             data-status="{{statusText this}}" data-isEstimated="{{isEstimated this}}" data-isCancelled="{{isCancelled this}}"
             data-operator="{{operator}}"
