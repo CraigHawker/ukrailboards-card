@@ -31,6 +31,39 @@ ha-card {
 }
 `;
 
+function buildRuntimeFontCss() {
+    const ukPidsWoff2 = new URL("./font/UkPIDS.woff2", import.meta.url).href;
+    const ukPidsTtf = new URL("./font/UkPIDS.ttf", import.meta.url).href;
+    const robotoMonoRegularWoff2 = new URL("./font/RobotoMono-Regular.woff2", import.meta.url).href;
+    const robotoMonoRegularTtf = new URL("./font/RobotoMono-Regular.ttf", import.meta.url).href;
+    const robotoMonoBoldWoff2 = new URL("./font/RobotoMono-Bold.woff2", import.meta.url).href;
+    const robotoMonoBoldTtf = new URL("./font/RobotoMono-Bold.ttf", import.meta.url).href;
+
+    return `
+@font-face {
+    font-family: "UkPIDS";
+    src: url("${ukPidsWoff2}") format("woff2"), url("${ukPidsTtf}") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("${robotoMonoRegularWoff2}") format("woff2"), url("${robotoMonoRegularTtf}") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("${robotoMonoBoldWoff2}") format("woff2"), url("${robotoMonoBoldTtf}") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+`;
+}
+
+const RUNTIME_FONT_CSS = buildRuntimeFontCss();
+
 let helpersRegistered = false;
 
 function ensureHelpersRegistered() {
@@ -132,7 +165,7 @@ class NationalRailUKCard extends HTMLElement {
         if (!this.shadowRoot) return;
 
         this.shadowRoot.innerHTML = `
-            <style>${WRAPPER_CSS}\n${boardCss}</style>
+            <style>${WRAPPER_CSS}\n${boardCss}\n${RUNTIME_FONT_CSS}</style>
             <ha-card>
                 <div class="card-header">${this._config ? this._config.title : "Train Departures"}</div>
                 <div class="card-body">
