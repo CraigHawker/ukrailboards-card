@@ -283,7 +283,9 @@ export function initializeRenderedBoards(root) {
     });
     rootBoards.set(root, boardControllers);
 
-    root.querySelectorAll(".can-scroll").forEach(function(el) {
-        measureScrollableElement(el);
+    requestAnimationFrame(function() {
+        root.querySelectorAll(".can-scroll").forEach(function(el) {
+            measureScrollableElement(el);
+        });
     });
 }

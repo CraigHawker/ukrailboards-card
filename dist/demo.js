@@ -2569,7 +2569,9 @@ function buildDateTime(time, generatedAt) {
     var debouncedMeasureAllScrollableElements = debounce(measureAllScrollableElements, 300);
     window.addEventListener("resize", debouncedMeasureAllScrollableElements);
   });
-  document.addEventListener("boards:rendered", initializeScrolling);
+  document.addEventListener("boards:rendered", function() {
+    requestAnimationFrame(initializeScrolling);
+  });
 })();
 
 // src/demo/main.js

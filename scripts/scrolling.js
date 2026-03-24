@@ -135,5 +135,7 @@
 		window.addEventListener('resize', debouncedMeasureAllScrollableElements);
 	});
 
-	document.addEventListener('boards:rendered', initializeScrolling);
+	document.addEventListener('boards:rendered', function () {
+		requestAnimationFrame(initializeScrolling);
+	});
 })();

@@ -1552,8 +1552,10 @@ function initializeRenderedBoards(root) {
     boardControllers.push(createBoardController(boardElement));
   });
   rootBoards.set(root, boardControllers);
-  root.querySelectorAll(".can-scroll").forEach(function(el) {
-    measureScrollableElement(el);
+  requestAnimationFrame(function() {
+    root.querySelectorAll(".can-scroll").forEach(function(el) {
+      measureScrollableElement(el);
+    });
   });
 }
 
