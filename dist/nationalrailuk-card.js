@@ -1470,19 +1470,34 @@ function ensureHelpersRegistered() {
   registerHandlebarsHelpers(import_runtime2.default);
   helpersRegistered = true;
 }
+function normalizeTrainServices(boardData) {
+  if (!boardData) return null;
+  if (Array.isArray(boardData.trainServices)) {
+    return boardData;
+  }
+  if (Array.isArray(boardData.trains)) {
+    return {
+      ...boardData,
+      trainServices: boardData.trains
+    };
+  }
+  return null;
+}
 function resolveBoardDataFromAttributes(attributes) {
   if (!attributes) return null;
-  if (Array.isArray(attributes.trainServices)) {
-    return attributes;
+  let boardData = normalizeTrainServices(attributes);
+  if (boardData) return boardData;
+  if (attributes.board) {
+    boardData = normalizeTrainServices(attributes.board);
+    if (boardData) return boardData;
   }
-  if (attributes.board && Array.isArray(attributes.board.trainServices)) {
-    return attributes.board;
+  if (attributes.boardData) {
+    boardData = normalizeTrainServices(attributes.boardData);
+    if (boardData) return boardData;
   }
-  if (attributes.boardData && Array.isArray(attributes.boardData.trainServices)) {
-    return attributes.boardData;
-  }
-  if (attributes.data && Array.isArray(attributes.data.trainServices)) {
-    return attributes.data;
+  if (attributes.data) {
+    boardData = normalizeTrainServices(attributes.data);
+    if (boardData) return boardData;
   }
   return null;
 }
@@ -1512,6 +1527,9 @@ var NationalRailUKCard = class extends HTMLElement {
     };
     if (config.limit && !config.max_rows) {
       this._config.max_rows = config.limit;
+    }
+    if (this._config.max_rows > 9) {
+      this._config.max_rows = 9;
     }
     this.render();
     this.updateContent();

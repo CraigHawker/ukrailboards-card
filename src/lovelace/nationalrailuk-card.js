@@ -39,23 +39,43 @@ function ensureHelpersRegistered() {
     helpersRegistered = true;
 }
 
+function normalizeTrainServices(boardData) {
+    // Handle both 'trainServices' and 'trains' attribute names
+    if (!boardData) return null;
+
+    if (Array.isArray(boardData.trainServices)) {
+        return boardData;
+    }
+
+    if (Array.isArray(boardData.trains)) {
+        return {
+            ...boardData,
+            trainServices: boardData.trains
+        };
+    }
+
+    return null;
+}
+
 function resolveBoardDataFromAttributes(attributes) {
     if (!attributes) return null;
 
-    if (Array.isArray(attributes.trainServices)) {
-        return attributes;
+    let boardData = normalizeTrainServices(attributes);
+    if (boardData) return boardData;
+
+    if (attributes.board) {
+        boardData = normalizeTrainServices(attributes.board);
+        if (boardData) return boardData;
     }
 
-    if (attributes.board && Array.isArray(attributes.board.trainServices)) {
-        return attributes.board;
+    if (attributes.boardData) {
+        boardData = normalizeTrainServices(attributes.boardData);
+        if (boardData) return boardData;
     }
 
-    if (attributes.boardData && Array.isArray(attributes.boardData.trainServices)) {
-        return attributes.boardData;
-    }
-
-    if (attributes.data && Array.isArray(attributes.data.trainServices)) {
-        return attributes.data;
+    if (attributes.data) {
+        boardData = normalizeTrainServices(attributes.data);
+        if (boardData) return boardData;
     }
 
     return null;
