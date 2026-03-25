@@ -1915,12 +1915,12 @@ var UkrailboardsCard = class extends HTMLElement {
     this._config = {
       title: config.title || "Train Departures",
       entity: config.entity,
-      max_rows: config.max_rows || 10,
+      max_rows: config.max_rows || 9,
       limit: config.limit || 10,
-      show_delayed: config.show_delayed !== false,
-      show_cancelled: config.show_cancelled !== false,
-      show_platform: config.show_platform !== false,
-      show_operator: config.show_operator !== false,
+      show_delayed: config.show_delayed ?? false,
+      show_cancelled: config.show_cancelled ?? false,
+      show_platform: config.show_platform ?? false,
+      show_operator: config.show_operator ?? false,
       refresh_interval: config.refresh_interval || 60,
       layout: config.layout || "responsive",
       theme: config.theme || "",
@@ -1942,7 +1942,116 @@ var UkrailboardsCard = class extends HTMLElement {
       entity: "sensor.train_schedule_wat_all",
       title: "Train Departures",
       layout: "responsive",
-      theme: ""
+      theme: "",
+      max_rows: 9,
+      show_delayed: false,
+      show_cancelled: false,
+      show_platform: false,
+      show_operator: false,
+      refresh_interval: 60
+    };
+  }
+  static getConfigForm() {
+    return {
+      schema: [
+        {
+          name: "entity",
+          selector: {
+            entity: {
+              multiple: false,
+              filter: [
+                {
+                  domain: "sensor",
+                  integration: "national_rail_uk"
+                }
+              ]
+            }
+          }
+        },
+        {
+          name: "title",
+          selector: {
+            text: {}
+          }
+        },
+        {
+          name: "layout",
+          selector: {
+            select: {
+              options: [
+                { value: "responsive", label: "Responsive" },
+                { value: "single-train", label: "Single Train" },
+                { value: "table", label: "Table" },
+                { value: "overhead-platform", label: "Overhead Platform" }
+              ]
+            }
+          }
+        },
+        {
+          name: "theme",
+          selector: {
+            select: {
+              options: [
+                { value: "", label: "Default" },
+                { value: "theme-london2025", label: "London 2025" }
+              ]
+            }
+          }
+        },
+        {
+          name: "advanced",
+          type: "expandable",
+          title: "Advanced",
+          collapsed: true,
+          flatten: true,
+          schema: [
+            {
+              name: "max_rows",
+              selector: {
+                number: {
+                  min: 1,
+                  max: 9,
+                  mode: "slider"
+                }
+              }
+            },
+            {
+              name: "show_delayed",
+              selector: {
+                boolean: {}
+              }
+            },
+            {
+              name: "show_cancelled",
+              selector: {
+                boolean: {}
+              }
+            },
+            {
+              name: "show_platform",
+              selector: {
+                boolean: {}
+              }
+            },
+            {
+              name: "show_operator",
+              selector: {
+                boolean: {}
+              }
+            },
+            {
+              name: "refresh_interval",
+              selector: {
+                number: {
+                  min: 1,
+                  mode: "box",
+                  unit_of_measurement: "seconds"
+                }
+              }
+            }
+          ]
+        }
+      ]
     };
   }
   render() {
@@ -2057,8 +2166,8 @@ ${site_default}</style>
     if (!config.entity) {
       throw new Error("Entity is required");
     }
-    if (config.max_rows && (config.max_rows < 1 || config.max_rows > 50)) {
-      throw new Error("max_rows must be between 1 and 50");
+    if (config.max_rows && (config.max_rows < 1 || config.max_rows > 9)) {
+      throw new Error("max_rows must be between 1 and 9");
     }
     if (config.limit && (config.limit < 1 || config.limit > 50)) {
       throw new Error("limit must be between 1 and 50");
