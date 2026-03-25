@@ -17,13 +17,14 @@
 
     trains{
         display: grid;
-        grid-template-columns: auto 1fr auto minmax(100px, auto);
+        grid-template-columns: auto 1fr auto minmax(60px, auto);
         grid-auto-flow: row;
         --board-gap: 4px 8px;
         gap: var(--board-gap);
         position: relative;
         padding: var(--board-content-spacing);
         border-top: var(--board-header-border-width, 30px) solid var(--board-border);
+        min-width: 250px;
 
         train{
             display: grid;
@@ -75,7 +76,7 @@
                     content: "Due";
                     text-align: right;
                     width: 100%;
-                    max-width: 100px;
+                    max-width: 70px;
                     box-sizing: border-box;
                 }
                 .platform:before{
