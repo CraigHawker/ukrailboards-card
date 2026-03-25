@@ -1917,10 +1917,11 @@ var UkrailboardsCard = class extends HTMLElement {
       entity: config.entity,
       max_rows: config.max_rows || 9,
       limit: config.limit || 10,
-      show_delayed: config.show_delayed ?? false,
-      show_cancelled: config.show_cancelled ?? false,
-      show_platform: config.show_platform ?? false,
-      show_operator: config.show_operator ?? false,
+      platform_filter: typeof config.platform_filter === "string" ? config.platform_filter.trim() : config.platform_filter == null ? "" : String(config.platform_filter).trim(),
+      hide_delayed: config.hide_delayed ?? (config.show_delayed == null ? false : !config.show_delayed),
+      hide_cancelled: config.hide_cancelled ?? (config.show_cancelled == null ? false : !config.show_cancelled),
+      hide_platform: config.hide_platform ?? (config.show_platform == null ? false : !config.show_platform),
+      hide_operator: config.hide_operator ?? (config.show_operator == null ? false : !config.show_operator),
       refresh_interval: config.refresh_interval || 60,
       layout: config.layout || "responsive",
       theme: config.theme || "",
@@ -1944,10 +1945,11 @@ var UkrailboardsCard = class extends HTMLElement {
       layout: "responsive",
       theme: "",
       max_rows: 9,
-      show_delayed: false,
-      show_cancelled: false,
-      show_platform: false,
-      show_operator: false,
+      platform_filter: "",
+      hide_delayed: false,
+      hide_cancelled: false,
+      hide_platform: false,
+      hide_operator: false,
       refresh_interval: 60
     };
   }
@@ -2016,25 +2018,33 @@ var UkrailboardsCard = class extends HTMLElement {
               }
             },
             {
-              name: "show_delayed",
+              name: "platform_filter",
+              selector: {
+                text: {
+                  placeholder: "e.g. 2"
+                }
+              }
+            },
+            {
+              name: "hide_delayed",
               selector: {
                 boolean: {}
               }
             },
             {
-              name: "show_cancelled",
+              name: "hide_cancelled",
               selector: {
                 boolean: {}
               }
             },
             {
-              name: "show_platform",
+              name: "hide_platform",
               selector: {
                 boolean: {}
               }
             },
             {
-              name: "show_operator",
+              name: "hide_operator",
               selector: {
                 boolean: {}
               }
@@ -2118,11 +2128,18 @@ ${site_default}</style>
   }
   _applyConfigToBoardData(boardData) {
     const that = this;
+    const platformFilter = (that._config.platform_filter || "").trim().toLowerCase();
     const services = boardData.trainServices.filter(function(service) {
-      if (!that._config.show_cancelled && that._isCancelled(service)) {
+      if (platformFilter) {
+        const servicePlatform = (service && service.platform != null ? String(service.platform) : "").trim().toLowerCase();
+        if (servicePlatform !== platformFilter) {
+          return false;
+        }
+      }
+      if (that._config.hide_cancelled && that._isCancelled(service)) {
         return false;
       }
-      if (!that._config.show_delayed && that._isDelayed(service)) {
+      if (that._config.hide_delayed && that._isDelayed(service)) {
         return false;
       }
       return true;
@@ -2130,10 +2147,10 @@ ${site_default}</style>
       return that._parseTimeToMinutes(a.std) - that._parseTimeToMinutes(b.std);
     }).slice(0, that._config.max_rows).map(function(service) {
       const serviceCopy = { ...service };
-      if (!that._config.show_platform) {
+      if (that._config.hide_platform) {
         delete serviceCopy.platform;
       }
-      if (!that._config.show_operator) {
+      if (that._config.hide_operator) {
         serviceCopy.operator = "";
       }
       return serviceCopy;
