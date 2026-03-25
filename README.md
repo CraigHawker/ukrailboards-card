@@ -1,5 +1,9 @@
 # National Rail UK Board (Demo + Lovelace Card)
 
+This project is a Home Assistant card designed to be used alongside [https://github.com/darrenparkinson/homeassistant_nationalrail](https://github.com/darrenparkinson/homeassistant_nationalrail).  This renders the data from the national rail plugin similar to UK boards.
+
+It contains multiple layout types (e.g. over-platform board, or a board showing a single train, or a table), and provides support for different themes.  The default theme uses the older LED-style layout.
+
 This project now supports both:
 
 - A local demo page rendered from bundled, precompiled Handlebars templates
