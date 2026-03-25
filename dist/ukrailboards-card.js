@@ -2021,7 +2021,7 @@ var UkrailboardsCard = class extends HTMLElement {
               name: "platform_filter",
               selector: {
                 text: {
-                  placeholder: "e.g. 2"
+                  placeholder: "e.g. 1, 2, 4"
                 }
               }
             },
@@ -2128,11 +2128,16 @@ ${site_default}</style>
   }
   _applyConfigToBoardData(boardData) {
     const that = this;
-    const platformFilter = (that._config.platform_filter || "").trim().toLowerCase();
+    const platformFilter = (that._config.platform_filter || "").split(",").map(function(value) {
+      return value.trim().toLowerCase();
+    }).filter(function(value) {
+      return value.length > 0;
+    });
+    const hasPlatformFilter = platformFilter.length > 0;
     const services = boardData.trainServices.filter(function(service) {
-      if (platformFilter) {
+      if (hasPlatformFilter) {
         const servicePlatform = (service && service.platform != null ? String(service.platform) : "").trim().toLowerCase();
-        if (servicePlatform !== platformFilter) {
+        if (!platformFilter.includes(servicePlatform)) {
           return false;
         }
       }
