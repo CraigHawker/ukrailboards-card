@@ -1232,6 +1232,496 @@ var site_default = '@keyframes text-scroll {\n  0% {\n    left: 0;\n  }\n  40% {
 // styles/fonts.css
 var fonts_default = '@font-face {\n  font-family: "UkPIDS";\n  src: url("../fonts/UkPIDS.woff2") format("woff2"), url("../fonts/UkPIDS.ttf") format("truetype");\n  font-display: swap;\n}\n@font-face {\n  font-family: "Roboto Mono";\n  src: url("../fonts/RobotoMono-Regular.woff2") format("woff2"), url("../fonts/RobotoMono-Regular.ttf") format("truetype");\n  font-weight: 400;\n  font-style: normal;\n  font-display: swap;\n}\n@font-face {\n  font-family: "Roboto Mono";\n  src: url("../fonts/RobotoMono-Bold.woff2") format("woff2"), url("../fonts/RobotoMono-Bold.ttf") format("truetype");\n  font-weight: 700;\n  font-style: normal;\n  font-display: swap;\n}\n';
 
+// scripts/next-train.js
+var rootBoards = /* @__PURE__ */ new WeakMap();
+var TICK_INTERVAL = 10 * 1e3;
+var renderPlugins = [];
+registerRenderPlugin(createSingleTrainRenderPlugin());
+registerRenderPlugin(createOverheadPlatformRenderPlugin());
+function registerRenderPlugin(renderPlugin) {
+  renderPlugins.push(renderPlugin);
+}
+function ensureNumberBetweenMaxAndMin(value, min, max) {
+  var parsed = parseInt(value, 10);
+  if (isNaN(parsed)) return min;
+  if (parsed < min) return min;
+  if (parsed > max) return max;
+  return parsed;
+}
+function getWindowForElement(el) {
+  return el.ownerDocument ? el.ownerDocument.defaultView : window;
+}
+function Board(el) {
+  var that = this;
+  that.element = el;
+  that.renderPluginState = {};
+  that.getRenderPluginState = function(pluginName) {
+    if (!that.renderPluginState[pluginName]) {
+      that.renderPluginState[pluginName] = {};
+    }
+    return that.renderPluginState[pluginName];
+  };
+  that.collectTrains = function() {
+    that.allTrains = [];
+    var trains = that.element.querySelectorAll("train");
+    trains.forEach(function(trainElement) {
+      that.allTrains.push(new Train(trainElement));
+    });
+  };
+  that.shouldPauseOnHover = function() {
+    return false;
+    var view = getWindowForElement(that.element);
+    var value = view.getComputedStyle(that.element).getPropertyValue("--board-pause-on-hover").trim().toLowerCase();
+    return value === "true" || value === "1";
+  };
+  that.ensureNavigationControls = function() {
+    if (!that.allTrains || that.allTrains.length <= 1) {
+      var existingPrev = that.element.querySelector(".board-nav.prev");
+      var existingNext = that.element.querySelector(".board-nav.next");
+      if (existingPrev) existingPrev.remove();
+      if (existingNext) existingNext.remove();
+      that.element.removeAttribute("data-board-has-navigation");
+      return;
+    }
+    if (that.element.querySelector(".board-nav.prev")) {
+      that.element.setAttribute("data-board-has-navigation", "true");
+      return;
+    }
+    var ownerDocument = that.element.ownerDocument;
+    var prev = ownerDocument.createElement("button");
+    prev.type = "button";
+    prev.className = "board-nav prev";
+    prev.setAttribute("aria-label", "Previous train");
+    prev.textContent = "\u2039";
+    var next = ownerDocument.createElement("button");
+    next.type = "button";
+    next.className = "board-nav next";
+    next.setAttribute("aria-label", "Next train");
+    next.textContent = "\u203A";
+    prev.addEventListener("click", function(event) {
+      event.stopPropagation();
+      that.showPreviousTrain();
+    });
+    next.addEventListener("click", function(event) {
+      event.stopPropagation();
+      that.showNextTrain();
+    });
+    that.element.appendChild(prev);
+    that.element.appendChild(next);
+    that.element.setAttribute("data-board-has-navigation", "true");
+  };
+  that.showNextTrain = function() {
+    that.collectTrains();
+    renderPlugins.forEach(function(renderPlugin) {
+      if (typeof renderPlugin.next === "function") {
+        renderPlugin.next(that);
+      }
+    });
+    that.resetTimer();
+  };
+  that.showPreviousTrain = function() {
+    that.collectTrains();
+    renderPlugins.forEach(function(renderPlugin) {
+      if (typeof renderPlugin.previous === "function") {
+        renderPlugin.previous(that);
+      }
+    });
+    that.resetTimer();
+  };
+  that.render = function() {
+    that.collectTrains();
+    that.ensureNavigationControls();
+    renderPlugins.forEach(function(renderPlugin) {
+      if (typeof renderPlugin.render === "function") {
+        renderPlugin.render(that);
+      }
+    });
+  };
+  that.pause = function() {
+    if (!that.shouldPauseOnHover() || that.isPaused) return;
+    that.isPaused = true;
+    that.element.classList.add("board-paused");
+    if (that.timerId) {
+      clearTimeout(that.timerId);
+      that.timerId = null;
+    }
+  };
+  that.resume = function() {
+    if (!that.shouldPauseOnHover() || !that.isPaused) return;
+    that.isPaused = false;
+    that.element.classList.remove("board-paused");
+    that.resetTimer();
+  };
+  that.tick = function() {
+    that.timerId = null;
+    if (that.isPaused) return;
+    that.showNextTrain();
+  };
+  that.resetTimer = function() {
+    if (that.timerId) {
+      clearTimeout(that.timerId);
+    }
+    that.timerId = setTimeout(that.tick, TICK_INTERVAL);
+  };
+  that.destroy = function() {
+    if (that.timerId) {
+      clearTimeout(that.timerId);
+      that.timerId = null;
+    }
+    that.element.removeEventListener("mouseenter", that.pause);
+    that.element.removeEventListener("mouseleave", that.resume);
+  };
+  that.collectTrains();
+  that.ensureNavigationControls();
+  that.render();
+  that.element.addEventListener("mouseenter", that.pause);
+  that.element.addEventListener("mouseleave", that.resume);
+  that.resetTimer();
+  return that;
+}
+function Train(el) {
+  var that = this;
+  that.element = el;
+  that.setAttribute = function(attributeName, value) {
+    that.element.setAttribute(attributeName, value);
+  };
+  that.removeAttribute = function(attributeName) {
+    that.element.removeAttribute(attributeName);
+  };
+  return that;
+}
+function createOverheadPlatformRenderPlugin() {
+  var pluginName = "overhead-platform";
+  function getPluginState(board) {
+    var pluginState = board.getRenderPluginState(pluginName);
+    if (typeof pluginState.trainIndex !== "number") {
+      pluginState.trainIndex = 0;
+    }
+    return pluginState;
+  }
+  function clearCurrentTrainState(train) {
+    train.removeAttribute("data-overhead-platform-train-state");
+  }
+  function setTrainStructure(board, pluginState) {
+    var overviewRow = pluginState.fixedRows - 1;
+    board.element.setAttribute("data-overhead-platform-overview-row", overviewRow);
+    board.element.setAttribute("data-overhead-platform-static-train-count", pluginState.staticTrainCount);
+    board.allTrains.forEach(function(train, index) {
+      var role = "rotating";
+      if (index === 0) {
+        role = "next-train";
+      } else if (index < pluginState.staticTrainCount) {
+        role = "static";
+      }
+      train.setAttribute("data-overhead-platform-train-role", role);
+      clearCurrentTrainState(train);
+    });
+  }
+  function populateTrains(board, pluginState) {
+    pluginState.fixedRows = ensureNumberBetweenMaxAndMin(board.element.getAttribute("data-overhead-platform-fixed-rows"), 3, 7);
+    pluginState.baseStaticTrainCount = Math.max(1, pluginState.fixedRows - 2);
+    pluginState.staticTrainCount = Math.min(pluginState.baseStaticTrainCount, board.allTrains.length);
+    if (board.allTrains.length - pluginState.staticTrainCount <= 1) {
+      pluginState.staticTrainCount = board.allTrains.length;
+    }
+    setTrainStructure(board, pluginState);
+    pluginState.rotatingTrains = board.allTrains.slice(pluginState.staticTrainCount);
+  }
+  function showCurrentTrain(board, pluginState) {
+    board.allTrains.forEach(function(train) {
+      clearCurrentTrainState(train);
+    });
+    if (!pluginState.rotatingTrains || pluginState.rotatingTrains.length === 0) {
+      return;
+    }
+    pluginState.trainIndex = (pluginState.trainIndex % pluginState.rotatingTrains.length + pluginState.rotatingTrains.length) % pluginState.rotatingTrains.length;
+    pluginState.rotatingTrains[pluginState.trainIndex].setAttribute("data-overhead-platform-train-state", "current");
+  }
+  function showNextTrain(board) {
+    var pluginState = getPluginState(board);
+    populateTrains(board, pluginState);
+    if (!pluginState.rotatingTrains || pluginState.rotatingTrains.length === 0) {
+      return;
+    }
+    pluginState.trainIndex = (pluginState.trainIndex + 1) % pluginState.rotatingTrains.length;
+    showCurrentTrain(board, pluginState);
+  }
+  function showPreviousTrain(board) {
+    var pluginState = getPluginState(board);
+    populateTrains(board, pluginState);
+    if (!pluginState.rotatingTrains || pluginState.rotatingTrains.length === 0) {
+      return;
+    }
+    pluginState.trainIndex = (pluginState.trainIndex - 1 + pluginState.rotatingTrains.length) % pluginState.rotatingTrains.length;
+    showCurrentTrain(board, pluginState);
+  }
+  return {
+    name: pluginName,
+    render: function(board) {
+      var pluginState = getPluginState(board);
+      populateTrains(board, pluginState);
+      showCurrentTrain(board, pluginState);
+    },
+    next: showNextTrain,
+    previous: showPreviousTrain
+  };
+}
+function createSingleTrainRenderPlugin() {
+  var pluginName = "single-train";
+  function getPluginState(board) {
+    var pluginState = board.getRenderPluginState(pluginName);
+    if (typeof pluginState.trainIndex !== "number") {
+      pluginState.trainIndex = 0;
+    }
+    return pluginState;
+  }
+  function clearCurrentTrainState(train) {
+    train.removeAttribute("data-single-train-state");
+  }
+  function showCurrentTrain(board, pluginState) {
+    board.allTrains.forEach(function(train) {
+      clearCurrentTrainState(train);
+    });
+    if (board.allTrains.length === 0) {
+      return;
+    }
+    pluginState.trainIndex = (pluginState.trainIndex % board.allTrains.length + board.allTrains.length) % board.allTrains.length;
+    board.allTrains[pluginState.trainIndex].setAttribute("data-single-train-state", "current");
+  }
+  function showNextTrain(board) {
+    var pluginState = getPluginState(board);
+    if (board.allTrains.length === 0) {
+      return;
+    }
+    pluginState.trainIndex = (pluginState.trainIndex + 1) % board.allTrains.length;
+    showCurrentTrain(board, pluginState);
+  }
+  function showPreviousTrain(board) {
+    var pluginState = getPluginState(board);
+    if (board.allTrains.length === 0) {
+      return;
+    }
+    pluginState.trainIndex = (pluginState.trainIndex - 1 + board.allTrains.length) % board.allTrains.length;
+    showCurrentTrain(board, pluginState);
+  }
+  return {
+    name: pluginName,
+    render: function(board) {
+      var pluginState = getPluginState(board);
+      if (board.allTrains && board.allTrains.length > 1) {
+        board.element.setAttribute("data-single-train-animation", "true");
+      } else {
+        board.element.removeAttribute("data-single-train-animation");
+      }
+      showCurrentTrain(board, pluginState);
+    },
+    next: showNextTrain,
+    previous: showPreviousTrain
+  };
+}
+function createBoards(root) {
+  var boards = [];
+  root.querySelectorAll(".board").forEach(function(el) {
+    boards.push(new Board(el));
+  });
+  rootBoards.set(root, boards);
+  return boards;
+}
+function initializeRenderedBoards(root) {
+  var existingBoards = rootBoards.get(root);
+  if (existingBoards && existingBoards.length > 0) {
+    existingBoards.forEach(function(board) {
+      if (board && typeof board.destroy === "function") {
+        board.destroy();
+      }
+    });
+  }
+  return createBoards(root);
+}
+
+// scripts/scrolling.js
+var BASE_CALLING_AT_DISTANCE_PX = 772 - 426;
+var BASE_CALLING_AT_DURATION_S = 10;
+var CALLING_AT_FIXED_TIME_S = 0.5 + 2 + 1.5 + 0.5;
+var BASE_CALLING_AT_TRAVEL_TIME_S = BASE_CALLING_AT_DURATION_S - CALLING_AT_FIXED_TIME_S;
+var rootRuntimeStates = /* @__PURE__ */ new WeakMap();
+function getWindowForRoot(root) {
+  if (!root) {
+    return typeof window !== "undefined" ? window : null;
+  }
+  if (typeof Document !== "undefined" && root instanceof Document) {
+    return root.defaultView;
+  }
+  return root.ownerDocument ? root.ownerDocument.defaultView : null;
+}
+function getDocumentForElement(el) {
+  return el.ownerDocument || document;
+}
+function getRuntimeState(root) {
+  var state = rootRuntimeStates.get(root);
+  if (!state) {
+    state = {
+      observer: null,
+      observedElements: [],
+      measureHandler: null,
+      resizeHandler: null,
+      windowObject: null,
+      listenersAttached: false,
+      boardsRenderedHandler: null,
+      domReadyHandler: null
+    };
+    rootRuntimeStates.set(root, state);
+  }
+  return state;
+}
+function getScrollableElements(root) {
+  return root.querySelectorAll(".can-scroll");
+}
+function isTruthyFlag(value, defaultValue) {
+  var normalized = (value || "").trim().toLowerCase();
+  if (!normalized) {
+    return defaultValue;
+  }
+  return normalized !== "0" && normalized !== "false" && normalized !== "off" && normalized !== "no";
+}
+function shouldMeasureElement(el) {
+  var view = getWindowForRoot(getDocumentForElement(el));
+  if (!view || typeof view.getComputedStyle !== "function") {
+    return true;
+  }
+  var styles = view.getComputedStyle(el);
+  var isEnabled = isTruthyFlag(styles.getPropertyValue("--scroll-enabled"), true);
+  if (!isEnabled) {
+    return false;
+  }
+  return isTruthyFlag(styles.getPropertyValue("--scroll-measure-root"), true);
+}
+function canWrapElementContent(el) {
+  var tagName = (el.tagName || "").toUpperCase();
+  return tagName !== "OL" && tagName !== "UL" && tagName !== "STATIONS";
+}
+function ensureScrollerElement(el) {
+  if (!canWrapElementContent(el)) {
+    return null;
+  }
+  var existingScroller = el.querySelector(":scope > .scroller");
+  if (existingScroller) {
+    return existingScroller;
+  }
+  if (!el.firstChild) {
+    return null;
+  }
+  var scroller = getDocumentForElement(el).createElement("span");
+  scroller.className = "scroller";
+  while (el.firstChild) {
+    scroller.appendChild(el.firstChild);
+  }
+  el.appendChild(scroller);
+  return scroller;
+}
+function measureScrollableElement(el) {
+  if (!shouldMeasureElement(el)) {
+    el.classList.remove("scroll");
+    return;
+  }
+  ensureScrollerElement(el);
+  var availableWidth = el.getBoundingClientRect().width;
+  var actualWidth = el.scrollWidth;
+  var overflowDistance = Math.max(0, actualWidth - availableWidth);
+  var callingAtTravelDurationSeconds = overflowDistance / BASE_CALLING_AT_DISTANCE_PX * BASE_CALLING_AT_TRAVEL_TIME_S;
+  var callingAtDurationSeconds = CALLING_AT_FIXED_TIME_S + callingAtTravelDurationSeconds;
+  el.style.setProperty("--available-width", parseInt(availableWidth, 10) + "px");
+  el.style.setProperty("--actual-width", parseInt(actualWidth, 10) + "px");
+  el.style.setProperty("--overhead-platform-calling-at-scroll-duration", callingAtDurationSeconds + "s");
+  if (actualWidth - 1 >= availableWidth) {
+    el.classList.add("scroll");
+    return;
+  }
+  el.classList.remove("scroll");
+}
+function measureScrollableElements(root) {
+  getScrollableElements(root).forEach(function(el) {
+    measureScrollableElement(el);
+  });
+}
+function debounce(fn, waitMs) {
+  var timeoutId;
+  return function() {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(function() {
+      fn();
+    }, waitMs);
+  };
+}
+function getMeasureHandler(root, state) {
+  if (!state.measureHandler) {
+    state.measureHandler = debounce(function() {
+      measureScrollableElements(root);
+    }, 300);
+  }
+  return state.measureHandler;
+}
+function ensureResizeHandling(root, state) {
+  var windowObject = getWindowForRoot(root);
+  if (!windowObject) {
+    return;
+  }
+  if (!state.resizeHandler) {
+    state.resizeHandler = getMeasureHandler(root, state);
+  }
+  if (state.windowObject && state.windowObject !== windowObject) {
+    state.windowObject.removeEventListener("resize", state.resizeHandler);
+    state.windowObject = null;
+  }
+  if (!state.windowObject) {
+    windowObject.addEventListener("resize", state.resizeHandler);
+    state.windowObject = windowObject;
+  }
+}
+function observeScrollableElements(root, state) {
+  if (state.observer) {
+    state.observedElements.forEach(function(el) {
+      state.observer.unobserve(el);
+    });
+    state.observedElements = [];
+  }
+  if (typeof ResizeObserver === "undefined") {
+    return;
+  }
+  if (!state.observer) {
+    state.observer = new ResizeObserver(function() {
+      getMeasureHandler(root, state)();
+    });
+  }
+  getScrollableElements(root).forEach(function(el) {
+    state.observer.observe(el);
+    state.observedElements.push(el);
+  });
+  if (root.host) {
+    state.observer.observe(root.host);
+    state.observedElements.push(root.host);
+  }
+}
+function initializeScrolling(root) {
+  var state = getRuntimeState(root);
+  measureScrollableElements(root);
+  ensureResizeHandling(root, state);
+  observeScrollableElements(root, state);
+  return state;
+}
+function scheduleInitializeScrolling(root) {
+  var windowObject = getWindowForRoot(root);
+  if (windowObject && typeof windowObject.requestAnimationFrame === "function") {
+    windowObject.requestAnimationFrame(function() {
+      initializeScrolling(root);
+    });
+    return;
+  }
+  initializeScrolling(root);
+}
+
 // src/shared/register-handlebars-helpers.js
 function registerHandlebarsHelpers(Handlebars3) {
   Handlebars3.registerHelper("statusText", function(service) {
@@ -1325,241 +1815,6 @@ function buildDateTime(time, generatedAt) {
   var date = generatedAt ? generatedAt.slice(0, 10) : "";
   if (!date) return "";
   return date + "T" + time + ":00";
-}
-
-// src/lovelace/board-runtime.js
-function ensureNumberBetweenMaxAndMin(value, min, max) {
-  var parsed = parseInt(value, 10);
-  if (isNaN(parsed)) return min;
-  if (parsed < min) return min;
-  if (parsed > max) return max;
-  return parsed;
-}
-var TICK_INTERVAL = 10 * 1e3;
-var rootBoards = /* @__PURE__ */ new WeakMap();
-function normalizeIndex(index, length) {
-  if (length <= 0) return 0;
-  return (index % length + length) % length;
-}
-function applySingleTrainState(boardElement, trains, activeIndex) {
-  if (trains.length === 0) {
-    boardElement.removeAttribute("data-single-train-animation");
-    return;
-  }
-  var normalizedIndex = normalizeIndex(activeIndex, trains.length);
-  trains.forEach(function(train, index) {
-    if (index === normalizedIndex) {
-      train.setAttribute("data-single-train-state", "current");
-    } else {
-      train.removeAttribute("data-single-train-state");
-    }
-  });
-  if (trains.length > 1) {
-    boardElement.setAttribute("data-single-train-animation", "true");
-  } else {
-    boardElement.removeAttribute("data-single-train-animation");
-  }
-}
-function applyOverheadPlatformState(boardElement, trains, activeRotatingIndex) {
-  if (trains.length === 0) {
-    boardElement.removeAttribute("data-overhead-platform-overview-row");
-    boardElement.removeAttribute("data-overhead-platform-static-train-count");
-    return 0;
-  }
-  var fixedRows = ensureNumberBetweenMaxAndMin(boardElement.getAttribute("data-overhead-platform-fixed-rows"), 3, 7);
-  var baseStaticTrainCount = Math.max(1, fixedRows - 2);
-  var staticTrainCount = Math.min(baseStaticTrainCount, trains.length);
-  if (trains.length - staticTrainCount <= 1) {
-    staticTrainCount = trains.length;
-  }
-  boardElement.setAttribute("data-overhead-platform-overview-row", String(fixedRows - 1));
-  boardElement.setAttribute("data-overhead-platform-static-train-count", String(staticTrainCount));
-  var rotatingTrains = [];
-  trains.forEach(function(train, index) {
-    train.removeAttribute("data-overhead-platform-train-state");
-    var role = "rotating";
-    if (index === 0) {
-      role = "next-train";
-    } else if (index < staticTrainCount) {
-      role = "static";
-    }
-    train.setAttribute("data-overhead-platform-train-role", role);
-    if (role === "rotating") {
-      rotatingTrains.push(train);
-    }
-  });
-  if (rotatingTrains.length > 0) {
-    var normalizedIndex = normalizeIndex(activeRotatingIndex, rotatingTrains.length);
-    rotatingTrains[normalizedIndex].setAttribute("data-overhead-platform-train-state", "current");
-  }
-  return rotatingTrains.length;
-}
-function createBoardController(boardElement) {
-  var controller = {
-    element: boardElement,
-    timerId: null,
-    singleTrainIndex: 0,
-    overheadTrainIndex: 0,
-    trainCount: 0,
-    overheadRotatingCount: 0,
-    prevButton: null,
-    nextButton: null
-  };
-  controller.collectTrains = function() {
-    return Array.prototype.slice.call(controller.element.querySelectorAll("train"));
-  };
-  controller.ensureNavigationControls = function() {
-    if (controller.trainCount <= 1) {
-      if (controller.prevButton) {
-        controller.prevButton.remove();
-        controller.prevButton = null;
-      }
-      if (controller.nextButton) {
-        controller.nextButton.remove();
-        controller.nextButton = null;
-      }
-      controller.element.removeAttribute("data-board-has-navigation");
-      return;
-    }
-    if (controller.prevButton && controller.nextButton) {
-      controller.element.setAttribute("data-board-has-navigation", "true");
-      return;
-    }
-    var ownerDocument = controller.element.ownerDocument;
-    var prev = ownerDocument.createElement("button");
-    prev.type = "button";
-    prev.className = "board-nav prev";
-    prev.setAttribute("aria-label", "Previous train");
-    prev.textContent = "";
-    var next = ownerDocument.createElement("button");
-    next.type = "button";
-    next.className = "board-nav next";
-    next.setAttribute("aria-label", "Next train");
-    next.textContent = "";
-    prev.addEventListener("click", function(event) {
-      event.stopPropagation();
-      controller.showPreviousTrain();
-    });
-    next.addEventListener("click", function(event) {
-      event.stopPropagation();
-      controller.showNextTrain();
-    });
-    controller.element.appendChild(prev);
-    controller.element.appendChild(next);
-    controller.prevButton = prev;
-    controller.nextButton = next;
-    controller.element.setAttribute("data-board-has-navigation", "true");
-  };
-  controller.render = function() {
-    var trains = controller.collectTrains();
-    controller.trainCount = trains.length;
-    controller.singleTrainIndex = normalizeIndex(controller.singleTrainIndex, controller.trainCount);
-    applySingleTrainState(controller.element, trains, controller.singleTrainIndex);
-    controller.overheadRotatingCount = applyOverheadPlatformState(controller.element, trains, controller.overheadTrainIndex);
-    controller.overheadTrainIndex = normalizeIndex(controller.overheadTrainIndex, controller.overheadRotatingCount);
-    controller.ensureNavigationControls();
-  };
-  controller.showNextTrain = function() {
-    if (controller.trainCount > 0) {
-      controller.singleTrainIndex = normalizeIndex(controller.singleTrainIndex + 1, controller.trainCount);
-    }
-    if (controller.overheadRotatingCount > 0) {
-      controller.overheadTrainIndex = normalizeIndex(controller.overheadTrainIndex + 1, controller.overheadRotatingCount);
-    }
-    controller.render();
-    controller.resetTimer();
-  };
-  controller.showPreviousTrain = function() {
-    if (controller.trainCount > 0) {
-      controller.singleTrainIndex = normalizeIndex(controller.singleTrainIndex - 1, controller.trainCount);
-    }
-    if (controller.overheadRotatingCount > 0) {
-      controller.overheadTrainIndex = normalizeIndex(controller.overheadTrainIndex - 1, controller.overheadRotatingCount);
-    }
-    controller.render();
-    controller.resetTimer();
-  };
-  controller.tick = function() {
-    controller.timerId = null;
-    controller.showNextTrain();
-  };
-  controller.resetTimer = function() {
-    if (controller.timerId) {
-      clearTimeout(controller.timerId);
-    }
-    controller.timerId = setTimeout(controller.tick, TICK_INTERVAL);
-  };
-  controller.destroy = function() {
-    if (controller.timerId) {
-      clearTimeout(controller.timerId);
-      controller.timerId = null;
-    }
-  };
-  controller.render();
-  controller.resetTimer();
-  return controller;
-}
-function canWrapElementContent(el) {
-  var tagName = (el.tagName || "").toUpperCase();
-  return tagName !== "OL" && tagName !== "UL" && tagName !== "STATIONS";
-}
-function ensureScrollerElement(el) {
-  if (!canWrapElementContent(el)) {
-    return null;
-  }
-  var existingScroller = el.querySelector(":scope > .scroller");
-  if (existingScroller) {
-    return existingScroller;
-  }
-  if (!el.firstChild) {
-    return null;
-  }
-  var ownerDocument = el.ownerDocument;
-  var scroller = ownerDocument.createElement("span");
-  scroller.className = "scroller";
-  while (el.firstChild) {
-    scroller.appendChild(el.firstChild);
-  }
-  el.appendChild(scroller);
-  return scroller;
-}
-function measureScrollableElement(el) {
-  ensureScrollerElement(el);
-  var availableWidth = el.getBoundingClientRect().width;
-  var actualWidth = el.scrollWidth;
-  var overflowDistance = Math.max(0, actualWidth - availableWidth);
-  var baseDistance = 772 - 426;
-  var fixedTime = 0.5 + 2 + 1.5 + 0.5;
-  var travelTime = 10 - fixedTime;
-  var duration = fixedTime + overflowDistance / baseDistance * travelTime;
-  el.style.setProperty("--available-width", parseInt(availableWidth, 10) + "px");
-  el.style.setProperty("--actual-width", parseInt(actualWidth, 10) + "px");
-  el.style.setProperty("--overhead-platform-calling-at-scroll-duration", duration + "s");
-  if (actualWidth - 1 >= availableWidth) {
-    el.classList.add("scroll");
-  } else {
-    el.classList.remove("scroll");
-  }
-}
-function initializeRenderedBoards(root) {
-  var existingBoards = rootBoards.get(root);
-  if (existingBoards && existingBoards.length > 0) {
-    existingBoards.forEach(function(boardController) {
-      if (boardController && typeof boardController.destroy === "function") {
-        boardController.destroy();
-      }
-    });
-  }
-  var boardControllers = [];
-  root.querySelectorAll(".board").forEach(function(boardElement) {
-    boardControllers.push(createBoardController(boardElement));
-  });
-  rootBoards.set(root, boardControllers);
-  requestAnimationFrame(function() {
-    root.querySelectorAll(".can-scroll").forEach(function(el) {
-      measureScrollableElement(el);
-    });
-  });
 }
 
 // src/lovelace/nationalrailuk-card.js
@@ -1749,6 +2004,7 @@ ${site_default}</style>
     console.log("Rendering board with model:", model);
     content.innerHTML = board_default(model);
     initializeRenderedBoards(this.shadowRoot);
+    scheduleInitializeScrolling(this.shadowRoot);
     this._lastUpdate = now;
   }
   _applyConfigToBoardData(boardData) {

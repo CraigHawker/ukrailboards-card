@@ -3,9 +3,8 @@ import layoutTemplate from "../../templates/layout.hbs";
 import themeTemplate from "../../templates/theme.hbs";
 import boardTemplate from "../../templates/board.hbs";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
-
-import "../../scripts/next-train.js";
-import "../../scripts/scrolling.js";
+import { registerDocumentBoards } from "../../scripts/next-train.js";
+import { registerDocumentScrolling } from "../../scripts/scrolling.js";
 
 window.Handlebars = Handlebars;
 window.registerHandlebarsHelpers = function() {
@@ -16,5 +15,8 @@ window.boardTemplates = {
     themeTemplate: themeTemplate,
     boardTemplate: boardTemplate
 };
+
+registerDocumentBoards(document);
+registerDocumentScrolling(document);
 
 import("../../scripts/data.js");

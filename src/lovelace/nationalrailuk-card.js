@@ -2,8 +2,9 @@ import Handlebars from "handlebars/runtime";
 import boardTemplate from "../../templates/board.hbs";
 import boardCss from "../../styles/site.css";
 import fontCss from "../../styles/fonts.css";
+import { initializeRenderedBoards } from "../../scripts/next-train.js";
+import { scheduleInitializeScrolling } from "../../scripts/scrolling.js";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
-import { initializeRenderedBoards } from "./board-runtime.js";
 
 const WRAPPER_CSS = `
 :host {
@@ -233,6 +234,7 @@ class NationalRailUKCard extends HTMLElement {
 
         content.innerHTML = boardTemplate(model);
         initializeRenderedBoards(this.shadowRoot);
+        scheduleInitializeScrolling(this.shadowRoot);
         this._lastUpdate = now;
     }
 
