@@ -111,7 +111,7 @@ function resolveBoardDataFromAttributes(attributes) {
     return null;
 }
 
-class NationalRailUKCard extends HTMLElement {
+class UkrailboardsCard extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
@@ -326,6 +326,6 @@ class NationalRailUKCard extends HTMLElement {
 
 ensureHelpersRegistered();
 
-if (!customElements.get("nationalrailuk-card")) {
-    customElements.define("nationalrailuk-card", NationalRailUKCard);
+if (!customElements.get("ukrailboards-card")) {
+    customElements.define("ukrailboards-card", UkrailboardsCard);
 }

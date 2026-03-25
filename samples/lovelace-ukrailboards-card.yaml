@@ -1,4 +1,4 @@
-type: custom:nationalrailuk-card
+type: custom:ukrailboards-card
 title: Train Departures
 entity: sensor.train_schedule_wat_all
 layout: responsive

@@ -14,20 +14,20 @@ npm run build
 Build output:
 
 - `dist/demo.js`
-- `dist/nationalrailuk-card.js`
+- `dist/ukrailboards-card.js`
 
 ## Lovelace Setup
 
-1. Copy `dist/nationalrailuk-card.js` to your Home Assistant `/config/www/` directory (or your preferred static path).
+1. Copy `dist/ukrailboards-card.js` to your Home Assistant `/config/www/` directory (or your preferred static path).
 2. Add it as a Lovelace resource.
-3. Use `type: custom:nationalrailuk-card` in your dashboard YAML.
+3. Use `type: custom:ukrailboards-card` in your dashboard YAML.
 
 ### Example Card YAML
 
-The example below is also available in `samples/lovelace-nationalrailuk-card.yaml`.
+The example below is also available in `samples/lovelace-ukrailboards-card.yaml`.
 
 ```yaml
-type: custom:nationalrailuk-card
+type: custom:ukrailboards-card
 title: Train Departures
 entity: sensor.train_schedule_wat_all
 layout: responsive

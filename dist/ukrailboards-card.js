@@ -1181,7 +1181,7 @@ var require_runtime2 = __commonJS({
   }
 });
 
-// src/lovelace/nationalrailuk-card.js
+// src/lovelace/ukrailboards-card.js
 var import_runtime2 = __toESM(require_runtime2());
 
 // templates/board.hbs
@@ -1817,7 +1817,7 @@ function buildDateTime(time, generatedAt) {
   return date + "T" + time + ":00";
 }
 
-// src/lovelace/nationalrailuk-card.js
+// src/lovelace/ukrailboards-card.js
 var WRAPPER_CSS = `
 :host {
     display: block;
@@ -1902,7 +1902,7 @@ function resolveBoardDataFromAttributes(attributes) {
   }
   return null;
 }
-var NationalRailUKCard = class extends HTMLElement {
+var UkrailboardsCard = class extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -2072,6 +2072,6 @@ ${site_default}</style>
   }
 };
 ensureHelpersRegistered();
-if (!customElements.get("nationalrailuk-card")) {
-  customElements.define("nationalrailuk-card", NationalRailUKCard);
+if (!customElements.get("ukrailboards-card")) {
+  customElements.define("ukrailboards-card", UkrailboardsCard);
 }

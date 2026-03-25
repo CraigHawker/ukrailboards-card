@@ -35,12 +35,12 @@ await esbuild.build({
 });
 
 await esbuild.build({
-    entryPoints: [path.join(__dirname, "src", "lovelace", "nationalrailuk-card.js")],
+    entryPoints: [path.join(__dirname, "src", "lovelace", "ukrailboards-card.js")],
     bundle: true,
     format: "esm",
     platform: "browser",
     target: "es2020",
-    outfile: path.join(__dirname, "dist", "nationalrailuk-card.js"),
+    outfile: path.join(__dirname, "dist", "ukrailboards-card.js"),
     plugins: [handlebarsPrecompilePlugin],
     loader: {
         ".css": "text"
@@ -48,4 +48,4 @@ await esbuild.build({
 });
 
 console.log("Built dist/demo.js");
-console.log("Built dist/nationalrailuk-card.js");
+console.log("Built dist/ukrailboards-card.js");
