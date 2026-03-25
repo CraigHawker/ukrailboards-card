@@ -59,5 +59,6 @@ Card-specific display options also supported in this implementation:
 
 - `layout`: Board layout CSS class (`responsive`, `single-train`, `table`, `overhead-platform`).
 - `theme`: Theme CSS class (for example `theme-london2025`).
+- `font_path`: Base URL path for font files (default `/local/i-like-trains`).
 
 Delayed detection follows the same approach as the replacement card: an expected time later than scheduled is treated as delayed.

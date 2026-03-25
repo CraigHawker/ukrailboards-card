@@ -10,3 +10,4 @@ show_cancelled: true
 show_platform: false
 show_operator: false
 refresh_interval: 30
+font_path: /local/i-like-trains

@@ -1,6 +1,7 @@
 import Handlebars from "handlebars/runtime";
 import boardTemplate from "../../templates/board.hbs";
 import boardCss from "../../styles/site.css";
+import fontCss from "../../styles/fonts.css";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
 import { initializeRenderedBoards } from "./board-runtime.js";
 
@@ -31,38 +32,32 @@ ha-card {
 }
 `;
 
-function buildRuntimeFontCss() {
-    const ukPidsWoff2 = new URL("./font/UkPIDS.woff2", import.meta.url).href;
-    const ukPidsTtf = new URL("./font/UkPIDS.ttf", import.meta.url).href;
-    const robotoMonoRegularWoff2 = new URL("./font/RobotoMono-Regular.woff2", import.meta.url).href;
-    const robotoMonoRegularTtf = new URL("./font/RobotoMono-Regular.ttf", import.meta.url).href;
-    const robotoMonoBoldWoff2 = new URL("./font/RobotoMono-Bold.woff2", import.meta.url).href;
-    const robotoMonoBoldTtf = new URL("./font/RobotoMono-Bold.ttf", import.meta.url).href;
+const DEFAULT_FONT_PATH = "/local/i-like-trains";
+const DEMO_FONT_PATH = "../fonts";
+const RAIL_FONTS_LOADED_CLASS = "rail-fonts-loaded";
+const RAIL_FONTS_STYLE_ID = "rail-fonts-style";
 
-    return `
-@font-face {
-    font-family: "UkPIDS";
-    src: url("${ukPidsWoff2}") format("woff2"), url("${ukPidsTtf}") format("truetype");
-    font-display: swap;
-}
-@font-face {
-    font-family: "Roboto Mono";
-    src: url("${robotoMonoRegularWoff2}") format("woff2"), url("${robotoMonoRegularTtf}") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: "Roboto Mono";
-    src: url("${robotoMonoBoldWoff2}") format("woff2"), url("${robotoMonoBoldTtf}") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-`;
+function normalizeFontPath(fontPath) {
+    const candidate = (fontPath || "").trim();
+    const fallback = DEFAULT_FONT_PATH;
+    const normalized = candidate || fallback;
+    return normalized.replace(/\/$/, "");
 }
 
-const RUNTIME_FONT_CSS = buildRuntimeFontCss();
+function ensureRailFontsLoaded(fontPath) {
+    if (!document.body || !document.head) return;
+    if (document.body.classList.contains(RAIL_FONTS_LOADED_CLASS)) return;
+
+    const existingStyle = document.getElementById(RAIL_FONTS_STYLE_ID);
+    if (!existingStyle) {
+        const styleTag = document.createElement("style");
+        styleTag.id = RAIL_FONTS_STYLE_ID;
+        styleTag.textContent = fontCss.replaceAll(DEMO_FONT_PATH, normalizeFontPath(fontPath));
+        document.head.appendChild(styleTag);
+    }
+
+    document.body.classList.add(RAIL_FONTS_LOADED_CLASS);
+}
 
 let helpersRegistered = false;
 
@@ -139,6 +134,7 @@ class NationalRailUKCard extends HTMLElement {
             refresh_interval: config.refresh_interval || 60,
             layout: config.layout || "responsive",
             theme: config.theme || "",
+            font_path: config.font_path || DEFAULT_FONT_PATH,
             ...config
         };
 
@@ -148,6 +144,8 @@ class NationalRailUKCard extends HTMLElement {
         if(this._config.max_rows > 9){
             this._config.max_rows = 9;
         }
+
+        ensureRailFontsLoaded(this._config.font_path);
 
         this.render();
         this.updateContent();
@@ -166,7 +164,7 @@ class NationalRailUKCard extends HTMLElement {
         if (!this.shadowRoot) return;
 
         this.shadowRoot.innerHTML = `
-            <style>${WRAPPER_CSS}\n${boardCss}\n${RUNTIME_FONT_CSS}</style>
+            <style>${WRAPPER_CSS}\n${boardCss}</style>
             <ha-card>
                 <div class="card-header">${this._config ? this._config.title : "Train Departures"}</div>
                 <div class="card-body">
