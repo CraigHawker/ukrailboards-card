@@ -3,32 +3,6 @@
 @use "boards/single-train";
 @use "boards/table";
 
-
-@font-face {
-    font-family: "UkPIDS";
-    src: url("../font/UkPIDS.woff2") format("woff2"),
-         url("../font/UkPIDS.ttf") format("truetype");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Roboto Mono";
-    src: url("../font/RobotoMono-Regular.woff2") format("woff2"),
-         url("../font/RobotoMono-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Roboto Mono";
-    src: url("../font/RobotoMono-Bold.woff2") format("woff2"),
-         url("../font/RobotoMono-Bold.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
 @mixin applyBoardLayout($selector){
     #{$selector} {
 
@@ -43,7 +17,7 @@
         --board-gap: 4px;
         --board-content-spacing: 8px 16px;
 
-        --board-font-size: 14px;
+        --board-font-size: 12px;
         --board-line-height: 1.3;
         --board-header-border-width: 30px;
 
