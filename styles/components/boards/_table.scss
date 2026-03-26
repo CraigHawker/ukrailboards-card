@@ -74,10 +74,11 @@
                     @include table-header;
                     grid-column: 4;
                     content: "Due";
-                    text-align: right;
+                    text-align: left;
                     width: 100%;
                     max-width: 70px;
                     box-sizing: border-box;
+		    padding-left: 8px;
                 }
                 .platform:before{
                     @include table-header;

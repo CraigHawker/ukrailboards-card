@@ -9,6 +9,43 @@ This project now supports both:
 - A local demo page rendered from bundled, precompiled Handlebars templates
 - A Lovelace custom card bundle for Home Assistant
 
+## Layouts
+
+The card supports four layouts:
+
+* Overhead platform board
+* Single train departure board
+* Table board
+* Responsive (dynamic) board
+
+### Overhead platform board
+
+This board mimics the typical "overhead platform" board you see at many stations.  The top row shows the next train time, destination, and status.  The next row shows the stations (and times) it calls at.  The final row shows the upcoming trains, rotating from the third train to the ninth.
+
+![The overhead platform board layout](src/images/overhead-board.png)
+
+### Single train departure board
+
+This board mimics a table showing a single train at a time.  Note that if there is sufficient space, the board will show multiple trains side-by-side:
+
+![The table board layout (small width)](src/images/single-train.png)
+
+![The table board layout (wide width)](src/images/single-train-wide.png)
+
+### Responsive (dynamic)
+
+The responsive layout will attempt to choose the best layout considering the available space in your dashboard.
+
+### Table board
+
+This board mimics a table showing all upcoming trains.
+
+![The table board layout](src/images/table.png)
+
+## Themes
+
+TODO
+
 ## Build
 
 ```bash
@@ -28,7 +65,7 @@ Build output:
 
 ### Example Card YAML
 
-The example below is also available in `samples/lovelace-ukrailboards-card.yaml`.
+The example below is also available in `samples/lovelace-ukrailboards-card.yaml`.  Note that you do not need to create your yaml by hand; once you enter the correct type you can switch to the visual editor to configure the rest!
 
 ```yaml
 type: custom:ukrailboards-card
@@ -47,12 +84,11 @@ refresh_interval: 30
 
 ## Compatible Config Fields
 
-The card accepts the same configuration keys as the replacement target card and applies them in rendering.
+The card accepts the following configuration keysand applies them in rendering.
 
 - `title`: Card header text.
 - `entity`: Home Assistant sensor/entity to read.
-- `max_rows`: Maximum rows to render (validated 1-50).
-- `limit`: Alternate row-limit field (validated 1-50; also maps into `max_rows` when `max_rows` is omitted).
+- `max_rows`: Maximum rows to render (validated 1-9).
 - `show_delayed`: Hides delayed services when `false`.
 - `show_cancelled`: Hides cancelled services when `false`.
 - `show_platform`: Hides platform label/value when `false`.

@@ -67,6 +67,8 @@
                 overflow: hidden;
                 white-space: nowrap;
                 white-space-collapse: collapse;
+		position: relative;
+		top: 2px;
 
                 station {
                     --scroll-enabled: 0;
