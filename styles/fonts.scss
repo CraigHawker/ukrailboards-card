@@ -1,0 +1,26 @@
+$rail-font-path: "../fonts" !default;
+
+@font-face {
+    font-family: "UkPIDS";
+    src: url("#{$rail-font-path}/UkPIDS.woff2") format("woff2"),
+         url("#{$rail-font-path}/UkPIDS.ttf") format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("#{$rail-font-path}/RobotoMono-Regular.woff2") format("woff2"),
+         url("#{$rail-font-path}/RobotoMono-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("#{$rail-font-path}/RobotoMono-Bold.woff2") format("woff2"),
+         url("#{$rail-font-path}/RobotoMono-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}

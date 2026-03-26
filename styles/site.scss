@@ -2,49 +2,4 @@
 @use "themes/classic";
 @use "themes/london2025";
 
-:root {
-    --board-border: black;
-    --board-border-width: 10px;
-    --board-border-radius: 4px;
-    --board-bg: #222;
-    --board-text: orange;
-    --board-font: "UkPIDS", sans-serif;
-
-    --board-margin: 20px;
-    --board-gap: 4px;
-    --board-content-spacing: 8px 16px;
-
-    --board-font-size: 14px;
-    --board-line-height: 1.3;
-    --board-header-border-width: 30px;
-
-    --board-header-display: none;
-    --board-footer-display: none;
-    --board-prefix-display: none;
-
-    --board-cancel-color: red;
-
-    /* Navigation controls */
-    --board-nav-button-bg: transparent;
-    --board-nav-button-hover-bg: rgba(0, 0, 0, 0.2);
-    --board-nav-icon-color: var(--board-text);
-    --board-nav-icon-size: 3em;
-    --board-nav-prev-mask: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M15%2018l-6-6%206-6%22/%3E%3C/svg%3E");
-    --board-nav-next-mask: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M9%2018l6-6-6-6%22/%3E%3C/svg%3E");
-    --board-pause-on-hover: false;
-}
-
-body {
-    margin: 0;
-    background-color: #AAA;
-    padding: 1em;
-    font-family: "UkPIDS";
-    h1{
-        font-size: 1.2em;
-    }
-    h2{
-        font-size: 1.1em;
-    }
-}
-
 @include boards.applyBoardLayout(".board");

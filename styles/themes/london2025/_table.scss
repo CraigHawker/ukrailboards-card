@@ -8,6 +8,7 @@
         h1{
             text-align: center;
             text-transform: uppercase;
+            font-weight: normal;;
             &::after{
                 content: " Departures";
                 display: inline-block;

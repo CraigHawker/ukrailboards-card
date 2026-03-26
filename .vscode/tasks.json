@@ -23,6 +23,17 @@
 			],
 			"dependsOn": "Copy Handlebars",
 			"dependsOrder": "sequence",
+			"group": "build"
+		},
+		{
+			"label": "Build Lovelace",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"build-lovelace.mjs"
+			],
+			"dependsOn": "Build SCSS",
+			"dependsOrder": "sequence",
 			"group": {
 				"kind": "build",
 				"isDefault": true

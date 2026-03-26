@@ -1,5 +1,15 @@
 {
+  "scripts": {
+    "build:css": "npx sass styles:styles --no-source-map",
+    "build:demo": "node build-lovelace.mjs",
+    "build:card": "node build-lovelace.mjs",
+    "build": "npm run build:css && npm run build:demo"
+  },
   "dependencies": {
     "handlebars": "^4.7.8"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.2",
+    "ttf2woff2": "^8.0.1"
   }
 }
