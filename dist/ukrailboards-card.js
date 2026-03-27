@@ -1964,7 +1964,7 @@ var UkrailboardsCard = class extends HTMLElement {
               filter: [
                 {
                   domain: "sensor",
-                  integration: "national_rail_uk"
+                  integration: "nationalrailuk"
                 }
               ]
             }
