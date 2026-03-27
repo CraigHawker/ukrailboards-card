@@ -1,5 +1,6 @@
 {
   "name": "UK Rail Boards",
   "filename": "ukrailboards-card.js",
-  "country": "GB"
+  "country": "GB",
+  "render_readme": true
 }

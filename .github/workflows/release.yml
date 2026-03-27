@@ -79,4 +79,4 @@ jobs:
           target_commitish: ${{ github.sha }}
           generate_release_notes: true
           files: |
-            dist/*
+            dist/**

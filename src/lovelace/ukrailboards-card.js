@@ -33,7 +33,7 @@ ha-card {
 }
 `;
 
-const DEFAULT_FONT_PATH = new URL(".", import.meta.url).toString();
+const DEFAULT_FONT_PATH = new URL("./fonts", import.meta.url).toString();
 const DEMO_FONT_PATH = "../fonts";
 const RAIL_FONTS_LOADED_CLASS = "rail-fonts-loaded";
 const RAIL_FONTS_STYLE_ID = "rail-fonts-style";

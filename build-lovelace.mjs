@@ -35,13 +35,16 @@ if (!["all", "demo", "card"].includes(buildTarget)) {
 async function syncReleaseRoot() {
     await fs.copyFile(hacsManifestPath, path.join(distDir, "hacs.json"));
 
+    const fontDestDir = path.join(distDir, "fonts");
+    await fs.mkdir(fontDestDir, { recursive: true });
+
     const fontFiles = await fs.readdir(fontsDir, { withFileTypes: true });
     for (const fontFile of fontFiles) {
         if (!fontFile.isFile()) continue;
 
         await fs.copyFile(
             path.join(fontsDir, fontFile.name),
-            path.join(distDir, fontFile.name)
+            path.join(fontDestDir, fontFile.name)
         );
     }
 }

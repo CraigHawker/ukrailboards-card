@@ -1,5 +1,6 @@
 {
   "name": "UK Rail Boards",
+  "url": "https://github.com/CraigHawker/ukrailboards-card",
   "filename": "ukrailboards-card.js",
   "country": "GB",
   "render_readme": true

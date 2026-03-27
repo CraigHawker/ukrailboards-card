@@ -34,8 +34,11 @@ async function sha256(filePath) {
 }
 
 async function listFiles(dirPath) {
-    const dirents = await fs.readdir(dirPath, { withFileTypes: true });
-    return dirents.filter((dirent) => dirent.isFile()).map((dirent) => dirent.name).sort();
+    const entries = await fs.readdir(dirPath, { withFileTypes: true, recursive: true });
+    return entries
+        .filter((dirent) => dirent.isFile())
+        .map((dirent) => path.relative(dirPath, path.join(dirent.parentPath, dirent.name)))
+        .sort();
 }
 
 await ensureFile(releaseArtifactPath);
@@ -48,11 +51,11 @@ await fs.cp(distDir, packageRootDir, { recursive: true });
 const stagedReleaseArtifactPath = path.join(packageRootDir, path.basename(releaseArtifactPath));
 const packageFiles = await listFiles(packageRootDir);
 const fileSummaries = [];
-for (const fileName of packageFiles) {
-    const filePath = path.join(packageRootDir, fileName);
+for (const relPath of packageFiles) {
+    const filePath = path.join(packageRootDir, relPath);
     const stat = await fs.stat(filePath);
     fileSummaries.push({
-        path: `package-root/${fileName}`,
+        path: `package-root/${relPath.replaceAll(path.sep, "/")}`,
         bytes: stat.size,
         sha256: await sha256(filePath)
     });
@@ -76,6 +79,6 @@ await fs.writeFile(path.join(outputDir, "report.json"), `${JSON.stringify(report
 
 console.log(`Staged release inspection output in ${path.relative(rootDir, outputDir)}`);
 console.log("Package root files:");
-for (const fileName of packageFiles) {
-    console.log(`- package-root/${fileName}`);
+for (const relPath of packageFiles) {
+    console.log(`- package-root/${relPath.replaceAll(path.sep, "/")}`);
 }
