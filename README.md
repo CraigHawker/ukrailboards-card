@@ -145,4 +145,4 @@ Card-specific display options also supported in this implementation:
 
 - `layout`: Board layout CSS class (`responsive`, `single-train`, `table`, `overhead-platform`).
 - `theme`: Theme CSS class (for example `theme-london2025`).
-- `font_path`: Base URL path for font files (default `/local/ukrailboards-card`).
+- `font_path`: Base URL path for font files (default: resolved automatically relative to the installed card URL, so the packaged fonts work without configuration).
