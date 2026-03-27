@@ -2205,4 +2205,12 @@ ${site_default}</style>
 ensureHelpersRegistered();
 if (!customElements.get("ukrailboards-card")) {
   customElements.define("ukrailboards-card", UkrailboardsCard);
+  window.customCards = window.customCards || [];
+  window.customCards.push({
+    type: "ukrailboards-card",
+    name: "UK Rail Boards",
+    description: "Uses the national rail HCAS integration for data, displays trains various layouts mimicking boards seen at UK train stations.",
+    preview: true,
+    multiple: true
+  });
 }
