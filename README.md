@@ -90,27 +90,33 @@ Before you publish the repository for HACS, make sure that:
 
 ## Maintainer Release Flow
 
-The repository includes a GitHub Actions workflow that creates a GitHub release whenever you push a tag starting with `v`.
+The repository includes a GitHub Actions workflow that creates a GitHub release when an administrator runs it manually from the GitHub Actions UI.
 
-Example:
+Release tags use CalVer in the format `vYYYY.MM.DD`. If more than one release is created on the same London calendar day, the workflow automatically appends a numeric suffix such as `v2026.03.27.1`.
+
+Examples:
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+v2026.03.27
+v2026.03.27.1
 ```
 
 That workflow rebuilds the package root in `dist/` and uploads every file from that folder so the release contains `hacs.json`, `ukrailboards-card.js`, and the font files together. The demo bundle remains in `demo/` for the example page and is not part of the HACS release package.
+
+Each manual run calculates the next available CalVer tag using the same rules, so you do not need to track daily build numbers yourself.
 
 To inspect the local release package without GitHub Actions, run `npm run package:inspect`.  That stages the exact `dist/` package layout under `artifacts/release-inspect/package-root/`.
 
 ### Example Card YAML
 
-The example below is also available in `samples/lovelace-ukrailboards-card.yaml`.  Note that you do not need to create your yaml by hand; once you enter the correct type you can switch to the visual editor to configure the rest!
+**You do not need to manually create YAML; simply add a card to a dashboard and choose the "UK Rail Boards" custom card!**
+
+The example below is also available in `samples/lovelace-ukrailboards-card.yaml`.
 
 ```yaml
 type: custom:ukrailboards-card
 title: Train Departures
-entity: sensor.train_schedule_wat_all
+entity: sensor.train_schedule_wel
 layout: responsive
 theme: theme-london2025
 max_rows: 10
@@ -124,7 +130,7 @@ refresh_interval: 30
 
 ## Compatible Config Fields
 
-The card accepts the following configuration keysand applies them in rendering.
+The card accepts the following configuration keys and applies them in rendering.
 
 - `title`: Card header text.
 - `entity`: Home Assistant sensor/entity to read.
@@ -139,6 +145,4 @@ Card-specific display options also supported in this implementation:
 
 - `layout`: Board layout CSS class (`responsive`, `single-train`, `table`, `overhead-platform`).
 - `theme`: Theme CSS class (for example `theme-london2025`).
-- `font_path`: Base URL path for font files (default `/local/i-like-trains`).
-
-Delayed detection follows the same approach as the replacement card: an expected time later than scheduled is treated as delayed.
+- `font_path`: Base URL path for font files (default `/local/ukrailboards-card`).
