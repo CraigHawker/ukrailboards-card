@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compute CalVer tag
+        id: calver
+        uses: actions/github-script@v8
+        with:
+          result-encoding: string
+          script: |
+            const timeZone = 'Europe/London';
+            const formatter = new Intl.DateTimeFormat('en-CA', {
+              timeZone,
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            });
+            const [{ value: year }, , { value: month }, , { value: day }] = formatter.formatToParts(new Date());
+            const baseTag = `v${year}.${month}.${day}`;
+            const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = new RegExp(`^${escapeRegex(baseTag)}(?:\\.(\\d+))?$`);
+            const tags = await github.paginate(github.rest.repos.listTags, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            let highestSuffix = -1;
+            for (const tag of tags) {
+              const match = pattern.exec(tag.name);
+              if (!match) {
+                continue;
+              }
+
+              const suffix = match[1] ? Number.parseInt(match[1], 10) : 0;
+              if (suffix > highestSuffix) {
+                highestSuffix = suffix;
+              }
+            }
+
+            const tagName = highestSuffix < 0 ? baseTag : `${baseTag}.${highestSuffix + 1}`;
+            core.setOutput('tag_name', tagName);
+            core.setOutput('base_tag', baseTag);
+            core.setOutput('time_zone', timeZone);
+            core.info(`Selected release tag ${tagName}`);
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build:release
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.calver.outputs.tag_name }}
+          name: ${{ steps.calver.outputs.tag_name }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
+          files: |
+            dist/**
