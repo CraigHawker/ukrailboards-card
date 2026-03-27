@@ -182,7 +182,7 @@ class UkrailboardsCard extends HTMLElement {
                             filter: [
                                 {
                                     domain: "sensor",
-                                    integration: "national_rail_uk"
+                                    integration: "nationalrailuk"
                                 }
                             ]
                         }
@@ -466,4 +466,14 @@ ensureHelpersRegistered();
 
 if (!customElements.get("ukrailboards-card")) {
     customElements.define("ukrailboards-card", UkrailboardsCard);
+
+    // Register the card so it appears in the list of available cards.
+    window.customCards = window.customCards || [];
+    window.customCards.push({
+        type: "ukrailboards-card",
+        name: "UK Rail Boards",
+        description: "Uses the national rail HCAS integration for data, displays trains various layouts mimicking boards seen at UK train stations.",
+        preview: true,
+        multiple: true
+    });
 }
