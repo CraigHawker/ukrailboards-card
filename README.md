@@ -13,10 +13,10 @@ This project now supports both:
 
 The card supports four layouts:
 
-* Overhead platform board
-* Single train departure board
-* Table board
-* Responsive (dynamic) board
+- Overhead platform board
+- Single train departure board
+- Table board
+- Responsive (dynamic) board
 
 ### Overhead platform board
 
@@ -54,14 +54,54 @@ npm run build
 
 Build output:
 
-- `dist/demo.js`
+- `demo/demo.js`
 - `dist/ukrailboards-card.js`
+- `dist/hacs.json`
+- `dist/*.woff2`, `dist/*.ttf`
 
 ## Lovelace Setup
 
 1. Copy `dist/ukrailboards-card.js` to your Home Assistant `/config/www/` directory (or your preferred static path).
 2. Add it as a Lovelace resource.
 3. Use `type: custom:ukrailboards-card` in your dashboard YAML.
+
+## HACS Setup
+
+Once this repository is published on GitHub, it can be added to HACS as a custom repository of type `Dashboard`.
+
+1. In HACS, go to the custom repositories screen.
+2. Add your GitHub repository URL.
+3. Select repository type `Dashboard`.
+4. Install `UK Rail Boards`.
+5. Add `/hacsfiles/ukrailboards-card.js` as a Lovelace resource if HACS does not register it automatically.
+
+For maintainers, the release package root is `dist/`.  It contains `hacs.json`, `ukrailboards-card.js`, and the required font files together at the same level.
+
+By default the card now resolves its font files relative to the installed module URL, so the packaged fonts work when they sit alongside `ukrailboards-card.js`.  You can still override that with the `font_path` card option.
+
+## Publishing Checklist
+
+Before you publish the repository for HACS, make sure that:
+
+- The repository is public on GitHub.
+- `dist/ukrailboards-card.js` is committed in the default branch and included in releases.
+- The GitHub repository has a short description and some relevant topics.
+- You create GitHub releases if you want HACS users to be able to pin versions cleanly.
+
+## Maintainer Release Flow
+
+The repository includes a GitHub Actions workflow that creates a GitHub release whenever you push a tag starting with `v`.
+
+Example:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+That workflow rebuilds the package root in `dist/` and uploads every file from that folder so the release contains `hacs.json`, `ukrailboards-card.js`, and the font files together. The demo bundle remains in `demo/` for the example page and is not part of the HACS release package.
+
+To inspect the local release package without GitHub Actions, run `npm run package:inspect`.  That stages the exact `dist/` package layout under `artifacts/release-inspect/package-root/`.
 
 ### Example Card YAML
 

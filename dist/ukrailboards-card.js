@@ -1844,7 +1844,7 @@ ha-card {
     padding: 16px;
 }
 `;
-var DEFAULT_FONT_PATH = "/local/i-like-trains";
+var DEFAULT_FONT_PATH = new URL(".", import.meta.url).toString();
 var DEMO_FONT_PATH = "../fonts";
 var RAIL_FONTS_LOADED_CLASS = "rail-fonts-loaded";
 var RAIL_FONTS_STYLE_ID = "rail-fonts-style";
