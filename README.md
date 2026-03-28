@@ -92,7 +92,7 @@ The responsive layout will attempt to choose the best layout considering the ava
 
 #### Default
 
-The default theme shows using an older-style "Orange LED" style.  This is, for many, the iconic classic board layout.  The font is `[UkPIDS](https://github.com/ProbablyIdiot/UkPIDS-Font?tab=readme-ov-file)`, used under the SIL open font licence.
+The default theme shows using an older-style "Orange LED" style.  This is, for many, the iconic classic board layout.  The font is [UkPIDS](https://github.com/ProbablyIdiot/UkPIDS-Font?tab=readme-ov-file), used under the SIL open font licence.
 
 #### Modern
 
