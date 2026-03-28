@@ -1532,6 +1532,8 @@ function createSingleTrainRenderPlugin() {
     }
     if (pluginState.trainIndex + 1 >= board.allTrains.length)
       return;
+    if (pluginState.trainIndex + 1 >= board.allTrains.length)
+      return;
     pluginState.trainIndex = (pluginState.trainIndex + 1) % board.allTrains.length;
     showCurrentTrain(board, pluginState);
   }
@@ -1540,6 +1542,8 @@ function createSingleTrainRenderPlugin() {
     if (board.allTrains.length === 0) {
       return;
     }
+    if (pluginState.trainIndex - 1 < 0)
+      return;
     if (pluginState.trainIndex - 1 < 0)
       return;
     pluginState.trainIndex = (pluginState.trainIndex - 1 + board.allTrains.length) % board.allTrains.length;

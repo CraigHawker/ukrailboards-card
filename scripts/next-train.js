@@ -374,6 +374,10 @@ function createSingleTrainRenderPlugin(){
         if(pluginState.trainIndex + 1 >= board.allTrains.length)
             return;
 
+        // Stop skipping past the end.
+        if(pluginState.trainIndex + 1 >= board.allTrains.length)
+            return;
+
         pluginState.trainIndex = (pluginState.trainIndex + 1) % board.allTrains.length;
         showCurrentTrain(board, pluginState);
     }
@@ -383,6 +387,10 @@ function createSingleTrainRenderPlugin(){
         if(board.allTrains.length === 0){
             return;
         }
+
+        // Stop skipping past the start.
+        if(pluginState.trainIndex - 1 < 0)
+            return;
 
         // Stop skipping past the start.
         if(pluginState.trainIndex - 1 < 0)
