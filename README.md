@@ -4,12 +4,58 @@ This project is a Home Assistant card designed to be used alongside [https://git
 
 It contains multiple layout types (e.g. over-platform board, or a board showing a single train, or a table), and provides support for different themes.  The default theme uses the older LED-style layout.
 
-This project now supports both:
+## Getting started
 
-- A local demo page rendered from bundled, precompiled Handlebars templates
-- A Lovelace custom card bundle for Home Assistant
+Before using this card, make sure you have:
 
-## Layouts
+- A working Home Assistant installation: https://www.home-assistant.io/getting-started/
+- HACS installed and configured: https://hacs.xyz/docs/installation/prerequisites
+
+You must also set up the `[homeassistant_nationalrail](https://github.com/darrenparkinson/homeassistant_nationalrail)` integration first:
+
+1. Install `homeassistant_nationalrail` from its GitHub repository.
+2. Configure at least one station to retrieve departure data.
+3. Use the station CRS code for that station; CRS codes can be looked up here:
+   https://www.nationalrail.co.uk/stations_destinations/48541.aspx
+
+The integration requires an API key from raildata.org.uk:
+
+- Sign in or create an account at https://raildata.org.uk/
+- Locate the "[Live Departure Board](https://raildata.org.uk/dashboard/dataProduct/P-d81d6eaf-8060-4467-a339-1c833e50cbbe/overview)" data and subscribe to it
+ - Go back to this data set and select the "Specification" tab a little down on the page to find your API key for this data
+- Add that API key to your `homeassistant_nationalrail` configuration
+
+**Important: the current `homeassistant_nationalrail` version `1.0.2` does not yet include information about train stops. That feature is pending in PR https://github.com/darrenparkinson/homeassistant_nationalrail/pull/2, so calling-at details will be missing until the update is merged.  In the interim you can use [my fork](https://github.com/CraigHawker/homeassistant_nationalrail) and install manually.**
+
+Once the integration is working and at least one station is returning data, install this card in HACS as a custom repository:
+
+1. In Home Assistant, open HACS > Frontend.
+2. Add a custom repository using this repository's GitHub URL.
+3. Set the repository type to `Frontend`.
+4. Install `UK Rail Boards`.
+
+After installation, refresh Home Assistant or restart if needed. Then add the card to a dashboard.  The card should be shown in the list of custom cards:
+![The 'UK Rail Boards' card](src/images/custom-card.png)
+
+If you wish to install it manually you can download the output from the 'Releases' section shown on the right of this projec's github page.
+
+Developers looking to extend this project can fork the repository, download the code, then use the build task to generate the various things that are needed.  The "demo/index.html" page can be used to render some snapshot data with various themes and layouts.
+
+## Configuration options
+
+When you add or edit a card using the graphical editor, you can configure exactly how it works:
+
+![Configuration options](/src/images/config-options.png)
+
+### Entity
+
+Choose the entity that shows your station.  This is configured in the other - `homeassistant_nationalrail` plugin above.  This is mandatory.
+
+### Title
+
+Optional card title.
+
+### Layout
 
 The card supports four layouts:
 
@@ -18,13 +64,13 @@ The card supports four layouts:
 - Table board
 - Responsive (dynamic) board
 
-### Overhead platform board
+#### Overhead platform board
 
 This board mimics the typical "overhead platform" board you see at many stations.  The top row shows the next train time, destination, and status.  The next row shows the stations (and times) it calls at.  The final row shows the upcoming trains, rotating from the third train to the ninth.
 
 ![The overhead platform board layout](src/images/overhead-board.png)
 
-### Single train departure board
+#### Single train departure board
 
 This board mimics a table showing a single train at a time.  Note that if there is sufficient space, the board will show multiple trains side-by-side:
 
@@ -32,63 +78,89 @@ This board mimics a table showing a single train at a time.  Note that if there 
 
 ![The table board layout (wide width)](src/images/single-train-wide.png)
 
-### Responsive (dynamic)
-
-The responsive layout will attempt to choose the best layout considering the available space in your dashboard.
-
-### Table board
+#### Table board
 
 This board mimics a table showing all upcoming trains.
 
 ![The table board layout](src/images/table.png)
 
-## Themes
+#### Responsive (dynamic)
 
-TODO
+The responsive layout will attempt to choose the best layout considering the available space in your dashboard.  At small widths the card will be shown using the single-train layout, slightly wider as a table, then as the overhead platform board, then - at very large widths - as a series of single train boards next to each other.
 
-## Build
+### Themes
 
-```bash
-npm run build
-```
+#### Default
 
-Build output:
+The default theme shows using an older-style "Orange LED" style.  This is, for many, the iconic classic board layout.  The font is `[UkPIDS](https://github.com/ProbablyIdiot/UkPIDS-Font?tab=readme-ov-file)`, used under the SIL open font licence.
 
-- `demo/demo.js`
-- `dist/ukrailboards-card.js`
-- `dist/hacs.json`
-- `dist/*.woff2`, `dist/*.ttf`
+#### Modern
 
-## Lovelace Setup
+This is a work-in-progress, aimed to align more with the newer LCD-style boards, using bolder colours, a more modern font, and a more aesthetic visual.  Some layouts do not yet support this theme.
 
-1. Copy `dist/ukrailboards-card.js` to your Home Assistant `/config/www/` directory (or your preferred static path).
-2. Add it as a Lovelace resource.
-3. Use `type: custom:ukrailboards-card` in your dashboard YAML.
+### Advanced options
+
+#### Maximum rows
+
+The maximum number of rows to show.  Note that the `homeassistant_nationalrail` integration may return more rows than this card can deal with.  Defaults to 9.
+
+#### Platform filter
+
+If you only care about a subset of platforms then you can use this to filter.  For example, for my local station the trains going south are always on platforms 2 and 4 and the trains going north on platforms 1 and 3.  You can either enter a string here (which must match the platform exactly, such as "1A", or "2") or a comma-separated list of platforms (e.g. "1, 2, 3").
+
+#### Hide delayed
+
+If true, hides delayed trains on the board.
+
+#### Hide cancelled
+
+If true, hides cancelled trains on the board.
+
+#### Hide platform
+
+If true, hides the platform on the board.
+
+#### Hide operator
+
+If true, hides the opertor (e.g. "Great Western Railways") on the board.
+
+#### Refresh interval
+
+The amount of time before the board is refreshed.
+
+## Installation
+
+Please see the getting-started section above for more information.
 
 ## HACS Setup
 
-Once this repository is published on GitHub, it can be added to HACS as a custom repository of type `Dashboard`.
+This card is not yet published to the official HACS store, so you must add it as a custom repository.
 
-1. In HACS, go to the custom repositories screen.
-2. Add your GitHub repository URL.
-3. Select repository type `Dashboard`.
-4. Install `UK Rail Boards`.
-5. Add `/hacsfiles/ukrailboards-card.js` as a Lovelace resource if HACS does not register it automatically.
+1. In HACS, go to Frontend.
+2. Open the three-dot menu and choose `Custom repositories`.
+3. Add this repository's GitHub URL.
+4. Set repository type to `Frontend`.
+5. Install `UK Rail Boards`.
+6. If HACS does not register the resource automatically, add `/hacsfiles/ukrailboards-card.js` as a Lovelace resource.
 
-For maintainers, the release package root is `dist/`.  It contains `hacs.json`, `ukrailboards-card.js`, and the required font files together at the same level.
 
-By default the card now resolves its font files relative to the installed module URL, so the packaged fonts work when they sit alongside `ukrailboards-card.js`.  You can still override that with the `font_path` card option.
+## A note about non-simple-screen-scenarios
 
-## Publishing Checklist
+This card uses CSS keyframe animations to fade items in and out, to scroll them left/right (if they overflow the available space), etc.  Whilst the card supports situations where the browser states that it wants minimal animation, I am interested in exactly how well this works.  If you are trying this on a low-refresh-rate screen (e.g. e-ink) then let me know!
 
-Before you publish the repository for HACS, make sure that:
+## For maintainers
 
-- The repository is public on GitHub.
-- `dist/ukrailboards-card.js` is committed in the default branch and included in releases.
-- The GitHub repository has a short description and some relevant topics.
-- You create GitHub releases if you want HACS users to be able to pin versions cleanly.
+* The structure of the source code has evolved and needs some cleanup; I'm sorry.  I'll try to get this done over the next couple of weeks.
+* There are a number of VSCode tasks:
+ * 'Copy handlebars' - handlebars is used as a templating language to make maintaining the HTML easier.  This task copies handlebars into the appropriate location from the npm package
+ * 'Build SCSS' - builds the SASS files into the ditributable CSS files.  One-time operation.
+ * 'Watch SCSS' - same as the above, but watches the files for changes and rebuilds as needed.  Useful during development.
+ * 'Build lovelace' - precompiles the handlebars templates and pulls together both the demo JS and the actual lovelace card.
+* There are two github actions:
+ * 'validate' - run on push and validates everything according to HCAS' rules
+ * 'release' - generates a CalVer (calendar-versioning, i.e. "2026.03.1") build number, then creates and publishes a release.  This is a manual step run by an administrator.  More details within the "release flow" section below.
 
-## Maintainer Release Flow
+### Maintainer Release Flow
 
 The repository includes a GitHub Actions workflow that creates a GitHub release when an administrator runs it manually from the GitHub Actions UI.
 
@@ -106,43 +178,3 @@ That workflow rebuilds the package root in `dist/` and uploads every file from t
 Each manual run calculates the next available CalVer tag using the same rules, so you do not need to track daily build numbers yourself.
 
 To inspect the local release package without GitHub Actions, run `npm run package:inspect`.  That stages the exact `dist/` package layout under `artifacts/release-inspect/package-root/`.
-
-### Example Card YAML
-
-**You do not need to manually create YAML; simply add a card to a dashboard and choose the "UK Rail Boards" custom card!**
-
-The example below is also available in `samples/lovelace-ukrailboards-card.yaml`.
-
-```yaml
-type: custom:ukrailboards-card
-title: Train Departures
-entity: sensor.train_schedule_wel
-layout: responsive
-theme: theme-london2025
-max_rows: 10
-limit: 10
-show_delayed: true
-show_cancelled: true
-show_platform: false
-show_operator: false
-refresh_interval: 30
-```
-
-## Compatible Config Fields
-
-The card accepts the following configuration keys and applies them in rendering.
-
-- `title`: Card header text.
-- `entity`: Home Assistant sensor/entity to read.
-- `max_rows`: Maximum rows to render (validated 1-9).
-- `show_delayed`: Hides delayed services when `false`.
-- `show_cancelled`: Hides cancelled services when `false`.
-- `show_platform`: Hides platform label/value when `false`.
-- `show_operator`: Hides operator text when `false`.
-- `refresh_interval`: Minimum seconds between card content refreshes.
-
-Card-specific display options also supported in this implementation:
-
-- `layout`: Board layout CSS class (`responsive`, `single-train`, `table`, `overhead-platform`).
-- `theme`: Theme CSS class (for example `theme-london2025`).
-- `font_path`: Base URL path for font files (default: resolved automatically relative to the installed card URL, so the packaged fonts work without configuration).
