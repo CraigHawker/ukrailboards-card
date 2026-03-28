@@ -17,6 +17,10 @@ $grid-gap: 4px;
     position: relative;
     line-height: var(--board-line-height, 1.3);
 
+    &[data-swipe-enabled="true"] {
+        touch-action: pan-y;
+    }
+
     * {
         padding: 0px;
         margin: 0px;

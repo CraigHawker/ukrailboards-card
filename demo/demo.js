@@ -2061,7 +2061,7 @@ var board_default = import_runtime3.default.template({ "1": function(container, 
     }
     return void 0;
   };
-  return '<section class="board ' + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "layout") : depth0) != null ? lookupProperty(stack1, "css") : stack1, depth0)) + " " + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "theme") : depth0) != null ? lookupProperty(stack1, "css") : stack1, depth0)) + '" data-location-city="' + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "locationName") : stack1, depth0)) + '" data-location-platform="' + alias2((lookupProperty(helpers, "firstPlatform") || depth0 && lookupProperty(depth0, "firstPlatform") || alias4).call(alias3, (stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "trainServices") : stack1, { "name": "firstPlatform", "hash": {}, "data": data, "loc": { "start": { "line": 1, "column": 120 }, "end": { "line": 1, "column": 157 } } })) + '">\r\n    <header>\r\n        <h1>\r\n            <span class="prefix">Departures from</span>\r\n            <span class="location can-scroll">' + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "locationName") : stack1, depth0)) + '</span>\r\n        </h1>\r\n    </header>\r\n    <trains role="list">\r\n' + ((stack1 = lookupProperty(helpers, "each").call(alias3, (lookupProperty(helpers, "limit") || depth0 && lookupProperty(depth0, "limit") || alias4).call(alias3, (stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "trainServices") : stack1, depth0 != null ? lookupProperty(depth0, "maxRows") : depth0, { "name": "limit", "hash": {}, "data": data, "loc": { "start": { "line": 9, "column": 16 }, "end": { "line": 9, "column": 51 } } }), { "name": "each", "hash": {}, "fn": container.program(1, data, 0, blockParams, depths), "inverse": container.noop, "data": data, "loc": { "start": { "line": 9, "column": 8 }, "end": { "line": 35, "column": 17 } } })) != null ? stack1 : "") + "    </trains>\r\n</section>\r\n";
+  return '<section class="board ' + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "layout") : depth0) != null ? lookupProperty(stack1, "css") : stack1, depth0)) + " " + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "theme") : depth0) != null ? lookupProperty(stack1, "css") : stack1, depth0)) + '" data-swipe-enabled="true" data-location-city="' + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "locationName") : stack1, depth0)) + '" data-location-platform="' + alias2((lookupProperty(helpers, "firstPlatform") || depth0 && lookupProperty(depth0, "firstPlatform") || alias4).call(alias3, (stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "trainServices") : stack1, { "name": "firstPlatform", "hash": {}, "data": data, "loc": { "start": { "line": 1, "column": 146 }, "end": { "line": 1, "column": 183 } } })) + '">\r\n    <header>\r\n        <h1>\r\n            <span class="prefix">Departures from</span>\r\n            <span class="location can-scroll">' + alias2(alias1((stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "locationName") : stack1, depth0)) + '</span>\r\n        </h1>\r\n    </header>\r\n    <trains role="list">\r\n' + ((stack1 = lookupProperty(helpers, "each").call(alias3, (lookupProperty(helpers, "limit") || depth0 && lookupProperty(depth0, "limit") || alias4).call(alias3, (stack1 = depth0 != null ? lookupProperty(depth0, "board") : depth0) != null ? lookupProperty(stack1, "trainServices") : stack1, depth0 != null ? lookupProperty(depth0, "maxRows") : depth0, { "name": "limit", "hash": {}, "data": data, "loc": { "start": { "line": 9, "column": 16 }, "end": { "line": 9, "column": 51 } } }), { "name": "each", "hash": {}, "fn": container.program(1, data, 0, blockParams, depths), "inverse": container.noop, "data": data, "loc": { "start": { "line": 9, "column": 8 }, "end": { "line": 35, "column": 17 } } })) != null ? stack1 : "") + "    </trains>\r\n</section>\r\n";
 }, "useData": true, "useDepths": true });
 
 // src/shared/register-handlebars-helpers.js
@@ -2298,9 +2298,46 @@ function Board(el) {
     }
     that.element.removeEventListener("mouseenter", that.pause);
     that.element.removeEventListener("mouseleave", that.resume);
+    that.element.removeEventListener("touchstart", onSwipeStart, { passive: true });
+    that.element.removeEventListener("touchend", onSwipeEnd);
+    that.element.removeEventListener("touchcancel", resetSwipeState);
   };
   that.collectTrains();
   that.ensureNavigationControls();
+  that.swipeStartX = null;
+  that.swipeStartY = null;
+  function resetSwipeState() {
+    that.swipeStartX = null;
+    that.swipeStartY = null;
+  }
+  function onSwipeStart(event) {
+    var touch = event.touches ? event.touches[0] : event;
+    that.swipeStartX = touch.clientX;
+    that.swipeStartY = touch.clientY;
+  }
+  function onSwipeEnd(event) {
+    if (that.swipeStartX === null || that.swipeStartY === null) {
+      return;
+    }
+    var touch = event.changedTouches ? event.changedTouches[0] : event;
+    var deltaX = touch.clientX - that.swipeStartX;
+    var deltaY = touch.clientY - that.swipeStartY;
+    resetSwipeState();
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) {
+      return;
+    }
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+    if (deltaX > 0) {
+      that.showPreviousTrain();
+    } else {
+      that.showNextTrain();
+    }
+  }
+  that.element.addEventListener("touchstart", onSwipeStart, { passive: false });
+  that.element.addEventListener("touchend", onSwipeEnd);
+  that.element.addEventListener("touchcancel", resetSwipeState);
   that.render();
   that.element.addEventListener("mouseenter", that.pause);
   that.element.addEventListener("mouseleave", that.resume);
@@ -2421,6 +2458,8 @@ function createSingleTrainRenderPlugin() {
     if (board.allTrains.length === 0) {
       return;
     }
+    if (pluginState.trainIndex + 1 >= board.allTrains.length)
+      return;
     pluginState.trainIndex = (pluginState.trainIndex + 1) % board.allTrains.length;
     showCurrentTrain(board, pluginState);
   }
@@ -2429,6 +2468,8 @@ function createSingleTrainRenderPlugin() {
     if (board.allTrains.length === 0) {
       return;
     }
+    if (pluginState.trainIndex - 1 < 0)
+      return;
     pluginState.trainIndex = (pluginState.trainIndex - 1 + board.allTrains.length) % board.allTrains.length;
     showCurrentTrain(board, pluginState);
   }
