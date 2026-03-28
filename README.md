@@ -11,7 +11,7 @@ Before using this card, make sure you have:
 - A working Home Assistant installation: https://www.home-assistant.io/getting-started/
 - HACS installed and configured: https://hacs.xyz/docs/installation/prerequisites
 
-You must also set up the `[homeassistant_nationalrail](https://github.com/darrenparkinson/homeassistant_nationalrail)` integration first:
+You must also set up the [homeassistant_nationalrail](https://github.com/darrenparkinson/homeassistant_nationalrail) integration first:
 
 1. Install `homeassistant_nationalrail` from its GitHub repository.
 2. Configure at least one station to retrieve departure data.
