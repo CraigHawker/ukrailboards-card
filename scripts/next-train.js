@@ -161,10 +161,54 @@ function Board(el){
 
         that.element.removeEventListener('mouseenter', that.pause);
         that.element.removeEventListener('mouseleave', that.resume);
+        that.element.removeEventListener('touchstart', onSwipeStart, { passive: true });
+        that.element.removeEventListener('touchend', onSwipeEnd);
+        that.element.removeEventListener('touchcancel', resetSwipeState);
     };
 
     that.collectTrains();
     that.ensureNavigationControls();
+
+    that.swipeStartX = null;
+    that.swipeStartY = null;
+
+    function resetSwipeState(){
+        that.swipeStartX = null;
+        that.swipeStartY = null;
+    }
+
+    function onSwipeStart(event){
+        var touch = event.touches ? event.touches[0] : event;
+        that.swipeStartX = touch.clientX;
+        that.swipeStartY = touch.clientY;
+    }
+
+    function onSwipeEnd(event){
+        if(that.swipeStartX === null || that.swipeStartY === null){
+            return;
+        }
+
+        var touch = event.changedTouches ? event.changedTouches[0] : event;
+        var deltaX = touch.clientX - that.swipeStartX;
+        var deltaY = touch.clientY - that.swipeStartY;
+
+        resetSwipeState();
+
+        if(Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)){
+            return;
+        }
+
+        if(deltaX > 0){
+            that.showNextTrain();
+        } else {
+            that.showPreviousTrain();
+        }
+    }
+
+    that.element.addEventListener('touchstart', onSwipeStart, { passive: true });
+    that.element.addEventListener('touchend', onSwipeEnd);
+    that.element.addEventListener('touchcancel', resetSwipeState);
+
     that.render();
 
     that.element.addEventListener('mouseenter', that.pause);
@@ -322,6 +366,10 @@ function createSingleTrainRenderPlugin(){
             return;
         }
 
+        // Stop skipping past the end.
+        if(pluginState.trainIndex + 1 >= board.allTrains.length)
+            return;
+
         pluginState.trainIndex = (pluginState.trainIndex + 1) % board.allTrains.length;
         showCurrentTrain(board, pluginState);
     }
@@ -331,6 +379,10 @@ function createSingleTrainRenderPlugin(){
         if(board.allTrains.length === 0){
             return;
         }
+
+        // Stop skipping past the start.
+        if(pluginState.trainIndex - 1 < 0)
+            return;
 
         pluginState.trainIndex = (pluginState.trainIndex - 1 + board.allTrains.length) % board.allTrains.length;
         showCurrentTrain(board, pluginState);
