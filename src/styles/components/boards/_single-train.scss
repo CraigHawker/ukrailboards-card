@@ -75,7 +75,7 @@
                 content: attr(data-operator);
                 display: block;
                 grid-column: 1 / -1;
-                grid-row: 6;
+                grid-row: 7;
             }
 
             time.departure {
@@ -132,6 +132,85 @@
                             display: inline-block;
                         }
                     }
+                }
+            }
+
+            carriages{
+                grid-row: 6;
+                grid-column: 1 / -1;
+                display: grid;
+                height: 15px;
+                column-gap: 4px;
+                @for $i from 1 through 20 {
+                    &[length="#{$i}"] {
+                        grid-template-columns: 20px repeat(#{$i}, 20px) 1fr;
+                    }
+                }
+                &:before, &:after{
+                    display: block;
+                    content: "";
+                    width: 15px;
+                    height: 15px;
+                    grid-column: 1;
+                    grid-row: 1;
+                    justify-self: end;
+                    box-sizing: border-box; /* Ensure border doesn't distort shape */
+                    position: relative;
+                    left: 2px;
+                }
+                &:before{
+                    background: var(--board-text); /* Fill color */
+                    /* Create trapezoid shape */
+                    clip-path: polygon(
+                        80% -0.5px,
+                        100% -0.5px, 
+                        100% 100%,
+                        -0.5px 100%,
+                        -0.5px 80%
+                        );
+                }
+                &:after{
+                    background: var(--board-bg); /* Fill color */
+                    /* Create trapezoid shape */
+                    clip-path: polygon(
+                        80% 1px, 
+                        calc(100% - 1.5px) 1px, 
+                        calc(100% - 1.5px) calc(100% - 1.5px), 
+                        1px calc(100% - 1.5px), 
+                        1px 80%
+                        );
+                }
+                carriage{
+                    width: 20px;
+                    grid-row: 1;
+                    font-size: 0.8em;
+                    border: 1px solid var(--board-text);
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 1fr;
+                    align-items: center;
+                    justify-items: center;
+                    &:before{
+                        content: attr(identifier);
+                        display: block;
+                        grid-column: 1;
+                        grid-row: 1;
+                    }
+                    &[class="First"]{
+                        background-color: var(--board-text);
+                        color: var(--board-bg);
+                        &:before{
+                            content: "1st";
+                            font-size: 0.9em;
+                        }
+                    }
+
+                    @for $i from 1 through 20 {
+                        &:nth-child(#{$i}) {
+                            grid-column: #{$i + 1};
+                        }
+                    }
+
                 }
             }
 
