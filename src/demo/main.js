@@ -1,10 +1,10 @@
 import Handlebars from "handlebars/runtime";
-import layoutTemplate from "../../templates/layout.hbs";
-import themeTemplate from "../../templates/theme.hbs";
-import boardTemplate from "../../templates/board.hbs";
+import layoutTemplate from "../templates/layout.hbs";
+import themeTemplate from "../templates/theme.hbs";
+import boardTemplate from "../templates/board.hbs";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
-import { registerDocumentBoards } from "../../scripts/next-train.js";
-import { registerDocumentScrolling } from "../../scripts/scrolling.js";
+import { registerDocumentBoards } from "../scripts/next-train.js";
+import { registerDocumentScrolling } from "../scripts/scrolling.js";
 
 window.Handlebars = Handlebars;
 window.registerHandlebarsHelpers = function() {
@@ -19,4 +19,4 @@ window.boardTemplates = {
 registerDocumentBoards(document);
 registerDocumentScrolling(document);
 
-import("../../scripts/data.js");
+import("../scripts/data.js");

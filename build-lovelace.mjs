@@ -8,7 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distDir = path.join(__dirname, "dist");
 const demoDir = path.join(__dirname, "demo");
-const fontsDir = path.join(__dirname, "fonts");
+const demoHtmlSourcePath = path.join(__dirname, "src", "demo", "index.htm");
+const fontsDir = path.join(__dirname, "src", "fonts");
 const hacsManifestPath = path.join(__dirname, "hacs.json");
 
 const handlebarsPrecompilePlugin = {
@@ -49,8 +50,18 @@ async function syncReleaseRoot() {
     }
 }
 
+async function syncDemoHtml() {
+    const source = await fs.readFile(demoHtmlSourcePath, "utf8");
+    const output = source
+        .replaceAll("../styles/fonts.css", "../src/styles/fonts.css")
+        .replaceAll("../styles/site.css", "../src/styles/site.css");
+
+    await fs.writeFile(path.join(demoDir, "index.htm"), output, "utf8");
+}
+
 if (buildTarget === "all" || buildTarget === "demo") {
     await fs.mkdir(demoDir, { recursive: true });
+    await syncDemoHtml();
 
     await esbuild.build({
         entryPoints: [path.join(__dirname, "src", "demo", "main.js")],
@@ -62,6 +73,7 @@ if (buildTarget === "all" || buildTarget === "demo") {
         plugins: [handlebarsPrecompilePlugin]
     });
 
+    console.log("Synced demo/index.htm");
     console.log("Built demo/demo.js");
 }
 
