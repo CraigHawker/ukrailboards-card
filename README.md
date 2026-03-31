@@ -39,7 +39,7 @@ After installation, refresh Home Assistant or restart if needed. Then add the ca
 
 If you wish to install it manually you can download the output from the 'Releases' section shown on the right of this projec's github page.
 
-Developers looking to extend this project can fork the repository, download the code, then use the build task to generate the various things that are needed.  The "demo/index.html" page can be used to render some snapshot data with various themes and layouts.
+Developers looking to extend this project can fork the repository, download the code, then use the build task to generate the various things that are needed.  The "demo/index.htm" page can be used to render some snapshot data with various themes and layouts.
 
 ## Configuration options
 
@@ -150,7 +150,6 @@ This card uses CSS keyframe animations to fade items in and out, to scroll them 
 
 ## For maintainers
 
-* The structure of the source code has evolved and needs some cleanup; I'm sorry.  I'll try to get this done over the next couple of weeks.
 * There are a number of VSCode tasks:
  * 'Copy handlebars' - handlebars is used as a templating language to make maintaining the HTML easier.  This task copies handlebars into the appropriate location from the npm package
  * 'Build SCSS' - builds the SASS files into the ditributable CSS files.  One-time operation.
@@ -159,6 +158,22 @@ This card uses CSS keyframe animations to fade items in and out, to scroll them 
 * There are two github actions:
  * 'validate' - run on push and validates everything according to HCAS' rules
  * 'release' - generates a CalVer (calendar-versioning, i.e. "2026.03.1") build number, then creates and publishes a release.  This is a manual step run by an administrator.  More details within the "release flow" section below.
+ * The `src` folder contains the actual source of the application (see more details below).
+ * The `build-lovelace.mjs` file contains a build script used to create the `dist` folder contents.
+ * The `has.json` file used to describe this application to HCAS.
+
+### The src folder
+
+The src folder contains the application source code; all the templates, fonts, scripts, stylesheets, etc. needed to build the application:
+
+* `\src\demo` folder contains the source files used for the demo site.  When the build task is run it generates the \demo folder which can be used to show the various layouts and themes.
+* `\src\fonts` contains the fonts used by the application.
+* `\src\images` contains images used within the readme.
+* `\src\lovelace` contains the raw lovelace card.
+* `\src\scripts` contain JavaScript files used within both the demos and the package itself.
+* `\src\shared` contains helpers for registering the handlebars helpers.
+* `\src\styles` contains the SASS files used for various layouts and themes.
+* `\src\templates` contains the handlebars templates.
 
 ### Maintainer Release Flow
 

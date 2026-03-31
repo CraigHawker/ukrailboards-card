@@ -7,13 +7,13 @@
     "node": ">=22"
   },
   "scripts": {
-    "build:css": "npx sass styles:styles --no-source-map",
+    "build:css": "npx sass src/styles:src/styles --no-source-map",
     "build:demo": "node build-lovelace.mjs demo",
     "build:card": "node build-lovelace.mjs card",
     "build:js": "node build-lovelace.mjs all",
     "build": "npm run build:css && npm run build:js",
     "build:release": "npm run build:css && npm run build:card",
-    "package:inspect": "npm run build:release && node scripts/package-release.mjs"
+    "package:inspect": "npm run build:release && node src/scripts/package-release.mjs"
   },
   "dependencies": {
     "handlebars": "^4.7.8"

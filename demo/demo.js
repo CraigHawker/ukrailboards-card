@@ -1181,9 +1181,9 @@ var require_runtime2 = __commonJS({
   }
 });
 
-// scripts/data.js
+// src/scripts/data.js
 var require_data = __commonJS({
-  "scripts/data.js"() {
+  "src/scripts/data.js"() {
     if (typeof registerHandlebarsHelpers === "function") {
       registerHandlebarsHelpers();
     }
@@ -1998,7 +1998,7 @@ var require_data = __commonJS({
 // src/demo/main.js
 var import_runtime4 = __toESM(require_runtime2());
 
-// templates/layout.hbs
+// src/templates/layout.hbs
 var import_runtime = __toESM(require_runtime2());
 var layout_default = import_runtime.default.template({ "compiler": [8, ">= 4.3.0"], "main": function(container, depth0, helpers, partials, data) {
   var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -2010,7 +2010,7 @@ var layout_default = import_runtime.default.template({ "compiler": [8, ">= 4.3.0
   return "<h1>" + container.escapeExpression((helper = (helper = lookupProperty(helpers, "name") || (depth0 != null ? lookupProperty(depth0, "name") : depth0)) != null ? helper : container.hooks.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : container.nullContext || {}, { "name": "name", "hash": {}, "data": data, "loc": { "start": { "line": 1, "column": 4 }, "end": { "line": 1, "column": 12 } } }) : helper)) + "</h1>\r\n";
 }, "useData": true });
 
-// templates/theme.hbs
+// src/templates/theme.hbs
 var import_runtime2 = __toESM(require_runtime2());
 var theme_default = import_runtime2.default.template({ "compiler": [8, ">= 4.3.0"], "main": function(container, depth0, helpers, partials, data) {
   var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -2022,7 +2022,7 @@ var theme_default = import_runtime2.default.template({ "compiler": [8, ">= 4.3.0
   return "<h2>" + container.escapeExpression((helper = (helper = lookupProperty(helpers, "name") || (depth0 != null ? lookupProperty(depth0, "name") : depth0)) != null ? helper : container.hooks.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : container.nullContext || {}, { "name": "name", "hash": {}, "data": data, "loc": { "start": { "line": 1, "column": 4 }, "end": { "line": 1, "column": 12 } } }) : helper)) + "</h2>\r\n";
 }, "useData": true });
 
-// templates/board.hbs
+// src/templates/board.hbs
 var import_runtime3 = __toESM(require_runtime2());
 var board_default = import_runtime3.default.template({ "1": function(container, depth0, helpers, partials, data, blockParams, depths) {
   var stack1, helper, alias1 = depth0 != null ? depth0 : container.nullContext || {}, alias2 = container.hooks.helperMissing, alias3 = container.escapeExpression, alias4 = "function", lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -2159,7 +2159,7 @@ function buildDateTime(time, generatedAt) {
   return date + "T" + time + ":00";
 }
 
-// scripts/next-train.js
+// src/scripts/next-train.js
 var rootBoards = /* @__PURE__ */ new WeakMap();
 var rootListenerStates = /* @__PURE__ */ new WeakMap();
 var TICK_INTERVAL = 10 * 1e3;
@@ -2541,7 +2541,7 @@ function registerDocumentBoards(doc) {
   return state;
 }
 
-// scripts/scrolling.js
+// src/scripts/scrolling.js
 var BASE_CALLING_AT_DISTANCE_PX = 772 - 426;
 var BASE_CALLING_AT_DURATION_S = 10;
 var CALLING_AT_FIXED_TIME_S = 0.5 + 2 + 1.5 + 0.5;
