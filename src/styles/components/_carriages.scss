@@ -1,3 +1,5 @@
+@use "../icons";
+
 @mixin carriages {
     @keyframes fadeOutCarriageIdentifier {
         0% {
@@ -105,15 +107,19 @@
             &:after{
                 grid-column: 1;
                 grid-row: 1;
+                width: 100%;
+                height: 100%;
             }
             &[accessible]{
                 &:after{
-                    content: "♿";
+                    content: " ";
+                    @include icons.accessible();
                 }
             }
             &[bicycles]{
                 &:after{
-                    content: "🚲";
+                    content: " ";
+                    @include icons.bicycles();
                 }
             }
             &[accessible],
