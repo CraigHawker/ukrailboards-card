@@ -43,13 +43,6 @@ function Board(el){
         });
     };
 
-    that.shouldPauseOnHover = function(){
-        return false;
-        var view = getWindowForElement(that.element);
-        var value = view.getComputedStyle(that.element).getPropertyValue('--board-pause-on-hover').trim().toLowerCase();
-        return value === 'true' || value === '1';
-    };
-
     that.ensureNavigationControls = function(){
         if(!that.allTrains || that.allTrains.length <= 1){
             var existingPrev = that.element.querySelector('.board-nav.prev');
@@ -123,26 +116,8 @@ function Board(el){
         });
     };
 
-    that.pause = function(){
-        if(!that.shouldPauseOnHover() || that.isPaused) return;
-        that.isPaused = true;
-        that.element.classList.add('board-paused');
-        if(that.timerId){
-            clearTimeout(that.timerId);
-            that.timerId = null;
-        }
-    };
-
-    that.resume = function(){
-        if(!that.shouldPauseOnHover() || !that.isPaused) return;
-        that.isPaused = false;
-        that.element.classList.remove('board-paused');
-        that.resetTimer();
-    };
-
     that.tick = function(){
         that.timerId = null;
-        if(that.isPaused) return;
         that.showNextTrain();
     };
 
@@ -159,8 +134,6 @@ function Board(el){
             that.timerId = null;
         }
 
-        that.element.removeEventListener('mouseenter', that.pause);
-        that.element.removeEventListener('mouseleave', that.resume);
         that.element.removeEventListener('touchstart', onSwipeStart, { passive: true });
         that.element.removeEventListener('touchend', onSwipeEnd);
         that.element.removeEventListener('touchcancel', resetSwipeState);
@@ -214,9 +187,6 @@ function Board(el){
     that.element.addEventListener('touchcancel', resetSwipeState);
 
     that.render();
-
-    that.element.addEventListener('mouseenter', that.pause);
-    that.element.addEventListener('mouseleave', that.resume);
 
     that.resetTimer();
 
