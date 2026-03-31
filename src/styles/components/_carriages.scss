@@ -1,4 +1,40 @@
 @mixin carriages {
+    @keyframes fadeOutCarriageIdentifier {
+        0% {
+            opacity: 0;
+        }
+        2.5% {
+            opacity: 1;
+        }
+        47.5% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeInCarriageAttribute {
+        0% {
+            opacity: 0;
+        }
+        50% {
+            opacity: 0;
+        }
+        52.5% {
+            opacity: 1;
+        }
+        97.5% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
     carriages{
         display: grid;
         height: 15px;
@@ -78,6 +114,16 @@
             &[bicycles]{
                 &:after{
                     content: "🚲";
+                }
+            }
+            &[accessible],
+            &[bicycles]{
+                &:before{
+                    animation: fadeOutCarriageIdentifier 10s linear infinite;
+                }
+
+                &:after{
+                    animation: fadeInCarriageAttribute 10s linear infinite;
                 }
             }
 
