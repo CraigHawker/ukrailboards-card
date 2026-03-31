@@ -101,6 +101,13 @@
                     }
                 }
             }
+            carriages{
+                grid-row: 8;
+                --board-text: white;
+                carriage:not([class="First"]):before{
+                    color: white;
+                }
+            }
         }
     }
 }
