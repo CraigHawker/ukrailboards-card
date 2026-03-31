@@ -4,3 +4,4 @@ src/scripts/handlebars.min.js
 node_modules/
 artifacts/
 demo/
+dist/
