@@ -1,9 +1,9 @@
 import Handlebars from "handlebars/runtime";
-import boardTemplate from "../../templates/board.hbs";
-import boardCss from "../../styles/site.css";
-import fontCss from "../../styles/fonts.css";
-import { initializeRenderedBoards } from "../../scripts/next-train.js";
-import { scheduleInitializeScrolling } from "../../scripts/scrolling.js";
+import boardTemplate from "../templates/board.hbs";
+import boardCss from "../styles/site.css";
+import fontCss from "../styles/fonts.css";
+import { initializeRenderedBoards } from "../scripts/next-train.js";
+import { scheduleInitializeScrolling } from "../scripts/scrolling.js";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
 
 const WRAPPER_CSS = `

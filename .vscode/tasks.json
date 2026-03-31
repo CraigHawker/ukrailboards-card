@@ -8,7 +8,7 @@
 			"args": [
 				"-NoProfile",
 				"-Command",
-				"Copy-Item -Path 'node_modules/handlebars/dist/handlebars.min.js' -Destination 'scripts/handlebars.min.js' -Force"
+				"Copy-Item -Path 'node_modules/handlebars/dist/handlebars.min.js' -Destination 'src/scripts/handlebars.min.js' -Force"
 			],
 			"problemMatcher": []
 		},
@@ -18,7 +18,7 @@
 			"command": "npx",
 			"args": [
 				"sass",
-				"styles:styles",
+				"src/styles:src/styles",
 				"--no-source-map"
 			],
 			"dependsOn": "Copy Handlebars",
@@ -45,7 +45,7 @@
 			"command": "npx",
 			"args": [
 				"sass",
-				"styles:styles",
+				"src/styles:src/styles",
 				"--no-source-map",
 				"--watch"
 			],

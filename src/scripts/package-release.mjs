@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, "..");
+const rootDir = path.resolve(__dirname, "..", "..");
 const outputDir = path.join(rootDir, "artifacts", "release-inspect");
 const packageRootDir = path.join(outputDir, "package-root");
 const distDir = path.join(rootDir, "dist");

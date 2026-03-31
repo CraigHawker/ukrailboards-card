@@ -1,5 +1,7 @@
-styles/site.css
-styles/fonts.css
-scripts/handlebars.min.js
+src/styles/site.css
+src/styles/fonts.css
+src/scripts/handlebars.min.js
 node_modules/
 artifacts/
+demo/
+dist/
