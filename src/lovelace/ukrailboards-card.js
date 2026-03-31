@@ -5,6 +5,7 @@ import fontCss from "../styles/fonts.css";
 import { initializeRenderedBoards } from "../scripts/next-train.js";
 import { scheduleInitializeScrolling } from "../scripts/scrolling.js";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
+import { normalizeCarriagesForService } from "../shared/normalize-carriages.js";
 
 const WRAPPER_CSS = `
 :host {
@@ -86,6 +87,8 @@ function normalizeTrainServices(boardData) {
 
     return boardData;
 }
+
+
 
 function resolveBoardDataFromAttributes(attributes) {
     if (!attributes) return null;
@@ -404,6 +407,8 @@ class UkrailboardsCard extends HTMLElement {
                 if (that._config.hide_operator) {
                     serviceCopy.operator = "";
                 }
+
+                serviceCopy.carriages = normalizeCarriagesForService(service, boardData);
 
                 return serviceCopy;
             });
