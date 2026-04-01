@@ -205,6 +205,10 @@ class UkrailboardsCard extends HTMLElement {
                                 { value: "overhead-platform", label: "Overhead Platform" }
                             ]
                         }
+                    },
+                    default: "responsive",
+                    description:{
+                        suggested_value: "responsive"
                     }
                 },
                 {
@@ -247,6 +251,9 @@ class UkrailboardsCard extends HTMLElement {
                             name: "hide_delayed",
                             selector: {
                                 boolean: {}
+                            },
+                            description: {
+                                suggested_value: false
                             }
                         },
                         {
@@ -279,7 +286,28 @@ class UkrailboardsCard extends HTMLElement {
                         }
                     ]
                 }
-            ]
+            ],
+            // computeLabel: (schema) => {
+            //     if (schema.name === "icon") return "Special Icon";
+            //     return undefined;
+            // },
+            computeHelper: (schema) => {
+                switch (schema.name) {
+                case "hide_operator":
+                    return "If true, the operator is hidden fron the card.";
+                case "hide_platform":
+                    return "If true, the platform is hidden from the card.";
+                case "hide_delayed":
+                    return "If true, delayed trains are hidden from the card. A train is considered delayed if its expected departure time is later than its scheduled departure time.";
+                case "hide_cancelled":
+                    return "If true, cancelled trains are hidden from the card.";
+                case "platform_filter":
+                    return "A comma-separated list of platforms to show. If specified, only trains departing from the listed platforms will be shown. For example, '1, 2, 4' would show only trains departing from platforms 1, 2, and 4.";
+                case "layout":
+                    return "The layout to use for the board. 'Responsive' will adapt to the size of the card and show more or fewer details accordingly. 'Single Train' is optimized to show one train with more details. 'Table' shows trains in a tabular format. 'Overhead Platform' mimics the style of overhead platform boards commonly seen at UK train stations.";
+                }
+                return undefined;
+            }
         };
     }
 
