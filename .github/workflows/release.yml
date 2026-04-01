@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      suffix:
+        description: Optional release suffix (for example beta). When set, a prerelease is created.
+        required: false
+        type: string
 
 concurrency:
   group: release-${{ github.ref }}
@@ -31,7 +36,49 @@ jobs:
               day: '2-digit'
             });
             const [{ value: year }, , { value: month }, , { value: day }] = formatter.formatToParts(new Date());
-            const baseTag = `v${year}.${month}.${day}`;
+            const baseCalVer = `${year}.${month}.${day}`;
+
+            const defaultBranch = context.payload.repository?.default_branch || 'master';
+            const branchName = context.ref?.startsWith('refs/heads/')
+              ? context.ref.substring('refs/heads/'.length)
+              : context.ref;
+            const isDefaultBranch = branchName === defaultBranch;
+
+            const normalizeSuffix = (value) => value
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '')
+              .replace(/-{2,}/g, '-');
+
+            const requestedSuffixRaw = core.getInput('suffix') || '';
+            const requestedSuffix = normalizeSuffix(requestedSuffixRaw);
+            const branchSuffix = normalizeSuffix(branchName || 'preview');
+
+            const effectiveSuffix = requestedSuffix
+              ? requestedSuffix
+              : (isDefaultBranch ? '' : branchSuffix || 'preview');
+
+            if (isDefaultBranch && !effectiveSuffix) {
+              const { data: permissionData } = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: context.actor
+              });
+
+              if (permissionData.permission !== 'admin') {
+                core.setFailed(
+                  `Stable releases on ${defaultBranch} require admin permission. ` +
+                  `Actor '${context.actor}' has '${permissionData.permission}'. ` +
+                  `Use a suffix input (for example 'beta') to publish a prerelease.`
+                );
+                return;
+              }
+            }
+
+            const baseTag = effectiveSuffix
+              ? `v${baseCalVer}-${effectiveSuffix}`
+              : `v${baseCalVer}`;
+
             const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const pattern = new RegExp(`^${escapeRegex(baseTag)}(?:\\.(\\d+))?$`);
             const tags = await github.paginate(github.rest.repos.listTags, {
@@ -54,10 +101,14 @@ jobs:
             }
 
             const tagName = highestSuffix < 0 ? baseTag : `${baseTag}.${highestSuffix + 1}`;
+            const isPrerelease = effectiveSuffix.length > 0;
             core.setOutput('tag_name', tagName);
             core.setOutput('base_tag', baseTag);
+            core.setOutput('suffix', effectiveSuffix);
+            core.setOutput('is_prerelease', String(isPrerelease));
             core.setOutput('time_zone', timeZone);
             core.info(`Selected release tag ${tagName}`);
+            core.info(`Branch=${branchName}; defaultBranch=${defaultBranch}; prerelease=${isPrerelease}`);
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -77,6 +128,7 @@ jobs:
           tag_name: ${{ steps.calver.outputs.tag_name }}
           name: ${{ steps.calver.outputs.tag_name }}
           target_commitish: ${{ github.sha }}
+          prerelease: ${{ steps.calver.outputs.is_prerelease == 'true' }}
           generate_release_notes: true
           files: |
             dist/**
