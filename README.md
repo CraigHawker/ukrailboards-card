@@ -179,13 +179,27 @@ The src folder contains the application source code; all the templates, fonts, s
 
 The repository includes a GitHub Actions workflow that creates a GitHub release when an administrator runs it manually from the GitHub Actions UI.
 
-Release tags use CalVer in the format `vYYYY.MM.DD`. If more than one release is created on the same London calendar day, the workflow automatically appends a numeric suffix such as `v2026.03.27.1`.
+Release tags use CalVer in the format `vYYYY.MM.DD`.
+
+By default, running the release workflow on the default branch creates a stable release.
+
+Stable releases on the default branch are restricted to users with GitHub admin permission on this repository. Non-admin users can still create prereleases by providing a `suffix`.
+
+Prerelease behavior:
+
+- If you provide a `suffix` input (for example `beta`), the workflow creates a prerelease and appends the suffix to the tag (for example `v2026.03.27-beta`).
+- If you run on a non-default branch and do not provide `suffix`, the workflow uses a sanitized branch name as the suffix (for example `v2026.03.27-configuration-testing`) and creates a prerelease.
+
+If more than one release is created with the same base tag on the same London calendar day, the workflow automatically appends a numeric suffix such as `v2026.03.27.1` or `v2026.03.27-beta.1`.
 
 Examples:
 
 ```bash
 v2026.03.27
 v2026.03.27.1
+v2026.03.27-beta
+v2026.03.27-beta.1
+v2026.03.27-configuration-testing
 ```
 
 That workflow rebuilds the package root in `dist/` and uploads every file from that folder so the release contains `hacs.json`, `ukrailboards-card.js`, and the font files together. The demo bundle remains in `demo/` for the example page and is not part of the HACS release package.
