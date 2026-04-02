@@ -68,6 +68,16 @@ function ensureHelpersRegistered() {
     helpersRegistered = true;
 }
 
+/**
+ * Normalizes board data to standardized internal format for rendering.
+ * 
+ * Handles multiple input formats for backward compatibility with different data sources:
+ * - trainServices (standard) vs trains (legacy/alternative attribute name)
+ * - locationName (standard) vs station_name (legacy attribute name)
+ * 
+ * This ensures the card can work with data from different integrations and versions
+ * of the homeassistant_nationalrail component.
+ */
 function normalizeTrainServices(boardData) {
     // Handle both 'trainServices' and 'trains' attribute names
     if (!boardData) return null;
