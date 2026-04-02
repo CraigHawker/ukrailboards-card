@@ -206,10 +206,7 @@ class UkrailboardsCard extends HTMLElement {
                             ]
                         }
                     },
-                    default: "responsive",
-                    description:{
-                        suggested_value: "responsive"
-                    }
+                    default: "responsive"
                 },
                 {
                     name: "theme",
@@ -251,9 +248,6 @@ class UkrailboardsCard extends HTMLElement {
                             name: "hide_delayed",
                             selector: {
                                 boolean: {}
-                            },
-                            description: {
-                                suggested_value: false
                             }
                         },
                         {
