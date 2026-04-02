@@ -1,3 +1,7 @@
+/*
+ * London 2025 skin for table layout.
+ * Keep this focused on table-specific visual language and typography.
+ */
 @mixin table(){
     header{
         background-color: var(--train-header-background-color);

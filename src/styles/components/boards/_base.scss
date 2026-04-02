@@ -1,7 +1,7 @@
 $grid-gap: 4px;
 
 @mixin board-base {
-    /* Theme-configurable variables (defaults are provided by the theme/root). */
+    /* Structural board shell: consumes shared theme variables and enables container queries. */
 
     border: var(--board-border-width) solid var(--board-border);
     border-radius: var(--board-border-radius);
@@ -35,6 +35,7 @@ $grid-gap: 4px;
         font-weight: normal;
     }
 
+    /* Optional next/prev controls driven by shared nav variables. */
     .board-nav {
         position: absolute;
         top: 0.75rem;
@@ -90,6 +91,7 @@ $grid-gap: 4px;
         text-transform: capitalize;
     }
 
+    /* Scrolling contract: JS toggles .scroll and updates CSS custom properties for width math. */
     .can-scroll {
         --scroll-enabled: 1;
         --scroll-measure-root: 1;

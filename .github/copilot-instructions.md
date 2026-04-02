@@ -91,6 +91,15 @@ Layouts use custom HTML elements (`<trains>`, `<train>`, `<stations>`, `<station
 ### Must: Documentation
 Handlebars templates and custom helpers must be understandable and maintainable. Comments should clarify the purpose of template conditionals and why certain data transformations are necessary (e.g., normalizing `trainServices` vs `trains`).
 
+### Should: Lightweight Structural Comments
+For large JS/SCSS files, add concise comments that explain structure and ownership rather than implementation details. Prioritize:
+
+- File-level intent comments at key entry points
+- Section comments at lifecycle/cascade boundaries (e.g., render pipeline, filter pipeline, theme override order)
+- Brief notes where behavior is non-obvious or compatibility-driven
+
+Avoid line-by-line narration; comments should reduce cognitive load without creating significant maintenance overhead.
+
 ### Should: Font Path Flexibility
 Font URLs are injected dynamically because the demo uses a different path structure than the production card. The system detects the execution context and adjusts `DEMO_FONT_PATH` vs `DEFAULT_FONT_PATH` accordingly. Preserve this pattern when modifying font loading.
 
@@ -107,6 +116,7 @@ Themes and layouts are applied via CSS class combinations (e.g., `.board.theme-c
 - Run `npm run build:css` to compile
 - SCSS is organized by breakpoints; component styles live in `components/boards/`
 - Theme overrides live in `themes/`; use nesting to avoid duplication
+- Document cascade intent at file/section boundaries when styles span base, layout, and theme layers
 
 ### Adding or Modifying Templates
 - Edit `.hbs` files in `src/templates/`
@@ -124,6 +134,7 @@ Themes and layouts are applied via CSS class combinations (e.g., `.board.theme-c
 - Central normalization logic is in `src/lovelace/ukrailboards-card.js` (see `normalizeTrainServices()`)
 - Additional utilities are in `src/scripts/data.js`
 - When handling incoming data, account for both `trainServices` (standard) and `trains` (legacy/alternative) attributes
+- Add comments where compatibility handling or pipeline order is non-obvious
 
 ### Testing Changes
 - Changes to layouts and styles should be validated in `demo/index.htm` first using snapshot data in `demo/demo.js`

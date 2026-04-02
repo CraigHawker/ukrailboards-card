@@ -1,3 +1,8 @@
+/*
+ * Classic theme token overrides.
+ * Keep this file focused on shared --board-* variables and status/spacing values.
+ * Layout-specific geometry belongs in component/layout partials.
+ */
 .theme-classic {
     /* Explicit opt-in for the classic theme.
        These match the default values baked into the board base styles, so a plain `.board` will also behave like classic.
