@@ -39,6 +39,7 @@ const DEMO_FONT_PATH = "../fonts";
 const RAIL_FONTS_LOADED_CLASS = "rail-fonts-loaded";
 const RAIL_FONTS_STYLE_ID = "rail-fonts-style";
 
+// Font URLs differ between the Home Assistant runtime and the demo bundle.
 function normalizeFontPath(fontPath) {
     const candidate = (fontPath || "").trim();
     const fallback = DEFAULT_FONT_PATH;
@@ -63,12 +64,23 @@ function ensureRailFontsLoaded(fontPath) {
 
 let helpersRegistered = false;
 
+// Helpers are registered once globally because templates are re-rendered often.
 function ensureHelpersRegistered() {
     if (helpersRegistered) return;
     registerHandlebarsHelpers(Handlebars);
     helpersRegistered = true;
 }
 
+/**
+ * Normalizes board data to standardized internal format for rendering.
+ * 
+ * Handles multiple input formats for backward compatibility with different data sources:
+ * - trainServices (standard) vs trains (legacy/alternative attribute name)
+ * - locationName (standard) vs station_name (legacy attribute name)
+ * 
+ * This ensures the card can work with data from different integrations and versions
+ * of the homeassistant_nationalrail component.
+ */
 function normalizeTrainServices(boardData) {
     // Handle both 'trainServices' and 'trains' attribute names
     if (!boardData) return null;
@@ -93,6 +105,7 @@ function normalizeTrainServices(boardData) {
 function resolveBoardDataFromAttributes(attributes) {
     if (!attributes) return null;
 
+    // Accept known payload wrappers from different integration versions.
     let boardData = normalizeTrainServices(attributes);
     if (boardData) return boardData;
 
@@ -323,6 +336,7 @@ class UkrailboardsCard extends HTMLElement {
             return;
         }
 
+        // Throttle updates to avoid expensive re-renders during frequent state updates.
         const refreshIntervalMs = (this._config.refresh_interval || 60) * 1000;
         const now = Date.now();
         if (this._lastUpdate > 0 && (now - this._lastUpdate) < refreshIntervalMs) {
@@ -355,7 +369,6 @@ class UkrailboardsCard extends HTMLElement {
             maxRows: maxRows,
             board: filteredBoardData
         };
-        console.log("Rendering board with model:", model);
 
         content.innerHTML = boardTemplate(model);
         initializeRenderedBoards(this.shadowRoot);
@@ -365,6 +378,9 @@ class UkrailboardsCard extends HTMLElement {
 
     _applyConfigToBoardData(boardData) {
         const that = this;
+
+        // Pipeline order is intentional: filter -> sort -> cap row count -> apply field hiding.
+        // This keeps filtering deterministic and avoids mutating original service objects.
         const platformFilter = (that._config.platform_filter || "")
             .split(",")
             .map(function(value) {

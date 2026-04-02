@@ -1,3 +1,9 @@
+/*
+ * Styling cascade contract:
+ * 1) board defaults + layout mixins are defined in components/boards
+ * 2) themes override shared CSS variables
+ * 3) board markup consumes variables via layout/base mixins
+ */
 @use "components/boards";
 @use "themes/classic";
 @use "themes/london2025";

@@ -3,6 +3,8 @@
 @use "boards/single-train";
 @use "boards/table";
 
+// Applies board defaults and selects layout mixins by class.
+// Theme files should override the shared --board-* variables rather than hardcoding layout styles.
 @mixin applyBoardLayout($selector){
     #{$selector} {
 
@@ -35,7 +37,7 @@
         --board-nav-prev-mask: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M15%2018l-6-6%206-6%22/%3E%3C/svg%3E");
         --board-nav-next-mask: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M9%2018l6-6-6-6%22/%3E%3C/svg%3E");
 
-        // Explicit style defined.
+        // Explicit layout classes bypass responsive layout switching.
         &.overhead-platform {
             @include overhead-platform.overhead-platform;
         }
@@ -46,7 +48,9 @@
             @include table.table;
         }
 
-        // Responsive the style reacts to size.
+        // Responsive layout uses container width to switch board format.
+        // Container width is important because cards in HA may be resized by the user,
+        // and we want the layout to adapt to the card size rather than the viewport.
         &.responsive {
             @include base.board-base;
             @container board (max-width: 500px){

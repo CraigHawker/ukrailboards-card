@@ -1,3 +1,17 @@
+/**
+ * Build orchestration for UK Rail Boards card and demo.
+ * 
+ * This script handles the complete build pipeline with sequential dependencies:
+ * 1. Copies Handlebars runtime from node_modules
+ * 2. Compiles SCSS to CSS (see separate build:css task)
+ * 3. Precompiles Handlebars templates and bundles JavaScript with esbuild
+ * 
+ * The handlebarsPrecompilePlugin intercepts .hbs imports and converts them to
+ * precompiled JavaScript functions, enabling template rendering without runtime compilation.
+ * 
+ * Build targets: 'all' (card + demo), 'card' (production), 'demo' (development)
+ */
+
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
@@ -12,6 +26,11 @@ const demoHtmlSourcePath = path.join(__dirname, "src", "demo", "index.htm");
 const fontsDir = path.join(__dirname, "src", "fonts");
 const hacsManifestPath = path.join(__dirname, "hacs.json");
 
+/**
+ * esbuild plugin that precompiles Handlebars templates (.hbs files) into JavaScript.
+ * Converts template source into precompiled template functions that can be rendered
+ * without requiring the Handlebars compiler at runtime.
+ */
 const handlebarsPrecompilePlugin = {
     name: "handlebars-precompile",
     setup(build) {
