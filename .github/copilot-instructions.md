@@ -85,8 +85,8 @@ hacs.json                          # HACS manifest (copied to dist/)
 ### Must: Shadow DOM & Home Assistant Integration
 The card operates within Home Assistant's Lovelace shadow DOM context. Styles must use `:host` and `ha-card` selectors to isolate and style the custom element properly. The card must accept a configuration schema compatible with Home Assistant's entity/service structure.
 
-### Must: Semantic HTML & Accessibility
-Layouts must use appropriate semantic HTML for train tables. Text content must be clear and properly separated (times, destination names, platforms) so it remains accessible to screen readers.
+### Must: Semantic Content & Accessibility
+Layouts use custom HTML elements (`<trains>`, `<train>`, `<stations>`, `<station>`) as the standard structural pattern. Styling and interactivity are applied via CSS classes and semantic attributes. Text content must be clear and properly separated (times, destination names, platforms). Use ARIA attributes (role, aria-label) and schema markup (itemscope/itemtype) to ensure content remains accessible to screen readers, assistive technology, and semantic API consumers. Custom elements must preserve accessible naming and semantic relationships.
 
 ### Must: Documentation
 Handlebars templates and custom helpers must be understandable and maintainable. Comments should clarify the purpose of template conditionals and why certain data transformations are necessary (e.g., normalizing `trainServices` vs `trains`).
@@ -112,12 +112,13 @@ Themes and layouts are applied via CSS class combinations (e.g., `.board.theme-c
 - Edit `.hbs` files in `src/templates/`
 - Templates are precompiled during the build; no manual compilation needed
 - Use Handlebars syntax for conditionals (`{{#if}}`, `{{#each}}`) and helpers (`{{formatTime}}`, etc.)
-- Always generate semantic HTML (use `<table>` for tabular data, `<ul>`/`<li>` for lists)
+- Use custom HTML elements as structural containers (`<trains>`, `<train>`, `<stations>`, `<station>`) with ARIA attributes for accessibility
+- Ensure all dynamic text (times, station names, platform numbers) is properly rendered and accessible
 
 ### Adding Handlebars Helpers
-- Define the helper function in `src/scripts/handlebars-helpers.js`
-- Register it in `src/shared/register-handlebars-helpers.js` at the point where `Handlebars.registerHelper()` is called
-- Document the helper's purpose and parameters in a code comment
+- Define the helper function in `src/shared/register-handlebars-helpers.js`
+- Register it in the `registerHandlebarsHelpers()` function in the same file
+- Document the helper's purpose, parameters, and return value using JSDoc comments
 
 ### Updating Data Handling or Normalization
 - Central normalization logic is in `src/lovelace/ukrailboards-card.js` (see `normalizeTrainServices()`)
@@ -135,6 +136,7 @@ Themes and layouts are applied via CSS class combinations (e.g., `.board.theme-c
 - **Font style injection**: Dynamically insert font CSS into the page head with a unique ID to avoid duplicate registration
 - **Data normalization**: Always handle both `trainServices` and `trains` attribute names for backward compatibility
 - **Shadow DOM scoping**: Use `:host` in CSS and avoid global selectors that could interfere with other Home Assistant cards
+- **Custom element semantics**: Use custom HTML elements (`<trains>`, `<train>`, `<stations>`, `<station>`) with ARIA attributes and data attributes to preserve accessibility and semantic relationships
 - **Template-based rendering**: Use Handlebars for all dynamic content generation; avoid string concatenation
 
 ## Handlebars & Precompilation Notes
