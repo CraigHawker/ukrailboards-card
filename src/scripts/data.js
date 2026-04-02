@@ -101,16 +101,16 @@ function getTrainData(){
                             "formation": {
                                 "coaches": [
                                     {
-                                        "coachClass": "Standard",
+                                        "coachClass": "First",
                                         "toilet": {
                                             "status": "InService",
-                                            "Value": "Accessible"
+                                            "Value": "Standard"
                                         },
                                         "loadingSpecified": false,
                                         "number": "A1"
                                     },
                                     {
-                                        "coachClass": "Standard",
+                                        "coachClass": "First",
                                         "toilet": {
                                             "status": "Unknown",
                                             "Value": "None"
@@ -133,6 +133,7 @@ function getTrainData(){
                                             "status": "Unknown",
                                             "Value": "None"
                                         },
+                                        "bicycles": true,
                                         "loadingSpecified": false,
                                         "number": "A4"
                                     },
@@ -188,7 +189,7 @@ function getTrainData(){
                                         "number": "A2"
                                     },
                                     {
-                                        "coachClass": "Standard",
+                                        "coachClass": "First",
                                         "toilet": {
                                             "status": "Unknown",
                                             "Value": "None"
@@ -674,6 +675,7 @@ function getTrainData(){
                             "status": "Unknown",
                             "Value": "None"
                         },
+                        "accessible": true,
                         "loadingSpecified": false,
                         "number": "A3"
                     },
@@ -1455,6 +1457,7 @@ function getTrainData(){
                             "status": "Unknown",
                             "Value": "None"
                         },
+                        "accessible": true,
                         "loadingSpecified": false,
                         "number": "A2"
                     },
@@ -1558,7 +1561,7 @@ function getTrainData(){
                                         "number": "A2"
                                     },
                                     {
-                                        "coachClass": "Standard",
+                                        "coachClass": "First",
                                         "toilet": {
                                             "status": "Unknown",
                                             "Value": "None"
@@ -2642,10 +2645,10 @@ function getTrainData(){
             "formation": {
                 "coaches": [
                     {
-                        "coachClass": "Standard",
+                        "coachClass": "First",
                         "toilet": {
                             "status": "InService",
-                            "Value": "Accessible"
+                            "Value": "Standard"
                         },
                         "loadingSpecified": false,
                         "number": "A1"
@@ -2656,6 +2659,7 @@ function getTrainData(){
                             "status": "Unknown",
                             "Value": "None"
                         },
+                        "accessible": true,
                         "loadingSpecified": false,
                         "number": "A2"
                     },
@@ -2692,6 +2696,7 @@ function getTrainData(){
                             "status": "InService",
                             "Value": "Standard"
                         },
+                        "bicycles": true,
                         "loadingSpecified": false,
                         "number": "A6"
                     }
@@ -2742,10 +2747,10 @@ function getTrainData(){
                             "formation": {
                                 "coaches": [
                                     {
-                                        "coachClass": "Standard",
+                                        "coachClass": "First",
                                         "toilet": {
                                             "status": "InService",
-                                            "Value": "Accessible"
+                                            "Value": "Standard"
                                         },
                                         "loadingSpecified": false,
                                         "number": "A1"
@@ -2756,6 +2761,7 @@ function getTrainData(){
                                             "status": "Unknown",
                                             "Value": "None"
                                         },
+                                        "accessible": true,
                                         "loadingSpecified": false,
                                         "number": "A2"
                                     },
@@ -2792,6 +2798,7 @@ function getTrainData(){
                                             "status": "InService",
                                             "Value": "Standard"
                                         },
+                                        "bicycles": true,
                                         "loadingSpecified": false,
                                         "number": "A6"
                                     }

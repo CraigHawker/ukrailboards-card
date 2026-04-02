@@ -1,5 +1,4 @@
 @use "base" as boards;
-@use "../carriages";
 
 @mixin single-train {
     @include boards.board-base;
@@ -131,10 +130,8 @@
                 }
             }
 
-            // Include the carriages layout.
-            @include carriages.carriages;
-
             carriages{
+                display: grid;
                 grid-row: 6;
                 grid-column: 1 / -1;
             }

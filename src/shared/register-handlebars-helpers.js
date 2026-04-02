@@ -173,10 +173,128 @@ export function registerHandlebarsHelpers(Handlebars) {
 
         return collection.slice(0, max);
     });
+
+    /**
+     * Builds a readable carriage formation summary from the normalized carriage array.
+     * @param {Object} service - Train service object with normalized carriages
+     * @returns {string} Natural-language carriage summary
+     */
+    Handlebars.registerHelper("carriageFormationText", function(service) {
+        var carriages = (service && Array.isArray(service.carriages)) ? service.carriages : [];
+        if (carriages.length === 0) {
+            return "";
+        }
+
+        var sentences = ["This train is formed of " + carriages.length + " " + pluralizeCarriage(carriages.length) + "."];
+        var isReverseFormation = !!(service && service.isReverseFormation);
+
+        var firstClassIndexes = getCoachIndexes(carriages, function(coach) {
+            return (coach && coach.coachClass) === "First";
+        });
+        var firstClassLocation = describeFeatureLocation(firstClassIndexes, carriages.length, isReverseFormation, true);
+        if (firstClassLocation) {
+            sentences.push("First-class seating is " + firstClassLocation + ".");
+        }
+
+        var bicycleIndexes = getCoachIndexes(carriages, function(coach) {
+            return !!(coach && coach.bicycles);
+        });
+        if (bicycleIndexes.length > 0) {
+            var bicycleCarriages = bicycleIndexes.map(function(index) {
+                return carriages[index] && carriages[index].number;
+            }).filter(function(number) {
+                return !!number;
+            });
+            var bicycleLocation = describeFeatureLocation(bicycleIndexes, carriages.length, isReverseFormation, false);
+
+            if (bicycleCarriages.length > 0) {
+                var carriageLabel = bicycleCarriages.length === 1 ? "carriage" : "carriages";
+                var bicycleSentence = "Bicycle space is ";
+
+                if (bicycleLocation) {
+                    bicycleSentence += bicycleLocation + " in " + carriageLabel + " " + formatOxfordList(bicycleCarriages) + ".";
+                } else {
+                    bicycleSentence += "in " + carriageLabel + " " + formatOxfordList(bicycleCarriages) + ".";
+                }
+
+                sentences.push(bicycleSentence);
+            } else if (bicycleLocation) {
+                sentences.push("Bicycle space is " + bicycleLocation + ".");
+            }
+        }
+
+        return sentences.join("  ");
+    });
 }
 
 function isClockTime(value) {
     return /^\d{2}:\d{2}$/.test(value || "");
+}
+
+function pluralizeCarriage(count) {
+    return count === 1 ? "carriage" : "carriages";
+}
+
+function getCoachIndexes(carriages, predicate) {
+    var indexes = [];
+
+    carriages.forEach(function(coach, index) {
+        if (predicate(coach, index)) {
+            indexes.push(index);
+        }
+    });
+
+    return indexes;
+}
+
+function describeFeatureLocation(indexes, totalCarriages, isReverseFormation, includeMiddle) {
+    if (!indexes.length || totalCarriages <= 0) {
+        return "";
+    }
+
+    var firstThirdEnd = Math.ceil(totalCarriages / 3) - 1;
+    var lastThirdStart = totalCarriages - Math.ceil(totalCarriages / 3);
+    var minIndex = Math.min.apply(null, indexes);
+    var maxIndex = Math.max.apply(null, indexes);
+    var location = "";
+
+    if (maxIndex <= firstThirdEnd) {
+        location = "at the front of the train";
+    } else if (minIndex >= lastThirdStart) {
+        location = "towards the back of the train";
+    } else if (includeMiddle) {
+        location = "in the middle of the train";
+    }
+
+    if (!isReverseFormation) {
+        return location;
+    }
+
+    if (location === "at the front of the train") {
+        return "towards the back of the train";
+    }
+
+    if (location === "towards the back of the train") {
+        return "at the front of the train";
+    }
+
+    return location;
+}
+
+function formatOxfordList(items) {
+    if (!items || items.length === 0) {
+        return "";
+    }
+
+    if (items.length === 1) {
+        return items[0];
+    }
+
+    if (items.length === 2) {
+        return items[0] + " and " + items[1];
+    }
+
+    return items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
 }
 
 function getMachineTime(estimatedTime, scheduledTime) {

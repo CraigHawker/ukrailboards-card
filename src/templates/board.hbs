@@ -32,7 +32,8 @@
                 {{/each}}
             </stations>
             {{#if carriages}}
-            <carriages length="{{carriages.length}}">
+                <carriages length="{{carriages.length}}" aria-label="{{carriageFormationText this}}">
+                    <legend>{{carriageFormationText this}}</legend>
                 {{#each carriages}}
                 <carriage class="{{fallback coachClass "Standard"}}"{{#if accessible}} accessible{{/if}}{{#if bicycles}} bicycles{{/if}} identifier="{{number}}">
                     <toilet data-status="{{toiletStatus}}"></toilet>

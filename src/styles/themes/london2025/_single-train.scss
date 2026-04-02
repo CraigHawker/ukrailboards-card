@@ -111,6 +111,9 @@
                 carriage:not([class="First"]):before{
                     color: white;
                 }
+                carriage:before{
+                    top: 0px;
+                }
             }
         }
     }

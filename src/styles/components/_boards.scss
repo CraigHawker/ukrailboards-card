@@ -2,6 +2,7 @@
 @use "boards/overhead-platform";
 @use "boards/single-train";
 @use "boards/table";
+@use "carriages";
 
 // Applies board defaults and selects layout mixins by class.
 // Theme files should override the shared --board-* variables rather than hardcoding layout styles.
@@ -66,5 +67,8 @@
                 @include single-train.single-train;
             }
         }
+
+        // Include the carriages layout.
+        @include carriages.carriages;
     }
 }

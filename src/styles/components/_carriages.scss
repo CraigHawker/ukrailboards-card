@@ -38,9 +38,12 @@
     }
 
     carriages{
-        display: grid;
+        display: none;
         height: 15px;
         column-gap: 4px;
+        legend {
+            display: none;
+        }
         @for $i from 1 through 20 {
             &[length="#{$i}"] {
                 grid-template-columns: 20px repeat(#{$i}, 20px) 1fr;
@@ -83,7 +86,7 @@
         carriage{
             width: 20px;
             grid-row: 1;
-            font-size: 0.8em;
+            font-size: 0.7em;
             border: 1px solid var(--board-text);
             display: grid;
             grid-template-columns: 1fr;
@@ -95,6 +98,8 @@
                 display: block;
                 grid-column: 1;
                 grid-row: 1;
+                position: relative;
+                top: 1px;
             }
             &[class="First"]{
                 background-color: var(--board-text);
@@ -135,7 +140,7 @@
 
             @for $i from 1 through 20 {
                 &:nth-child(#{$i}) {
-                    grid-column: #{$i + 1};
+                    grid-column: #{$i};
                 }
             }
 
