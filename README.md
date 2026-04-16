@@ -161,6 +161,9 @@ This card uses CSS keyframe animations to fade items in and out, to scroll them 
  * The `src` folder contains the actual source of the application (see more details below).
  * The `build-lovelace.mjs` file contains a build script used to create the `dist` folder contents.
  * The `has.json` file used to describe this application to HCAS.
+* The project governance baseline is defined in `.specify/memory/constitution.md`.
+ * For planning/spec/tasks workflows, run and satisfy constitution checks before implementation.
+ * Any compatibility, accessibility, or build-pipeline behavior changes should be reflected in spec/plan/tasks artifacts.
 
 ### The src folder
 
