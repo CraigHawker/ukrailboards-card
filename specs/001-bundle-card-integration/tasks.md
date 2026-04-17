@@ -46,13 +46,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Import bundled integration runtime modules in custom_components/ukrailboards_nationalrail/ (coordinator.py, sensor.py, api.py)
-- [ ] T015 [US1] Implement integration setup lifecycle for bundled domain in `custom_components/ukrailboards_nationalrail/__init__.py`
-- [ ] T016 [US1] Implement bundled integration entity registration in custom_components/ukrailboards_nationalrail/sensor.py
-- [ ] T017 [P] [US1] Add bundled integration translation strings and diagnostics text in custom_components/ukrailboards_nationalrail/translations/en.json
-- [ ] T018 [US1] Ensure release package includes card artifact plus integration source in src/scripts/package-release.mjs
-- [ ] T019 [US1] Update card installation guidance for single-item HACS flow in README.md
-- [ ] T020 [US1] Validate clean-install behavior and record outcome in specs/001-bundle-card-integration/quickstart.md
+- [X] T014 [US1] Import bundled integration runtime modules in custom_components/ukrailboards_nationalrail/ (coordinator.py, sensor.py, api.py)
+- [X] T015 [US1] Implement integration setup lifecycle for bundled domain in `custom_components/ukrailboards_nationalrail/__init__.py`
+- [X] T016 [US1] Implement bundled integration entity registration in custom_components/ukrailboards_nationalrail/sensor.py
+- [X] T017 [P] [US1] Add bundled integration translation strings and diagnostics text in custom_components/ukrailboards_nationalrail/translations/en.json
+- [X] T018 [US1] Ensure release package includes card artifact plus integration source in src/scripts/package-release.mjs
+- [X] T019 [US1] Update card installation guidance for single-item HACS flow in README.md
+- [X] T020 [US1] Validate clean-install behavior and record outcome in specs/001-bundle-card-integration/quickstart.md
 
 **Checkpoint**: User Story 1 is independently functional and demoable.
 
@@ -66,13 +66,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Add coordinated release metadata synchronization logic in src/scripts/package-release.mjs
-- [ ] T022 [US2] Enforce shared release-version propagation for bundled integration in custom_components/ukrailboards_nationalrail/manifest.json
-- [ ] T023 [P] [US2] Add release validation checks for shared version and required artifacts in src/scripts/validate-bundle-release.mjs
-- [ ] T024 [P] [US2] Update release workflow to run bundled validation checks in .github/workflows/release.yml
-- [ ] T025 [US2] Update CI validation workflow for bundle integrity checks in .github/workflows/validate.yml
-- [ ] T026 [US2] Document coordinated update behavior and failure messaging in README.md
-- [ ] T027 [US2] Validate bundled update path and record outcome in specs/001-bundle-card-integration/quickstart.md
+- [X] T021 [US2] Add coordinated release metadata synchronization logic in src/scripts/package-release.mjs
+- [X] T022 [US2] Enforce shared release-version propagation for bundled integration in custom_components/ukrailboards_nationalrail/manifest.json
+- [X] T023 [P] [US2] Add release validation checks for shared version and required artifacts in src/scripts/validate-bundle-release.mjs
+- [X] T024 [P] [US2] Update release workflow to run bundled validation checks in .github/workflows/release.yml
+- [X] T025 [US2] Update CI validation workflow for bundle integrity checks in .github/workflows/validate.yml
+- [X] T026 [US2] Document coordinated update behavior and failure messaging in README.md
+- [X] T027 [US2] Validate bundled update path and record outcome in specs/001-bundle-card-integration/quickstart.md
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -86,13 +86,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Enforce distinct bundled domain and integration ID declarations in custom_components/ukrailboards_nationalrail/manifest.json
-- [ ] T029 [P] [US3] Add coexistence and collision-avoidance guardrails in `custom_components/ukrailboards_nationalrail/__init__.py`
-- [ ] T030 [US3] Default new card configurations to bundled data source in src/lovelace/ukrailboards-card.js
-- [ ] T031 [US3] Preserve existing card data-source selections on install/update in src/lovelace/ukrailboards-card.js
-- [ ] T032 [P] [US3] Add user-facing guidance for ambiguous dual-source setups in src/templates/board.hbs
-- [ ] T033 [US3] Document side-by-side behavior and non-migration stance in README.md
-- [ ] T034 [US3] Validate side-by-side runtime behavior and record outcome in specs/001-bundle-card-integration/quickstart.md
+- [X] T028 [US3] Enforce distinct bundled domain and integration ID declarations in custom_components/ukrailboards_nationalrail/manifest.json
+- [X] T029 [P] [US3] Add coexistence and collision-avoidance guardrails in `custom_components/ukrailboards_nationalrail/__init__.py`
+- [X] T030 [US3] Default new card configurations to bundled data source in src/lovelace/ukrailboards-card.js
+- [X] T031 [US3] Preserve existing card data-source selections on install/update in src/lovelace/ukrailboards-card.js
+- [X] T032 [P] [US3] Add user-facing guidance for ambiguous dual-source setups in src/templates/board.hbs
+- [X] T033 [US3] Document side-by-side behavior and non-migration stance in README.md
+- [X] T034 [US3] Validate side-by-side runtime behavior and record outcome in specs/001-bundle-card-integration/quickstart.md
 
 **Checkpoint**: All user stories are independently functional.
 
@@ -102,12 +102,12 @@
 
 **Purpose**: Final consistency, accessibility, and release readiness checks across all stories.
 
-- [ ] T035 [P] Update plan-to-implementation trace notes in specs/001-bundle-card-integration/plan.md
-- [ ] T036 Verify compatibility behavior for both `trainServices` and `trains` payloads in src/scripts/data.js
-- [ ] T037 Verify accessibility and semantic output expectations for updated board messaging in src/templates/board.hbs
-- [ ] T038 Verify Shadow DOM style isolation for new UI indicators in src/styles/components/_boards.scss
-- [ ] T039 Run full build and package inspection workflow documentation update in specs/001-bundle-card-integration/quickstart.md
-- [ ] T040 Run bundled release validation and capture final readiness summary in specs/001-bundle-card-integration/research.md
+- [X] T035 [P] Update plan-to-implementation trace notes in specs/001-bundle-card-integration/plan.md
+- [X] T036 Verify compatibility behavior for both `trainServices` and `trains` payloads in src/scripts/data.js
+- [X] T037 Verify accessibility and semantic output expectations for updated board messaging in src/templates/board.hbs
+- [X] T038 Verify Shadow DOM style isolation for new UI indicators in src/styles/components/_boards.scss
+- [X] T039 Run full build and package inspection workflow documentation update in specs/001-bundle-card-integration/quickstart.md
+- [X] T040 Run bundled release validation and capture final readiness summary in specs/001-bundle-card-integration/research.md
 
 ---
 

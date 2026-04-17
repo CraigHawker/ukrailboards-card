@@ -206,7 +206,11 @@ class UkrailboardsCard extends HTMLElement {
                             filter: [
                                 {
                                     domain: "sensor",
-                                    integration: "nationalrailuk"
+                                        integration: "ukrailboards_nationalrail"
+                                    },
+                                    {
+                                        domain: "sensor",
+                                        integration: "nationalrailuk"
                                 }
                             ]
                         }

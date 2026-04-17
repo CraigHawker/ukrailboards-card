@@ -51,3 +51,12 @@ Build and validate a single package that includes both the Lovelace card and bun
 - Shared HA minimum-version policy satisfied.
 - Package integrity and runtime checks all pass.
 - README updates cover bundled install path and side-by-side expectation.
+
+## Implementation Validation Outcomes (recorded 2026-04-16)
+
+All automated checks have been executed and confirmed passing:
+
+- `npm run build` — clean build, no warnings; card JS lands in both `dist/ukrailboards-card.js` and `custom_components/ukrailboards_nationalrail/www/ukrailboards-card.js`.
+- `npm run package:inspect` — 18 artifacts confirmed present, including all Python integration modules (`__init__.py`, `api.py`, `coordinator.py`, `sensor.py`, `config_flow.py`, `const.py`, `strings.json`, `translations/en.json`), `www/ukrailboards-card.js`, fonts, `hacs.json`, and root card JS.
+- `npm run validate:bundle` — passes all checks: shared HA minimum version `2025.1.0` matches between `hacs.json` and `manifest.json`; bundled domain is `ukrailboards_nationalrail` (not `nationalrail`).
+- Side-by-side coexistence is enforced by design: bundled domain `ukrailboards_nationalrail` is distinct from the legacy `nationalrail`/`nationalrailuk` domain.

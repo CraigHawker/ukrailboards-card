@@ -51,6 +51,18 @@ async function main() {
     console.log(`- Shared Home Assistant min version: ${sharedHomeAssistantVersion}`);
     console.log(`- Bundled integration domain: ${integrationManifest.domain}`);
     console.log("- Required package artifacts are present");
+
+    const releaseTag = process.env.GITHUB_REF_NAME || "";
+    if (releaseTag.startsWith("v") && integrationManifest.version === "0.0.0-dev") {
+        throw new Error(
+            `Integration manifest version is still '0.0.0-dev' for release tag '${releaseTag}'. ` +
+            "Run the version-stamp step before building."
+        );
+    }
+
+    if (integrationManifest.version) {
+        console.log(`- Bundled integration version: ${integrationManifest.version}`);
+    }
 }
 
 main().catch((error) => {

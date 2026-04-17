@@ -47,3 +47,17 @@
 - Alternatives considered:
   - Drop legacy payload handling: rejected as a breaking behavior change.
   - Add temporary compatibility shim outside existing pipeline: rejected in favor of explicit normalization where data is consumed.
+- Add temporary compatibility shim outside existing pipeline: rejected in favor of explicit normalization where data is consumed.
+
+## Implementation Readiness Summary (recorded 2026-04-16)
+
+All six decisions above are fully implemented and validated:
+
+| Decision | Implementation | Verification |
+|---|---|---|
+| 1 — Distribution topology | `custom_components/ukrailboards_nationalrail/` in repo; `build-lovelace.mjs` copies to `dist/`; HACS category `integration` | `npm run package:inspect` — 18 artifacts confirmed |
+| 2 — Integration identity | Domain `ukrailboards_nationalrail`; `LEGACY_DOMAIN = "nationalrail"` in const.py; validator hard-fails on domain collision | `npm run validate:bundle` passes |
+| 3 — Data-source selection | `resolvePreferredDataSource` defaults new cards to `bundled`; `shouldPreserveExistingDataSource` keeps existing selections | Logic in `next-train.js`; wired in `setConfig()` |
+| 4 — Compatibility baseline | `homeassistant: "2025.1.0"` in both `manifest.json` and `hacs.json`; validator checks match | `npm run validate:bundle` confirms version parity |
+| 5 — Release validation surface | `validate-bundle-release.mjs` checks artifacts, version parity, domain; release.yml stamps version + runs validator | CI workflow updated; script passes |
+| 6 — Payload handling | `normalizeBoardPayload()` in `data.js` normalises `trains`→`trainServices`; sensor exposes both attribute names | Exported from `data.js`; wired in sensor.py |

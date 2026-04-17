@@ -8,33 +8,31 @@ It contains multiple layout types (e.g. over-platform board, or a board showing 
 
 Before using this card, make sure you have:
 
-- A working Home Assistant installation: https://www.home-assistant.io/getting-started/
-- HACS installed and configured: https://hacs.xyz/docs/installation/prerequisites
+- A working Home Assistant installation: [https://www.home-assistant.io/getting-started/](https://www.home-assistant.io/getting-started/)
+- HACS installed and configured: [https://hacs.xyz/docs/installation/prerequisites](https://hacs.xyz/docs/installation/prerequisites)
 
-You must also set up the [homeassistant_nationalrail](https://github.com/darrenparkinson/homeassistant_nationalrail) integration first:
+You need an API key from raildata.org.uk:
 
-1. Install `homeassistant_nationalrail` from its GitHub repository.
-2. Configure at least one station to retrieve departure data.
-3. Use the station CRS code for that station; CRS codes can be looked up here:
-   https://www.nationalrail.co.uk/stations_destinations/48541.aspx
-
-The integration requires an API key from raildata.org.uk:
-
-- Sign in or create an account at https://raildata.org.uk/
+- Sign in or create an account at [https://raildata.org.uk/](https://raildata.org.uk/)
 - Locate the "[Live Departure Board](https://raildata.org.uk/dashboard/dataProduct/P-d81d6eaf-8060-4467-a339-1c833e50cbbe/overview)" data and subscribe to it
- - Go back to this data set and select the "Specification" tab a little down on the page to find your API key for this data
-- Add that API key to your `homeassistant_nationalrail` configuration
+- Go back to this data set and select the "Specification" tab a little down on the page to find your API key for this data
 
-**Important: the current `homeassistant_nationalrail` version `1.0.2` does not yet include information about train stops. That feature is pending in PR https://github.com/darrenparkinson/homeassistant_nationalrail/pull/2, so calling-at details will be missing until the update is merged.  In the interim you can use [my fork](https://github.com/CraigHawker/homeassistant_nationalrail) and install manually.**
+You also need the CRS code for your station; CRS codes can be looked up here:
+[https://www.nationalrail.co.uk/stations_destinations/48541.aspx](https://www.nationalrail.co.uk/stations_destinations/48541.aspx)
 
-Once the integration is working and at least one station is returning data, install this card in HACS as a custom repository:
+### Single-item install (recommended)
 
-1. In Home Assistant, open HACS > Frontend.
-2. Add a custom repository using this repository's GitHub URL.
-3. Set the repository type to `Frontend`.
-4. Install `UK Rail Boards`.
+This repository bundles both the Lovelace card and the National Rail integration into one HACS item.  A single install gives you everything:
 
-After installation, refresh Home Assistant or restart if needed. Then add the card to a dashboard.  The card should be shown in the list of custom cards:
+1. In HACS, open the three-dot menu and choose `Custom repositories`.
+2. Add this repository's GitHub URL and set the type to **Integration**.
+3. Install **UK Rail Boards**.
+4. Restart Home Assistant.
+5. Go to **Settings → Devices & Services → Add Integration** and search for **UK Rail Boards National Rail**.
+6. Enter your raildata.org.uk API key and the CRS code for the station you want.
+7. The Lovelace card resource is registered automatically.  Add the `ukrailboards-card` card to any dashboard.
+
+After installation, add the card to a dashboard.  The card should be shown in the list of custom cards:
 ![The 'UK Rail Boards' card](src/images/custom-card.png)
 
 If you wish to install it manually you can download the output from the 'Releases' section shown on the right of this projec's github page.
@@ -134,15 +132,17 @@ Please see the getting-started section above for more information.
 
 ## HACS Setup
 
-This card is not yet published to the official HACS store, so you must add it as a custom repository.
+This item is not yet published to the official HACS store, so you must add it as a custom repository.
 
-1. In HACS, go to Frontend.
-2. Open the three-dot menu and choose `Custom repositories`.
-3. Add this repository's GitHub URL.
-4. Set repository type to `Frontend`.
-5. Install `UK Rail Boards`.
-6. If HACS does not register the resource automatically, add `/hacsfiles/ukrailboards-card.js` as a Lovelace resource.
+1. In HACS, open the three-dot menu and choose `Custom repositories`.
+2. Add this repository's GitHub URL and set the type to **Integration**.
+3. Install **UK Rail Boards**.
+4. Restart Home Assistant.
+5. Configure the **UK Rail Boards National Rail** integration under **Settings → Devices & Services**.
 
+### Side-by-side with the legacy integration
+
+If you already have the original [homeassistant_nationalrail](https://github.com/darrenparkinson/homeassistant_nationalrail) integration installed, you can keep it running alongside this bundled version.  The bundled integration uses a different domain (`ukrailboards_nationalrail`) so it will not conflict.  Existing card configurations that point to legacy integration entities are preserved unchanged.  New cards will default to using the bundled integration's entities.
 
 ## A note about non-simple-screen-scenarios
 

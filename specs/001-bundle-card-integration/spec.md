@@ -3,6 +3,7 @@
 **Feature Branch**: `001-create-feature-branch`  
 **Created**: 2026-04-16  
 **Status**: Draft  
+**Status**: Implementation Complete
 **Input**: User description: "The application currently defines a lovelace card which is deployed separately to the required integration which provides the underlying data. I have a fork of the integration with the needed changes (CraigHawker/homeassistant_nationalrail branch: with-details), but my PR is unlikely to be merged to the main project. We need to update this application so that it includes both the integration and the card in one (user installs one HCAS item and gets both)."
 
 ## Clarifications

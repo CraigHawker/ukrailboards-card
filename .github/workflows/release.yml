@@ -122,6 +122,22 @@ jobs:
       - name: Build assets
         run: npm run build:release
 
+      - name: Stamp integration manifest version
+        run: |
+          TAG="${{ steps.calver.outputs.tag_name }}"
+          VERSION="${TAG#v}"
+          jq --arg v "$VERSION" '.version = $v' \
+            custom_components/ukrailboards_nationalrail/manifest.json \
+            > /tmp/manifest.json && mv /tmp/manifest.json \
+            custom_components/ukrailboards_nationalrail/manifest.json
+          echo "Stamped manifest.json version: $VERSION"
+
+      - name: Rebuild assets after version stamp
+        run: npm run build:release
+
+      - name: Validate bundled release artifacts
+        run: node src/scripts/validate-bundle-release.mjs
+
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:

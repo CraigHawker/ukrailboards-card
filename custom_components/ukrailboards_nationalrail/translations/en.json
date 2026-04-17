@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure UK Rail Boards National Rail",
+        "description": "Enter your raildata.org.uk API key and the 3-letter CRS code for the station you want to monitor.",
+        "data": {
+          "api_key": "API Key (raildata.org.uk)",
+          "crs": "Station CRS code (e.g. WAT, SAT, STP)",
+          "filter_crs": "Filter destination/origin CRS (optional)",
+          "filter_type": "Filter type",
+          "num_rows": "Number of departures to fetch",
+          "time_window": "Time window (minutes)",
+          "time_offset": "Time offset (minutes)",
+          "get_full_details": "Get full details"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "Invalid API key — please check your raildata.org.uk subscription.",
+      "cannot_connect": "Could not connect to the National Rail API. Check your network and try again.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This station is already configured."
+    }
+  }
+}

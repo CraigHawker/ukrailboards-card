@@ -26,6 +26,7 @@ const demoHtmlSourcePath = path.join(__dirname, "src", "demo", "index.htm");
 const fontsDir = path.join(__dirname, "src", "fonts");
 const hacsManifestPath = path.join(__dirname, "hacs.json");
 const customComponentsSourceDir = path.join(__dirname, "custom_components");
+const integrationWwwDir = path.join(__dirname, "custom_components", "ukrailboards_nationalrail", "www");
 
 /**
  * esbuild plugin that precompiles Handlebars templates (.hbs files) into JavaScript.
@@ -72,6 +73,7 @@ async function syncReleaseRoot() {
     // Bundle custom integration sources so users install card + integration together.
     const customComponentsDestDir = path.join(distDir, "custom_components");
     await fs.cp(customComponentsSourceDir, customComponentsDestDir, { recursive: true });
+    console.log("Bundled custom_components into dist/");
 }
 
 async function syncDemoHtml() {
@@ -104,6 +106,7 @@ if (buildTarget === "all" || buildTarget === "demo") {
 if (buildTarget === "all" || buildTarget === "card") {
     await fs.rm(distDir, { recursive: true, force: true });
     await fs.mkdir(distDir, { recursive: true });
+    await fs.mkdir(integrationWwwDir, { recursive: true });
 
     await esbuild.build({
         entryPoints: [path.join(__dirname, "src", "lovelace", "ukrailboards-card.js")],
@@ -117,6 +120,13 @@ if (buildTarget === "all" || buildTarget === "card") {
             ".css": "text"
         }
     });
+
+    // Also place card in integration www/ so __init__.py can serve it when installed as an integration.
+    await fs.copyFile(
+        path.join(distDir, "ukrailboards-card.js"),
+        path.join(integrationWwwDir, "ukrailboards-card.js")
+    );
+    console.log("Copied card JS to custom_components/ukrailboards_nationalrail/www/");
 
     await syncReleaseRoot();
 

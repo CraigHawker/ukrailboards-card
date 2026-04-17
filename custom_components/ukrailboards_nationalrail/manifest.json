@@ -6,6 +6,8 @@
   "documentation": "https://github.com/CraigHawker/board",
   "issue_tracker": "https://github.com/CraigHawker/board/issues",
   "requirements": [],
+  "config_flow": true,
+  "platforms": ["sensor"],
   "codeowners": [
     "@CraigHawker"
   ],

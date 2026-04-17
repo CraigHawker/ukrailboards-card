@@ -13,7 +13,8 @@
     "build:js": "node build-lovelace.mjs all",
     "build": "npm run build:css && npm run build:js",
     "build:release": "npm run build:css && npm run build:card",
-    "package:inspect": "npm run build:release && node src/scripts/package-release.mjs"
+    "package:inspect": "npm run build:release && node src/scripts/package-release.mjs",
+    "validate:bundle": "node src/scripts/validate-bundle-release.mjs"
   },
   "dependencies": {
     "handlebars": "^4.7.8",
