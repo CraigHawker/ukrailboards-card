@@ -25,6 +25,7 @@ const demoDir = path.join(__dirname, "demo");
 const demoHtmlSourcePath = path.join(__dirname, "src", "demo", "index.htm");
 const fontsDir = path.join(__dirname, "src", "fonts");
 const hacsManifestPath = path.join(__dirname, "hacs.json");
+const customComponentsSourceDir = path.join(__dirname, "custom_components");
 
 /**
  * esbuild plugin that precompiles Handlebars templates (.hbs files) into JavaScript.
@@ -67,6 +68,10 @@ async function syncReleaseRoot() {
             path.join(fontDestDir, fontFile.name)
         );
     }
+
+    // Bundle custom integration sources so users install card + integration together.
+    const customComponentsDestDir = path.join(distDir, "custom_components");
+    await fs.cp(customComponentsSourceDir, customComponentsDestDir, { recursive: true });
 }
 
 async function syncDemoHtml() {

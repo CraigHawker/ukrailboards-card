@@ -1,0 +1,13 @@
+{
+  "domain": "ukrailboards_nationalrail",
+  "name": "UK Rail Boards National Rail",
+  "version": "0.0.0-dev",
+  "homeassistant": "2025.1.0",
+  "documentation": "https://github.com/CraigHawker/board",
+  "issue_tracker": "https://github.com/CraigHawker/board/issues",
+  "requirements": [],
+  "codeowners": [
+    "@CraigHawker"
+  ],
+  "iot_class": "cloud_polling"
+}

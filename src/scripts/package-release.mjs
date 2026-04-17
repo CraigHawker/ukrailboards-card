@@ -11,6 +11,7 @@ const packageRootDir = path.join(outputDir, "package-root");
 const distDir = path.join(rootDir, "dist");
 const releaseArtifactPath = path.join(distDir, "ukrailboards-card.js");
 const hacsManifestPath = path.join(distDir, "hacs.json");
+const bundledIntegrationDir = path.join(distDir, "custom_components", "ukrailboards_nationalrail");
 
 async function ensureFile(filePath) {
     try {
@@ -43,6 +44,7 @@ async function listFiles(dirPath) {
 
 await ensureFile(releaseArtifactPath);
 await ensureFile(hacsManifestPath);
+await ensureDir(bundledIntegrationDir);
 await ensureDir(distDir);
 await fs.rm(outputDir, { recursive: true, force: true });
 await fs.mkdir(outputDir, { recursive: true });
@@ -70,6 +72,7 @@ const report = {
     },
     notes: [
         "The package root contains hacs.json, ukrailboards-card.js, and the required font files together at the same level.",
+        "The package root includes custom_components/ukrailboards_nationalrail for bundled integration delivery.",
         "The card resolves font files relative to the installed module URL by default, or the configured font_path if provided.",
         "The staged package-root directory mirrors the intended dist release layout for inspection."
     ]

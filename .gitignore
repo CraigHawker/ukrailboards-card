@@ -6,3 +6,21 @@ artifacts/
 demo/
 !src/demo/
 dist/
+
+# Python/Home Assistant integration artifacts
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Logs and local env
+*.log
+.env*
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.idea/

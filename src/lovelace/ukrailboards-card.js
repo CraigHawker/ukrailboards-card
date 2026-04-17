@@ -2,7 +2,11 @@ import Handlebars from "handlebars/runtime";
 import boardTemplate from "../templates/board.hbs";
 import boardCss from "../styles/site.css";
 import fontCss from "../styles/fonts.css";
-import { initializeRenderedBoards } from "../scripts/next-train.js";
+import {
+    initializeRenderedBoards,
+    resolvePreferredDataSource,
+    shouldPreserveExistingDataSource
+} from "../scripts/next-train.js";
 import { scheduleInitializeScrolling } from "../scripts/scrolling.js";
 import { registerHandlebarsHelpers } from "../shared/register-handlebars-helpers.js";
 
@@ -136,6 +140,12 @@ class UkrailboardsCard extends HTMLElement {
     setConfig(config) {
         this._validateConfig(config);
 
+        const previousConfig = this._config;
+        const preserveExistingDataSource = shouldPreserveExistingDataSource(previousConfig, config);
+        const resolvedDataSource = preserveExistingDataSource
+            ? previousConfig.data_source
+            : resolvePreferredDataSource(config, previousConfig);
+
         this._config = {
             title: config.title || "Train Departures",
             entity: config.entity,
@@ -152,7 +162,8 @@ class UkrailboardsCard extends HTMLElement {
             layout: config.layout || "responsive",
             theme: config.theme || "",
             font_path: config.font_path || DEFAULT_FONT_PATH,
-            ...config
+            ...config,
+            data_source: resolvedDataSource
         };
 
         if (config.limit && !config.max_rows) {

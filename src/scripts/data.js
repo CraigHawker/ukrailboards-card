@@ -2,6 +2,22 @@ if (typeof registerHandlebarsHelpers === "function") {
     registerHandlebarsHelpers();
 }
 
+export function normalizeBoardPayload(boardData) {
+    if (!boardData || typeof boardData !== "object") {
+        return boardData;
+    }
+
+    if (Array.isArray(boardData.trains) && !Array.isArray(boardData.trainServices)) {
+        boardData.trainServices = boardData.trains;
+    }
+
+    if (boardData.station_name && !boardData.locationName) {
+        boardData.locationName = boardData.station_name;
+    }
+
+    return boardData;
+}
+
 // Compile our templates or use precompiled templates supplied by the demo bundle.
 var layoutTemplate;
 var themeTemplate;
@@ -44,7 +60,7 @@ var themes = [{
 }];
 
 // Get the actual train data.
-var boardData = getTrainData();
+var boardData = normalizeBoardPayload(getTrainData());
 
 // Iterate over every combination of theme and layout and output a board for each.
 var finalOutput = "";

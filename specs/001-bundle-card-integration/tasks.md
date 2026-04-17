@@ -11,12 +11,12 @@
 
 **Purpose**: Prepare repository structure and packaging surfaces for bundled distribution.
 
-- [ ] T001 Create bundled integration folder scaffold in `custom_components/ukrailboards_nationalrail/__init__.py`
-- [ ] T002 [P] Add bundled integration package metadata baseline in custom_components/ukrailboards_nationalrail/manifest.json
-- [ ] T003 [P] Define bundled integration domain constants in custom_components/ukrailboards_nationalrail/const.py
-- [ ] T004 Update release packaging copy flow to include custom_components/ukrailboards_nationalrail in src/scripts/package-release.mjs
-- [ ] T005 Update release bundle assembly to include integration files in build-lovelace.mjs
-- [ ] T006 Document bundled package structure and source-first edit rules in README.md
+- [X] T001 Create bundled integration folder scaffold in `custom_components/ukrailboards_nationalrail/__init__.py`
+- [X] T002 [P] Add bundled integration package metadata baseline in custom_components/ukrailboards_nationalrail/manifest.json
+- [X] T003 [P] Define bundled integration domain constants in custom_components/ukrailboards_nationalrail/const.py
+- [X] T004 Update release packaging copy flow to include custom_components/ukrailboards_nationalrail in src/scripts/package-release.mjs
+- [X] T005 Update release bundle assembly to include integration files in build-lovelace.mjs
+- [X] T006 Document bundled package structure and source-first edit rules in README.md
 
 ---
 
@@ -26,13 +26,13 @@
 
 **⚠️ CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T007 Set shared Home Assistant minimum-version policy in custom_components/ukrailboards_nationalrail/manifest.json
-- [ ] T008 Align shared minimum-version policy references in hacs.json
-- [ ] T009 [P] Add shared minimum-version and release-coordination notes in README.md
-- [ ] T010 Implement compatibility normalization entry point for `trainServices` and `trains` payloads in src/scripts/data.js
-- [ ] T011 [P] Add runtime data-source policy helper for bundled-default behavior in src/scripts/next-train.js
-- [ ] T012 [P] Add runtime data-source preservation helper for existing cards in src/lovelace/ukrailboards-card.js
-- [ ] T013 Add package integrity validation script for bundled artifacts in src/scripts/validate-bundle-release.mjs
+- [X] T007 Set shared Home Assistant minimum-version policy in custom_components/ukrailboards_nationalrail/manifest.json
+- [X] T008 Align shared minimum-version policy references in hacs.json
+- [X] T009 [P] Add shared minimum-version and release-coordination notes in README.md
+- [X] T010 Implement compatibility normalization entry point for `trainServices` and `trains` payloads in src/scripts/data.js
+- [X] T011 [P] Add runtime data-source policy helper for bundled-default behavior in src/scripts/next-train.js
+- [X] T012 [P] Add runtime data-source preservation helper for existing cards in src/lovelace/ukrailboards-card.js
+- [X] T013 Add package integrity validation script for bundled artifacts in src/scripts/validate-bundle-release.mjs
 
 **Checkpoint**: Foundation complete. User story work can now proceed.
 

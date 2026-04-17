@@ -2,6 +2,7 @@ var rootBoards = new WeakMap();
 var rootListenerStates = new WeakMap();
 var TICK_INTERVAL = 10 * 1000;
 var renderPlugins = [];
+var DEFAULT_DATA_SOURCE = "bundled";
 
 registerRenderPlugin(createSingleTrainRenderPlugin());
 registerRenderPlugin(createOverheadPlatformRenderPlugin());
@@ -425,6 +426,28 @@ function createBoards(root){
     });
     rootBoards.set(root, boards);
     return boards;
+}
+
+export function resolvePreferredDataSource(config, previousConfig){
+    var configured = typeof config?.data_source === 'string' ? config.data_source.trim() : '';
+    if(configured){
+        return configured;
+    }
+
+    var previous = typeof previousConfig?.data_source === 'string' ? previousConfig.data_source.trim() : '';
+    if(previous){
+        return previous;
+    }
+
+    return DEFAULT_DATA_SOURCE;
+}
+
+export function shouldPreserveExistingDataSource(previousConfig, config){
+    if(!previousConfig || typeof previousConfig.data_source !== 'string' || !previousConfig.data_source.trim()){
+        return false;
+    }
+
+    return !Object.prototype.hasOwnProperty.call(config || {}, 'data_source');
 }
 
 export function initializeRenderedBoards(root){

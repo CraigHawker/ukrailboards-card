@@ -159,8 +159,12 @@ This card uses CSS keyframe animations to fade items in and out, to scroll them 
  * 'validate' - run on push and validates everything according to HCAS' rules
  * 'release' - generates a CalVer (calendar-versioning, i.e. "2026.03.1") build number, then creates and publishes a release.  This is a manual step run by an administrator.  More details within the "release flow" section below.
  * The `src` folder contains the actual source of the application (see more details below).
+ * The `custom_components/ukrailboards_nationalrail` folder contains the bundled Home Assistant integration source.
+ * The bundled integration and card share a single minimum Home Assistant version floor (`2025.1.0`) declared in both `custom_components/ukrailboards_nationalrail/manifest.json` and `hacs.json`.
  * The `build-lovelace.mjs` file contains a build script used to create the `dist` folder contents.
- * The `has.json` file used to describe this application to HCAS.
+ * The `hacs.json` file describes this application to HACS.
+ * Maintainers should only edit authored sources (`src/**` and `custom_components/**`) and never hand-edit generated outputs in `dist/` or `demo/`.
+ * Release changes must keep card and integration packaging/version coordination in sync for single-item HACS delivery.
 * The project governance baseline is defined in `.specify/memory/constitution.md`.
  * For planning/spec/tasks workflows, run and satisfy constitution checks before implementation.
  * Any compatibility, accessibility, or build-pipeline behavior changes should be reflected in spec/plan/tasks artifacts.
